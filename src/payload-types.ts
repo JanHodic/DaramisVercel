@@ -75,10 +75,8 @@ export interface Config {
     projects: Project;
     locations: Location;
     pointsOfInterests: PointsOfInterest;
-    advantages: Advantage;
     galleries: Gallery;
     amenities: Amenity;
-    amenitySets: AmenitySet;
     pdfLibraries: PdfLibrary;
     timelines: Timeline;
     unitConfigs: UnitConfig;
@@ -108,10 +106,8 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
     pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
-    advantages: AdvantagesSelect<false> | AdvantagesSelect<true>;
     galleries: GalleriesSelect<false> | GalleriesSelect<true>;
     amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
-    amenitySets: AmenitySetsSelect<false> | AmenitySetsSelect<true>;
     pdfLibraries: PdfLibrariesSelect<false> | PdfLibrariesSelect<true>;
     timelines: TimelinesSelect<false> | TimelinesSelect<true>;
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
@@ -843,7 +839,6 @@ export interface Project {
     | null;
   location?: (number | null) | Location;
   gallery?: (number | null) | Gallery;
-  amenities?: (number | null) | AmenitySet;
   standards?: (number | null) | PdfLibrary;
   timeline?: (number | null) | Timeline;
   units?: (number | null) | UnitConfig;
@@ -870,7 +865,6 @@ export interface Location {
       }[]
     | null;
   pointsOfInterests?: (number | PointsOfInterest)[] | null;
-  advantages?: (number | Advantage)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -899,33 +893,6 @@ export interface PointsOfInterest {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "advantages".
- */
-export interface Advantage {
-  id: number;
-  title: string;
-  short?: string | null;
-  icon?: (number | null) | Media;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "galleries".
  */
 export interface Gallery {
@@ -947,29 +914,6 @@ export interface Gallery {
         id?: string | null;
       }[]
     | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "amenitySets".
- */
-export interface AmenitySet {
-  id: number;
-  name: string;
-  items?: (number | Amenity)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "amenities".
- */
-export interface Amenity {
-  id: number;
-  title: string;
-  description?: string | null;
-  media?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -1030,6 +974,18 @@ export interface UnitConfig {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "amenities".
+ */
+export interface Amenity {
+  id: number;
+  title: string;
+  description?: string | null;
+  media?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -1290,20 +1246,12 @@ export interface PayloadLockedDocument {
         value: number | PointsOfInterest;
       } | null)
     | ({
-        relationTo: 'advantages';
-        value: number | Advantage;
-      } | null)
-    | ({
         relationTo: 'galleries';
         value: number | Gallery;
       } | null)
     | ({
         relationTo: 'amenities';
         value: number | Amenity;
-      } | null)
-    | ({
-        relationTo: 'amenitySets';
-        value: number | AmenitySet;
       } | null)
     | ({
         relationTo: 'pdfLibraries';
@@ -1724,7 +1672,6 @@ export interface ProjectsSelect<T extends boolean = true> {
       };
   location?: T;
   gallery?: T;
-  amenities?: T;
   standards?: T;
   timeline?: T;
   units?: T;
@@ -1750,7 +1697,6 @@ export interface LocationsSelect<T extends boolean = true> {
         id?: T;
       };
   pointsOfInterests?: T;
-  advantages?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1773,18 +1719,6 @@ export interface PointsOfInterestsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "advantages_select".
- */
-export interface AdvantagesSelect<T extends boolean = true> {
-  title?: T;
-  short?: T;
-  icon?: T;
-  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1821,16 +1755,6 @@ export interface AmenitiesSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   media?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "amenitySets_select".
- */
-export interface AmenitySetsSelect<T extends boolean = true> {
-  name?: T;
-  items?: T;
   updatedAt?: T;
   createdAt?: T;
 }

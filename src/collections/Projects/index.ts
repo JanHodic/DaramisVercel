@@ -89,7 +89,6 @@ export const Projects: CollectionConfig = {
     // --- relations to content modules
     { name: 'location', type: 'relationship', relationTo: 'locations' },
     { name: 'gallery', type: 'relationship', relationTo: 'galleries' },
-    { name: 'amenities', type: 'relationship', relationTo: 'amenitySets' },
     { name: 'standards', type: 'relationship', relationTo: 'pdfLibraries' },
     { name: 'timeline', type: 'relationship', relationTo: 'timelines' },
     { name: 'units', type: 'relationship', relationTo: 'unitConfigs' },

@@ -17,10 +17,8 @@ import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
 import { Locations } from './collections/Locations'
 import { PointsOfInterest } from './collections/PointsOfInterest'
-import { Advantages } from './collections/Advantages'
 import { Galleries } from './collections/Galleries'
 import { Amenities } from './collections/Amenities'
-import { AmenitySets } from './collections/AmenitySets'
 import { PdfLibraries } from './collections/PdfLibraries'
 import { Timelines } from './collections/Timelines'
 import { UnitConfigs } from './collections/UnitConfigs'
@@ -88,10 +86,8 @@ export default buildConfig({
     Projects,
     Locations,
     PointsOfInterest,
-    Advantages,
     Galleries,
     Amenities,
-    AmenitySets,
     PdfLibraries,
     Timelines,
     UnitConfigs,

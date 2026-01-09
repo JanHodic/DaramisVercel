@@ -27,11 +27,5 @@ export const Locations: CollectionConfig = {
       relationTo: 'pointsOfInterests',
       hasMany: true,
     },
-    {
-      name: 'advantages',
-      type: 'relationship',
-      relationTo: 'advantages',
-      hasMany: true,
-    },
   ],
 }
