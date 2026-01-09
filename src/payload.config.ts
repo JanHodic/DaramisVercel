@@ -24,6 +24,7 @@ import { Timelines } from './collections/Timelines'
 import { UnitConfigs } from './collections/UnitConfigs'
 import { MapPoints } from './collections/MapPoints'
 import { AppSettings } from './globals/AppSettings'
+import { TimelineItems } from './collections/TimelineItems'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -90,6 +91,7 @@ export default buildConfig({
     Amenities,
     PdfLibraries,
     Timelines,
+    TimelineItems,
     UnitConfigs,
     MapPoints,],
   cors: [getServerSideURL()].filter(Boolean),

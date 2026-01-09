@@ -79,6 +79,7 @@ export interface Config {
     amenities: Amenity;
     pdfLibraries: PdfLibrary;
     timelines: Timeline;
+    'timeline-items': TimelineItem;
     unitConfigs: UnitConfig;
     mapPoints: MapPoint;
     redirects: Redirect;
@@ -110,6 +111,7 @@ export interface Config {
     amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
     pdfLibraries: PdfLibrariesSelect<false> | PdfLibrariesSelect<true>;
     timelines: TimelinesSelect<false> | TimelinesSelect<true>;
+    'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -943,16 +945,23 @@ export interface PdfLibrary {
 export interface Timeline {
   id: number;
   name: string;
-  milestones?:
-    | {
-        title: string;
-        date: string;
-        status?: ('planned' | 'inProgress' | 'done') | null;
-        note?: string | null;
-        order?: number | null;
-        id?: string | null;
-      }[]
-    | null;
+  items?: (number | TimelineItem)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "timeline-items".
+ */
+export interface TimelineItem {
+  id: number;
+  timeline: number | Timeline;
+  preset: 'custom' | 'item1' | 'item2' | 'item3' | 'item4' | 'item5' | 'item6' | 'item7' | 'item8';
+  title: string;
+  description?: string | null;
+  from: string;
+  to?: string | null;
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -983,9 +992,9 @@ export interface UnitConfig {
  */
 export interface Amenity {
   id: number;
-  title: string;
+  name: string;
   description?: string | null;
-  media?: (number | null) | Media;
+  image?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -1260,6 +1269,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'timelines';
         value: number | Timeline;
+      } | null)
+    | ({
+        relationTo: 'timeline-items';
+        value: number | TimelineItem;
       } | null)
     | ({
         relationTo: 'unitConfigs';
@@ -1752,9 +1765,9 @@ export interface GalleriesSelect<T extends boolean = true> {
  * via the `definition` "amenities_select".
  */
 export interface AmenitiesSelect<T extends boolean = true> {
-  title?: T;
+  name?: T;
   description?: T;
-  media?: T;
+  image?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1782,16 +1795,22 @@ export interface PdfLibrariesSelect<T extends boolean = true> {
  */
 export interface TimelinesSelect<T extends boolean = true> {
   name?: T;
-  milestones?:
-    | T
-    | {
-        title?: T;
-        date?: T;
-        status?: T;
-        note?: T;
-        order?: T;
-        id?: T;
-      };
+  items?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "timeline-items_select".
+ */
+export interface TimelineItemsSelect<T extends boolean = true> {
+  timeline?: T;
+  preset?: T;
+  title?: T;
+  description?: T;
+  from?: T;
+  to?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
