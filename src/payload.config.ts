@@ -14,11 +14,29 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { Projects } from './collections/Projects'
+import { Locations } from './collections/Locations'
+import { POIs } from './collections/POIs'
+import { Advantages } from './collections/Advantages'
+import { Galleries } from './collections/Galleries'
+import { Amenities } from './collections/Amenities'
+import { AmenitySets } from './collections/AmenitySets'
+import { PdfLibraries } from './collections/PdfLibraries'
+import { Timelines } from './collections/Timelines'
+import { UnitConfigs } from './collections/UnitConfigs'
+import { Models3D } from './collections/Models3D'
+import { MapPoints } from './collections/MapPoints'
+import { AppSettings } from './globals/AppSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  localization: {
+    locales: ['cs', 'en'],
+    defaultLocale: 'cs',
+    fallback: true,
+  },
   admin: {
     components: {
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
@@ -62,9 +80,26 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages, 
+    Posts, 
+    Media, 
+    Categories, 
+    Users, 
+    Projects,
+    Locations,
+    POIs,
+    Advantages,
+    Galleries,
+    Amenities,
+    AmenitySets,
+    PdfLibraries,
+    Timelines,
+    UnitConfigs,
+    MapPoints,
+    Models3D,],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [Header, Footer, AppSettings],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,
