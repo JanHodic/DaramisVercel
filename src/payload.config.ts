@@ -16,7 +16,7 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
 import { Locations } from './collections/Locations'
-import { POIs } from './collections/POIs'
+import { PointsOfInterest } from './collections/PointsOfInterest'
 import { Advantages } from './collections/Advantages'
 import { Galleries } from './collections/Galleries'
 import { Amenities } from './collections/Amenities'
@@ -24,7 +24,6 @@ import { AmenitySets } from './collections/AmenitySets'
 import { PdfLibraries } from './collections/PdfLibraries'
 import { Timelines } from './collections/Timelines'
 import { UnitConfigs } from './collections/UnitConfigs'
-import { Models3D } from './collections/Models3D'
 import { MapPoints } from './collections/MapPoints'
 import { AppSettings } from './globals/AppSettings'
 
@@ -88,7 +87,7 @@ export default buildConfig({
     Users, 
     Projects,
     Locations,
-    POIs,
+    PointsOfInterest,
     Advantages,
     Galleries,
     Amenities,
@@ -96,8 +95,7 @@ export default buildConfig({
     PdfLibraries,
     Timelines,
     UnitConfigs,
-    MapPoints,
-    Models3D,],
+    MapPoints,],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, AppSettings],
   plugins,

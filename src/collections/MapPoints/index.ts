@@ -51,9 +51,8 @@ export const MapPoints: CollectionConfig = {
 
     {
       name: 'model3d',
-      type: 'relationship',
-      relationTo: 'models3d',
-      required: true,
+      type: 'text',
+      required: false,
       admin: {
         description: '3D model, který se otevře po kliknutí',
       },

@@ -1,9 +1,9 @@
-// src/collections/POIs.ts
+// src/collections/PointsOfInterests.ts
 import type { CollectionConfig } from 'payload'
 import { isLoggedIn, isEditorOrAbove } from '../../access/index'
 
-export const POIs: CollectionConfig = {
-  slug: 'pois',
+export const PointsOfInterest: CollectionConfig = {
+  slug: 'pointsOfInterests',
   admin: { useAsTitle: 'name' },
   access: { read: isLoggedIn, create: isEditorOrAbove, update: isEditorOrAbove, delete: isEditorOrAbove },
   fields: [

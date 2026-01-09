@@ -16,6 +16,7 @@ export const Projects: CollectionConfig = {
     { name: 'title', type: 'text', localized: true, required: true },
     { name: 'subtitle', type: 'text', localized: true },
     { name: 'slug', type: 'text', required: true, unique: true },
+    
     {
       name: 'status',
       type: 'select',
@@ -29,6 +30,17 @@ export const Projects: CollectionConfig = {
     },
     { name: 'city', type: 'text', localized: true },
     { name: 'cover', type: 'upload', relationTo: 'media' },
+
+        // --- 3D visualization (external file / viewer entry point)
+    {
+      name: 'model3d',
+      type: 'text',
+      admin: {
+        description:
+          'URL na 3D vizualizaci (např. Unity WebGL index.html nebo jiný viewer).',
+        placeholder: 'https://cdn.example.com/unity/project/index.html',
+      },
+    },
 
     // --- dashboard presentation config
     {
@@ -67,7 +79,6 @@ export const Projects: CollectionConfig = {
             { label: 'Standards / PDFs', value: 'standards' },
             { label: 'Timeline', value: 'timeline' },
             { label: 'Units / Realpad', value: 'units' },
-            { label: '3D Model', value: 'model3d' },
           ],
         },
         { name: 'enabled', type: 'checkbox', defaultValue: true },
@@ -82,6 +93,5 @@ export const Projects: CollectionConfig = {
     { name: 'standards', type: 'relationship', relationTo: 'pdfLibraries' },
     { name: 'timeline', type: 'relationship', relationTo: 'timelines' },
     { name: 'units', type: 'relationship', relationTo: 'unitConfigs' },
-    { name: 'model3d', type: 'relationship', relationTo: 'models3d' },
   ],
 }

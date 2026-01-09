@@ -22,9 +22,9 @@ export const Locations: CollectionConfig = {
       ],
     },
     {
-      name: 'pois',
+      name: 'pointsOfInterests',
       type: 'relationship',
-      relationTo: 'pois',
+      relationTo: 'pointsOfInterests',
       hasMany: true,
     },
     {

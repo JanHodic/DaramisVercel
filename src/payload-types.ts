@@ -74,7 +74,7 @@ export interface Config {
     users: User;
     projects: Project;
     locations: Location;
-    pois: Pois;
+    pointsOfInterests: PointsOfInterest;
     advantages: Advantage;
     galleries: Gallery;
     amenities: Amenity;
@@ -83,7 +83,6 @@ export interface Config {
     timelines: Timeline;
     unitConfigs: UnitConfig;
     mapPoints: MapPoint;
-    models3d: Models3D;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -108,7 +107,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
-    pois: PoisSelect<false> | PoisSelect<true>;
+    pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
     advantages: AdvantagesSelect<false> | AdvantagesSelect<true>;
     galleries: GalleriesSelect<false> | GalleriesSelect<true>;
     amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
@@ -117,7 +116,6 @@ export interface Config {
     timelines: TimelinesSelect<false> | TimelinesSelect<true>;
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
-    models3d: Models3DSelect<false> | Models3DSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -818,6 +816,10 @@ export interface Project {
   status: 'planned' | 'current' | 'finished';
   city?: string | null;
   cover?: (number | null) | Media;
+  /**
+   * URL na 3D vizualizaci (např. Unity WebGL index.html nebo jiný viewer).
+   */
+  model3d?: string | null;
   dashboard?: {
     pinLat?: number | null;
     pinLng?: number | null;
@@ -833,7 +835,7 @@ export interface Project {
   };
   sections?:
     | {
-        key: 'location' | 'gallery' | 'amenities' | 'standards' | 'timeline' | 'units' | 'model3d';
+        key: 'location' | 'gallery' | 'amenities' | 'standards' | 'timeline' | 'units';
         enabled?: boolean | null;
         titleOverride?: string | null;
         id?: string | null;
@@ -845,7 +847,6 @@ export interface Project {
   standards?: (number | null) | PdfLibrary;
   timeline?: (number | null) | Timeline;
   units?: (number | null) | UnitConfig;
-  model3d?: (number | null) | Models3D;
   updatedAt: string;
   createdAt: string;
 }
@@ -868,16 +869,16 @@ export interface Location {
         id?: string | null;
       }[]
     | null;
-  pois?: (number | Pois)[] | null;
+  pointsOfInterests?: (number | PointsOfInterest)[] | null;
   advantages?: (number | Advantage)[] | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pois".
+ * via the `definition` "pointsOfInterests".
  */
-export interface Pois {
+export interface PointsOfInterest {
   id: number;
   name: string;
   category: string;
@@ -1034,36 +1035,6 @@ export interface UnitConfig {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "models3d".
- */
-export interface Models3D {
-  id: number;
-  name: string;
-  provider: 'unity' | 'iframe' | 'glb';
-  /**
-   * Unity: URL na index.html WebGL buildu (např. /unity/demo/index.html nebo https://cdn/.../index.html)
-   */
-  url: string;
-  /**
-   * Náhled do karty / popupu (volitelné)
-   */
-  poster?: (number | null) | Media;
-  /**
-   * Např. „Tahem myši otáčíš, kolečkem zoom.“
-   */
-  controlsHint?: string | null;
-  unityOptions?: {
-    allowFullscreen?: boolean | null;
-    /**
-     * Výška iframe v % výšky viewportu
-     */
-    heightVh?: number | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mapPoints".
  */
 export interface MapPoint {
@@ -1084,7 +1055,7 @@ export interface MapPoint {
   /**
    * 3D model, který se otevře po kliknutí
    */
-  model3d: number | Models3D;
+  model3d?: string | null;
   /**
    * Náhled do popupu (bez načítání 3D)
    */
@@ -1315,8 +1286,8 @@ export interface PayloadLockedDocument {
         value: number | Location;
       } | null)
     | ({
-        relationTo: 'pois';
-        value: number | Pois;
+        relationTo: 'pointsOfInterests';
+        value: number | PointsOfInterest;
       } | null)
     | ({
         relationTo: 'advantages';
@@ -1349,10 +1320,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'mapPoints';
         value: number | MapPoint;
-      } | null)
-    | ({
-        relationTo: 'models3d';
-        value: number | Models3D;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1731,6 +1698,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   status?: T;
   city?: T;
   cover?: T;
+  model3d?: T;
   dashboard?:
     | T
     | {
@@ -1760,7 +1728,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   standards?: T;
   timeline?: T;
   units?: T;
-  model3d?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1782,16 +1749,16 @@ export interface LocationsSelect<T extends boolean = true> {
         defaultOn?: T;
         id?: T;
       };
-  pois?: T;
+  pointsOfInterests?: T;
   advantages?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pois_select".
+ * via the `definition` "pointsOfInterests_select".
  */
-export interface PoisSelect<T extends boolean = true> {
+export interface PointsOfInterestsSelect<T extends boolean = true> {
   name?: T;
   category?: T;
   lat?: T;
@@ -1936,25 +1903,6 @@ export interface MapPointsSelect<T extends boolean = true> {
   model3d?: T;
   poster?: T;
   order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "models3d_select".
- */
-export interface Models3DSelect<T extends boolean = true> {
-  name?: T;
-  provider?: T;
-  url?: T;
-  poster?: T;
-  controlsHint?: T;
-  unityOptions?:
-    | T
-    | {
-        allowFullscreen?: T;
-        heightVh?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
