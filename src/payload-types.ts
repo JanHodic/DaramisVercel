@@ -81,6 +81,7 @@ export interface Config {
     timelines: Timeline;
     'timeline-items': TimelineItem;
     unitConfigs: UnitConfig;
+    'poi-categories': PoiCategory;
     mapPoints: MapPoint;
     redirects: Redirect;
     forms: Form;
@@ -113,6 +114,7 @@ export interface Config {
     timelines: TimelinesSelect<false> | TimelinesSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
+    'poi-categories': PoiCategoriesSelect<false> | PoiCategoriesSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -877,12 +879,12 @@ export interface Location {
 export interface PointsOfInterest {
   id: number;
   name: string;
-  category: string;
+  category: number | PoiCategory;
   lat: number;
   lng: number;
   distanceText?: string | null;
   description?: string | null;
-  media?: (number | null) | Media;
+  logo?: (number | null) | Media;
   links?:
     | {
         label?: string | null;
@@ -890,6 +892,24 @@ export interface PointsOfInterest {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "poi-categories".
+ */
+export interface PoiCategory {
+  id: number;
+  /**
+   * Technický klíč (např. school, shop, park)
+   */
+  key: string;
+  name: string;
+  /**
+   * Ikona kategorie (volitelné)
+   */
+  icon?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -1277,6 +1297,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'unitConfigs';
         value: number | UnitConfig;
+      } | null)
+    | ({
+        relationTo: 'poi-categories';
+        value: number | PoiCategory;
       } | null)
     | ({
         relationTo: 'mapPoints';
@@ -1724,7 +1748,7 @@ export interface PointsOfInterestsSelect<T extends boolean = true> {
   lng?: T;
   distanceText?: T;
   description?: T;
-  media?: T;
+  logo?: T;
   links?:
     | T
     | {
@@ -1831,6 +1855,17 @@ export interface UnitConfigsSelect<T extends boolean = true> {
         direction?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "poi-categories_select".
+ */
+export interface PoiCategoriesSelect<T extends boolean = true> {
+  key?: T;
+  name?: T;
+  icon?: T;
   updatedAt?: T;
   createdAt?: T;
 }

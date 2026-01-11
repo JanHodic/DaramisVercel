@@ -25,6 +25,7 @@ import { UnitConfigs } from './collections/UnitConfigs'
 import { MapPoints } from './collections/MapPoints'
 import { AppSettings } from './globals/AppSettings'
 import { TimelineItems } from './collections/TimelineItems'
+import { PointOfInterestCategories } from './collections/PointsOfInterestCategories/PointsOfInterestCategories'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -93,6 +94,7 @@ export default buildConfig({
     Timelines,
     TimelineItems,
     UnitConfigs,
+    PointOfInterestCategories,
     MapPoints,],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, AppSettings],
