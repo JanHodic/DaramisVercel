@@ -76,11 +76,10 @@ export interface Config {
     locations: Location;
     pointsOfInterests: PointsOfInterest;
     galleries: Gallery;
-    amenities: Amenity;
-    pdfLibraries: PdfLibrary;
     timelines: Timeline;
     'timeline-items': TimelineItem;
     unitConfigs: UnitConfig;
+    amenities: Amenity;
     'poi-categories': PoiCategory;
     mapPoints: MapPoint;
     redirects: Redirect;
@@ -109,11 +108,10 @@ export interface Config {
     locations: LocationsSelect<false> | LocationsSelect<true>;
     pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
     galleries: GalleriesSelect<false> | GalleriesSelect<true>;
-    amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
-    pdfLibraries: PdfLibrariesSelect<false> | PdfLibrariesSelect<true>;
     timelines: TimelinesSelect<false> | TimelinesSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
+    amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
     'poi-categories': PoiCategoriesSelect<false> | PoiCategoriesSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -817,9 +815,9 @@ export interface Project {
   city?: string | null;
   cover?: (number | null) | Media;
   /**
-   * URL na 3D vizualizaci (např. Unity WebGL index.html nebo jiný viewer).
+   * 3D vizualizace / viewer (např. Unity WebGL build)
    */
-  model3d?: string | null;
+  model3d?: (number | null) | Media;
   dashboard?: {
     pinLat?: number | null;
     pinLng?: number | null;
@@ -835,7 +833,7 @@ export interface Project {
   };
   sections?:
     | {
-        key: 'location' | 'gallery' | 'amenities' | 'standards' | 'timeline' | 'units';
+        key: 'location' | 'gallery' | 'standards' | 'timeline' | 'units';
         enabled?: boolean | null;
         titleOverride?: string | null;
         id?: string | null;
@@ -843,7 +841,7 @@ export interface Project {
     | null;
   location?: (number | null) | Location;
   gallery?: (number | null) | Gallery;
-  standards?: (number | null) | PdfLibrary;
+  standards?: (number | Media)[] | null;
   timeline?: (number | null) | Timeline;
   units?: (number | null) | UnitConfig;
   updatedAt: string;
@@ -932,25 +930,6 @@ export interface Gallery {
         media: number | Media;
         category?: string | null;
         caption?: string | null;
-        order?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pdfLibraries".
- */
-export interface PdfLibrary {
-  id: number;
-  name: string;
-  documents?:
-    | {
-        title: string;
-        file: number | Media;
-        category?: string | null;
         order?: number | null;
         id?: string | null;
       }[]
@@ -1279,14 +1258,6 @@ export interface PayloadLockedDocument {
         value: number | Gallery;
       } | null)
     | ({
-        relationTo: 'amenities';
-        value: number | Amenity;
-      } | null)
-    | ({
-        relationTo: 'pdfLibraries';
-        value: number | PdfLibrary;
-      } | null)
-    | ({
         relationTo: 'timelines';
         value: number | Timeline;
       } | null)
@@ -1297,6 +1268,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'unitConfigs';
         value: number | UnitConfig;
+      } | null)
+    | ({
+        relationTo: 'amenities';
+        value: number | Amenity;
       } | null)
     | ({
         relationTo: 'poi-categories';
@@ -1786,35 +1761,6 @@ export interface GalleriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "amenities_select".
- */
-export interface AmenitiesSelect<T extends boolean = true> {
-  name?: T;
-  description?: T;
-  image?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pdfLibraries_select".
- */
-export interface PdfLibrariesSelect<T extends boolean = true> {
-  name?: T;
-  documents?:
-    | T
-    | {
-        title?: T;
-        file?: T;
-        category?: T;
-        order?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "timelines_select".
  */
 export interface TimelinesSelect<T extends boolean = true> {
@@ -1855,6 +1801,17 @@ export interface UnitConfigsSelect<T extends boolean = true> {
         direction?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "amenities_select".
+ */
+export interface AmenitiesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  image?: T;
   updatedAt?: T;
   createdAt?: T;
 }

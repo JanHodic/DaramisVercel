@@ -18,14 +18,13 @@ import { Projects } from './collections/Projects'
 import { Locations } from './collections/Locations'
 import { PointsOfInterest } from './collections/PointsOfInterest'
 import { Galleries } from './collections/Galleries'
-import { Amenities } from './collections/Amenities'
-import { PdfLibraries } from './collections/PdfLibraries'
 import { Timelines } from './collections/Timelines'
 import { UnitConfigs } from './collections/UnitConfigs'
 import { MapPoints } from './collections/MapPoints'
 import { AppSettings } from './globals/AppSettings'
 import { TimelineItems } from './collections/TimelineItems'
 import { PointOfInterestCategories } from './collections/PointsOfInterestCategories/PointsOfInterestCategories'
+import { Amenities } from './collections/Amenities'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -89,11 +88,10 @@ export default buildConfig({
     Locations,
     PointsOfInterest,
     Galleries,
-    Amenities,
-    PdfLibraries,
     Timelines,
     TimelineItems,
     UnitConfigs,
+    Amenities,
     PointOfInterestCategories,
     MapPoints,],
   cors: [getServerSideURL()].filter(Boolean),

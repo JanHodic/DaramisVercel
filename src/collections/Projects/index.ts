@@ -4,7 +4,10 @@ import { isLoggedIn, isEditorOrAbove } from '../../access/index'
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'status', 'city', 'updatedAt'] },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'status', 'city', 'updatedAt'],
+  },
   access: {
     read: isLoggedIn,
     create: isEditorOrAbove,
@@ -16,7 +19,7 @@ export const Projects: CollectionConfig = {
     { name: 'title', type: 'text', localized: true, required: true },
     { name: 'subtitle', type: 'text', localized: true },
     { name: 'slug', type: 'text', required: true, unique: true },
-    
+
     {
       name: 'status',
       type: 'select',
@@ -28,17 +31,17 @@ export const Projects: CollectionConfig = {
         { label: 'Finished', value: 'finished' },
       ],
     },
+
     { name: 'city', type: 'text', localized: true },
     { name: 'cover', type: 'upload', relationTo: 'media' },
 
-        // --- 3D visualization (external file / viewer entry point)
+    // --- 3D visualization (media upload)
     {
       name: 'model3d',
-      type: 'text',
+      type: 'upload',
+      relationTo: 'media',
       admin: {
-        description:
-          'URL na 3D vizualizaci (např. Unity WebGL index.html nebo jiný viewer).',
-        placeholder: 'https://cdn.example.com/unity/project/index.html',
+        description: '3D vizualizace / viewer (např. Unity WebGL build)',
       },
     },
 
@@ -62,7 +65,7 @@ export const Projects: CollectionConfig = {
       ],
     },
 
-    // --- sections switch + ordering (big win!)
+    // --- sections switch + ordering
     {
       name: 'sections',
       type: 'array',
@@ -75,7 +78,6 @@ export const Projects: CollectionConfig = {
           options: [
             { label: 'Location & Surroundings', value: 'location' },
             { label: 'Gallery / Views', value: 'gallery' },
-            { label: 'Amenities', value: 'amenities' },
             { label: 'Standards / PDFs', value: 'standards' },
             { label: 'Timeline', value: 'timeline' },
             { label: 'Units / Realpad', value: 'units' },
@@ -89,7 +91,15 @@ export const Projects: CollectionConfig = {
     // --- relations to content modules
     { name: 'location', type: 'relationship', relationTo: 'locations' },
     { name: 'gallery', type: 'relationship', relationTo: 'galleries' },
-    { name: 'standards', type: 'relationship', relationTo: 'pdfLibraries' },
+
+    // --- standards now directly media (PDFs, brochures, etc.)
+    {
+      name: 'standards',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: true,
+    },
+
     { name: 'timeline', type: 'relationship', relationTo: 'timelines' },
     { name: 'units', type: 'relationship', relationTo: 'unitConfigs' },
   ],
