@@ -1,0 +1,231 @@
+/* Daramis Admin Theme */
+
+/* Custom Fonts */
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('/fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Matter';
+  src: url('/fonts/Matter-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Matter';
+  src: url('/fonts/Matter-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Payload Theme Tokens */
+:root {
+  --theme-bg: #EEEDF4;
+  --theme-input-bg: #ffffff;
+  --theme-text: #1a1a1a;
+  --theme-border-color: #DCDAE9;
+
+  /* Elevation scale */
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #ffffff;
+  --theme-elevation-100: #E7E5F0;
+  --theme-elevation-150: #DCDAE9;
+  --theme-elevation-200: #d0cfe0;
+  --theme-elevation-250: #c4c3d7;
+  --theme-elevation-300: #b8b7ce;
+  --theme-elevation-350: #acabc5;
+  --theme-elevation-400: #7a7994;
+  --theme-elevation-450: #9392b3;
+  --theme-elevation-500: #8786aa;
+  --theme-elevation-550: #7b7aa1;
+  --theme-elevation-600: #33706A;
+  --theme-elevation-700: #004C45;
+  --theme-elevation-750: #004540;
+  --theme-elevation-800: #004C45;
+  --theme-elevation-850: #003E3A;
+  --theme-elevation-900: #003E3A;
+  --theme-elevation-950: #00302D;
+  --theme-elevation-1000: #1a1a1a;
+
+  /* Success = Daramis Green */
+  --theme-success-50: #E9F4F0;
+  --theme-success-100: #D3E8E1;
+  --theme-success-150: #B8D0C4;
+  --theme-success-200: #99BCAB;
+  --theme-success-250: #80A6A2;
+  --theme-success-300: #66948F;
+  --theme-success-400: #4D827D;
+  --theme-success-500: #004C45;
+  --theme-success-600: #004540;
+  --theme-success-650: #003E3A;
+  --theme-success-750: #003733;
+  --theme-success-800: #00302D;
+  --theme-success-850: #002926;
+  --theme-success-900: #002220;
+
+  /* Error = Daramis Red */
+  --theme-error-50: #FDE8EC;
+  --theme-error-100: #F9C5CF;
+  --theme-error-150: #F4A1B2;
+  --theme-error-200: #EF7D95;
+  --theme-error-300: #EA5978;
+  --theme-error-400: #E53560;
+  --theme-error-500: #D40E3A;
+  --theme-error-600: #C00D34;
+  --theme-error-650: #AC0C2F;
+  --theme-error-750: #980A29;
+  --theme-error-800: #840924;
+  --theme-error-900: #70081E;
+  --theme-error-950: #5C0619;
+
+  /* Warning */
+  --theme-warning-100: #FFF3E0;
+  --theme-warning-150: #FFE0B2;
+  --theme-warning-600: #F57C00;
+  --theme-warning-800: #EF6C00;
+
+  /* Font */
+  --font-body: 'Matter', system-ui, sans-serif;
+}
+
+/* Scale up the admin UI globally */
+html {
+  font-size: 16px;
+}
+
+/* Hide default logo on login page */
+.template-minimal .login__brand {
+  display: none;
+}
+
+/* Search input white background */
+.search-bar .search-filter input {
+  background: #ffffff;
+}
+
+/* Dashboard collection cards */
+.dashboard__card-list {
+  gap: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid var(--theme-border-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  min-height: 120px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card__actions {
+  order: 2;
+  margin-left: auto;
+}
+
+.card__title {
+  order: 1;
+}
+
+.card:hover {
+  border-color: var(--theme-success-500);
+  box-shadow: 0 4px 12px rgba(0, 76, 69, 0.1);
+  transform: translateY(-2px);
+}
+
+.card__title {
+  font-family: 'Bebas Neue', system-ui, sans-serif;
+  font-size: 1.875rem;
+  letter-spacing: 0.02em;
+  color: var(--theme-text);
+  margin-bottom: 0.5rem;
+}
+
+.card__description,
+.card__count {
+  font-family: 'Matter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  color: var(--theme-elevation-400);
+}
+
+/* Hide Collections and Globals headings */
+.collections__label {
+  display: none;
+}
+
+/* Max 3 cards per row */
+.collections__card-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Sidebar white background */
+.nav {
+  background: #ffffff;
+}
+
+/* Matter font max weight 500 */
+.status__value {
+  font-weight: 500;
+}
+
+/* Global Matter font weight cap */
+body {
+  font-weight: 400;
+}
+
+strong, b, .card__title,
+.doc-controls__value,
+.doc-tab,
+.array-field__add-row,
+.step-nav > a,
+.per-page__base-button {
+  font-weight: 500;
+}
+
+/* Heading fonts - Bebas Neue */
+.doc-header__title,
+.render-title {
+  font-family: 'Bebas Neue', system-ui, sans-serif;
+  font-size: 1.875rem;
+  letter-spacing: 0.02em;
+}
+
+.list-header__title {
+  font-family: 'Bebas Neue', system-ui, sans-serif;
+  font-size: 2.25rem;
+  letter-spacing: 0.02em;
+}
+
+/* Step nav - Daramis green */
+.step-nav {
+  color: #004C45;
+}
+
+.step-nav a {
+  color: #004C45;
+}
+
+/* Field label size */
+.field-label {
+  font-size: 16px;
+}
+
+h3 > .field-label {
+  font-size: 20px;
+}

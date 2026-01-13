@@ -36,13 +36,26 @@ export default buildConfig({
     fallback: true,
   },
   admin: {
+    theme: 'light',
     components: {
+      // Custom Daramis branding
+      graphics: {
+        Logo: '@/components/admin/Logo',
+        Icon: '@/components/admin/Icon',
+      },
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below.
-      beforeDashboard: ['@/components/BeforeDashboard'],
+    },
+    meta: {
+      titleSuffix: '- Daramis Admin',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          url: '/favicon-daramis-logo.png',
+        },
+      ],
     },
     importMap: {
       baseDir: path.resolve(dirname),
