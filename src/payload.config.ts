@@ -3,6 +3,7 @@ import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
+import { openapi, swaggerUI } from 'payload-oapi'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
@@ -109,7 +110,16 @@ export default buildConfig({
     MapPoints,],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, AppSettings],
-  plugins,
+  plugins: [
+    openapi({
+      openapiVersion: '3.0',
+      metadata: { title: 'Daramis API', version: '1.0.0' },
+    }),
+    swaggerUI({
+      // defaultně bývá /api/docs a spec na /api/openapi.json
+      // dá se přenastavit dle potřeby
+    }),
+  ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
