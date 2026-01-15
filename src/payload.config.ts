@@ -4,7 +4,7 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 import { openapi, swaggerUI } from 'payload-oapi'
-
+import { s3Storage } from '@payloadcms/storage-s3'
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -118,6 +118,30 @@ export default buildConfig({
     swaggerUI({
       // defaultně bývá /api/docs a spec na /api/openapi.json
       // dá se přenastavit dle potřeby
+    }),
+      s3Storage({
+      collections: {
+        // slug upload kolekce:
+        media: {
+          prefix: 'media', // složka v bucketu (volitelné)
+          generateFileURL: ({ filename, prefix }) => {
+            const base = process.env.R2_PUBLIC_BASE_URL
+            const key = prefix ? `${prefix}/${filename}` : filename
+            return `${base}/${key}`
+          },
+        },
+      },
+      // AWS SDK S3ClientConfig:
+      config: {
+        endpoint: process.env.R2_ENDPOINT,
+        region: process.env.R2_REGION || 'auto',
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+        },
+        forcePathStyle: true,
+      },
+      bucket: process.env.R2_BUCKET!,
     }),
   ],
   secret: process.env.PAYLOAD_SECRET,
