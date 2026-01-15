@@ -305,6 +305,18 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * External source mapping (e.g. Realpad resource UID)
+   */
+  external?: {
+    realpad?: {
+      /**
+       * Realpad immutable resource UID
+       */
+      uid?: string | null;
+      type?: ('pdf' | 'plan' | 'image' | 'other') | null;
+    };
+  };
   prefix?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
@@ -652,6 +664,27 @@ export interface Project {
   gallery?: (number | null) | Gallery;
   standards?: (number | Media)[] | null;
   timeline?: (number | null) | Timeline;
+  /**
+   * Realpad PRICELIST sync config (per project). Values are used server-side only.
+   */
+  realpad?: {
+    enabled?: boolean | null;
+    login?: string | null;
+    /**
+     * Stored server-side only. Do NOT expose to frontend.
+     */
+    password?: string | null;
+    screenId?: number | null;
+    projectId?: number | null;
+    developerId?: number | null;
+    /**
+     * How often to refresh Realpad data for this project (minutes).
+     */
+    syncFrequencyMinutes?: number | null;
+    lastSyncAt?: string | null;
+    lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
+    lastSyncError?: string | null;
+  };
   units?: (number | null) | UnitConfig;
   updatedAt: string;
   createdAt: string;
@@ -791,6 +824,18 @@ export interface UnitConfig {
         id?: string | null;
       }[]
     | null;
+  realpad?: {
+    enabled?: boolean | null;
+    login?: string | null;
+    password?: string | null;
+    screenId?: number | null;
+    projectId?: number | null;
+    developerId?: number | null;
+    syncFrequencyMinutes?: number | null;
+    lastSyncAt?: string | null;
+    lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
+    lastSyncError?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1234,6 +1279,16 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  external?:
+    | T
+    | {
+        realpad?:
+          | T
+          | {
+              uid?: T;
+              type?: T;
+            };
+      };
   prefix?: T;
   folder?: T;
   updatedAt?: T;
@@ -1396,6 +1451,20 @@ export interface ProjectsSelect<T extends boolean = true> {
   gallery?: T;
   standards?: T;
   timeline?: T;
+  realpad?:
+    | T
+    | {
+        enabled?: T;
+        login?: T;
+        password?: T;
+        screenId?: T;
+        projectId?: T;
+        developerId?: T;
+        syncFrequencyMinutes?: T;
+        lastSyncAt?: T;
+        lastSyncStatus?: T;
+        lastSyncError?: T;
+      };
   units?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1510,6 +1579,20 @@ export interface UnitConfigsSelect<T extends boolean = true> {
         field?: T;
         direction?: T;
         id?: T;
+      };
+  realpad?:
+    | T
+    | {
+        enabled?: T;
+        login?: T;
+        password?: T;
+        screenId?: T;
+        projectId?: T;
+        developerId?: T;
+        syncFrequencyMinutes?: T;
+        lastSyncAt?: T;
+        lastSyncStatus?: T;
+        lastSyncError?: T;
       };
   updatedAt?: T;
   createdAt?: T;

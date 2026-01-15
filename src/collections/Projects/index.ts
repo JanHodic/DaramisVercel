@@ -101,6 +101,57 @@ export const Projects: CollectionConfig = {
     },
 
     { name: 'timeline', type: 'relationship', relationTo: 'timelines' },
+    // --- Realpad integration (per project)
+    {
+      name: 'realpad',
+      type: 'group',
+      admin: {
+        description: 'Realpad PRICELIST sync config (per project). Values are used server-side only.',
+      },
+      fields: [
+        { name: 'enabled', type: 'checkbox', defaultValue: false },
+
+        { name: 'login', type: 'text' },
+        {
+          name: 'password',
+          type: 'text',
+          admin: {
+            description: 'Stored server-side only. Do NOT expose to frontend.',
+          },
+        },
+
+        { name: 'screenId', type: 'number' },
+        { name: 'projectId', type: 'number' },
+        { name: 'developerId', type: 'number' },
+
+        // Optional: allow per-project frequency if you want (default hourly in cron)
+        {
+          name: 'syncFrequencyMinutes',
+          type: 'number',
+          defaultValue: 60,
+          admin: { description: 'How often to refresh Realpad data for this project (minutes).' },
+        },
+
+        // Sync metadata / logging (readonly)
+        { name: 'lastSyncAt', type: 'date', admin: { readOnly: true } },
+        {
+          name: 'lastSyncStatus',
+          type: 'select',
+          options: [
+            { label: 'OK', value: 'ok' },
+            { label: 'Error', value: 'error' },
+            { label: 'Skipped', value: 'skipped' },
+          ],
+          admin: { readOnly: true },
+        },
+        {
+          name: 'lastSyncError',
+          type: 'textarea',
+          admin: { readOnly: true },
+        },
+      ],
+    },
+
     { name: 'units', type: 'relationship', relationTo: 'unitConfigs' },
   ],
 }

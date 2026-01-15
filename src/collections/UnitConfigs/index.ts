@@ -20,5 +20,32 @@ export const UnitConfigs: CollectionConfig = {
         { name: 'direction', type: 'select', options: ['asc', 'desc'], defaultValue: 'asc' },
       ],
     },
+    {
+      name: 'realpad',
+      type: 'group',
+      fields: [
+        { name: 'enabled', type: 'checkbox', defaultValue: false },
+
+        // API credentials (per unitConfig / per project)
+        { name: 'login', type: 'text' },
+        { name: 'password', type: 'text' }, // server-side
+        { name: 'screenId', type: 'number' },
+        { name: 'projectId', type: 'number' },
+        { name: 'developerId', type: 'number' },
+
+        // optional
+        { name: 'syncFrequencyMinutes', type: 'number', defaultValue: 60 },
+
+        // readonly sync metadata
+        { name: 'lastSyncAt', type: 'date', admin: { readOnly: true } },
+        {
+          name: 'lastSyncStatus',
+          type: 'select',
+          options: ['ok', 'error', 'skipped'],
+          admin: { readOnly: true },
+        },
+        { name: 'lastSyncError', type: 'textarea', admin: { readOnly: true } },
+      ],
+    },
   ],
 }
