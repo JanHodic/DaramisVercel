@@ -81,6 +81,7 @@ export interface Config {
     unitConfigs: UnitConfig;
     amenities: Amenity;
     'poi-categories': PoiCategory;
+    jobs: Job;
     mapPoints: MapPoint;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -109,6 +110,7 @@ export interface Config {
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
     amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
     'poi-categories': PoiCategoriesSelect<false> | PoiCategoriesSelect<true>;
+    jobs: JobsSelect<false> | JobsSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -853,6 +855,38 @@ export interface Amenity {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs".
+ */
+export interface Job {
+  id: number;
+  title: string;
+  slug: string;
+  published?: boolean | null;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  location?: string | null;
+  employmentType?: ('full-time' | 'part-time' | 'contract' | 'internship') | null;
+  department?: string | null;
+  attachments?: (number | Media)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mapPoints".
  */
 export interface MapPoint {
@@ -1056,6 +1090,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'poi-categories';
         value: number | PoiCategory;
+      } | null)
+    | ({
+        relationTo: 'jobs';
+        value: number | Job;
       } | null)
     | ({
         relationTo: 'mapPoints';
@@ -1616,6 +1654,23 @@ export interface PoiCategoriesSelect<T extends boolean = true> {
   key?: T;
   name?: T;
   icon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs_select".
+ */
+export interface JobsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  published?: T;
+  excerpt?: T;
+  content?: T;
+  location?: T;
+  employmentType?: T;
+  department?: T;
+  attachments?: T;
   updatedAt?: T;
   createdAt?: T;
 }

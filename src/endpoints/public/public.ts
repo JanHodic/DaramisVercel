@@ -245,7 +245,7 @@ export const publicJobsList: Endpoint = {
       const limit = Math.min(safeInt(getQuery(req, 'limit'), 50), 100)
 
       const result = await req.payload.find({
-        collections: COLLECTIONS.jobs,
+        collection: COLLECTIONS.jobs,
         limit,
         depth: 2,
         sort: '-updatedAt',
@@ -269,7 +269,7 @@ export const publicJobsDetail: Endpoint = {
       const locale = getQuery(req, 'locale')
 
       const found = await req.payload.find({
-        collections: COLLECTIONS.jobs,
+        collection: COLLECTIONS.jobs,
         where: { slug: { equals: slug } },
         limit: 1,
         depth: 4,
