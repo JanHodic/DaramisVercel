@@ -317,7 +317,7 @@ export const publicNewsletter: Endpoint = {
   method: 'post',
   handler: async (req: PayloadRequest) => {
     try {
-      const email = (req.body?.email as string | undefined)?.trim()
+      const email = (req.body as any)?.email.trim()
       if (!email) return errorJson(400, 'Missing email')
 
       // TODO:

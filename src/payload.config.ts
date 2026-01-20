@@ -27,6 +27,7 @@ import { TimelineItems } from './collections/TimelineItems'
 import { PointOfInterestCategories } from './collections/PointsOfInterestCategories/PointsOfInterestCategories'
 import { Amenities } from './collections/Amenities'
 import { Jobs } from './collections/Jobs'
+import { publicEndpoints } from './endpoints/public/public'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -37,6 +38,9 @@ export default buildConfig({
     defaultLocale: 'cs',
     fallback: true,
   },
+    endpoints: [
+    ...publicEndpoints,
+  ],
   admin: {
     theme: 'light',
     components: {
@@ -110,7 +114,17 @@ export default buildConfig({
     PointOfInterestCategories,
     Jobs,
     MapPoints,],
-  cors: [getServerSideURL()].filter(Boolean),
+  cors: [
+    getServerSideURL(),
+    'http://localhost:3001',
+    'http://127.0.0.1:3001',
+    'http://172.20.10.10:3001',
+  ].filter(Boolean),
+    csrf: [
+    'http://localhost:3001',
+    'http://127.0.0.1:3001',
+    'http://172.20.10.10:3001',
+  ],
   globals: [Header, Footer, AppSettings],
   plugins: [
     openapi({
