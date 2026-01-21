@@ -1,10 +1,15 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import sharp from 'sharp'
 import path from 'path'
-import { buildConfig, PayloadRequest } from 'payload'
+import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import { openapi, swaggerUI } from 'payload-oapi'
 import { s3Storage } from '@payloadcms/storage-s3'
+
+// ✅ Admin UI translations
+import { en } from '@payloadcms/translations/languages/en'
+import { cs } from '@payloadcms/translations/languages/cs'
+
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -33,25 +38,30 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  // ✅ Admin UI language (labels/buttons in CMS)
+  i18n: {
+    supportedLanguages: { cs, en },
+    fallbackLanguage: 'cs',
+  },
+
+  // ✅ Content localization (localized fields + ?locale=cs)
   localization: {
     locales: ['cs', 'en'],
     defaultLocale: 'cs',
     fallback: true,
   },
-    endpoints: [
-    ...publicEndpoints,
-  ],
+
+  endpoints: [...publicEndpoints],
+
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
+
   admin: {
     theme: 'light',
     components: {
-      // Custom Daramis branding
       graphics: {
         Logo: '@/components/admin/Logo',
         Icon: '@/components/admin/Icon',
       },
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
     },
     meta: {
@@ -70,40 +80,27 @@ export default buildConfig({
     user: Users.slug,
     livePreview: {
       breakpoints: [
-        {
-          label: 'Mobile',
-          name: 'mobile',
-          width: 375,
-          height: 667,
-        },
-        {
-          label: 'Tablet',
-          name: 'tablet',
-          width: 768,
-          height: 1024,
-        },
-        {
-          label: 'Desktop',
-          name: 'desktop',
-          width: 1440,
-          height: 900,
-        },
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
       ],
     },
   },
-  // This config helps us configure global or default features that the other editors can inherit
+
   editor: defaultLexical,
+
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
+
   collections: [
-    Pages, 
-    Posts, 
-    Media, 
-    Categories, 
-    Users, 
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
     Projects,
     Locations,
     PointsOfInterest,
@@ -114,33 +111,34 @@ export default buildConfig({
     Amenities,
     PointOfInterestCategories,
     Jobs,
-    MapPoints,],
+    MapPoints,
+  ],
+
   cors: [
     getServerSideURL(),
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
   ].filter(Boolean),
-    csrf: [
+
+  csrf: [
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
   ],
+
   globals: [Header, Footer, AppSettings],
+
   plugins: [
     openapi({
       openapiVersion: '3.0',
       metadata: { title: 'Daramis API', version: '1.0.0' },
     }),
-    swaggerUI({
-      // defaultně bývá /api/docs a spec na /api/openapi.json
-      // dá se přenastavit dle potřeby
-    }),
-      s3Storage({
+    swaggerUI({}),
+    s3Storage({
       collections: {
-        // slug upload kolekce:
         media: {
-          prefix: 'media', // složka v bucketu (volitelné)
+          prefix: 'media',
           generateFileURL: ({ filename, prefix }) => {
             const base = process.env.R2_PUBLIC_BASE_URL
             const key = prefix ? `${prefix}/${filename}` : filename
@@ -148,7 +146,6 @@ export default buildConfig({
           },
         },
       },
-      // AWS SDK S3ClientConfig:
       config: {
         endpoint: process.env.R2_ENDPOINT,
         region: process.env.R2_REGION || 'auto',
@@ -161,11 +158,15 @@ export default buildConfig({
       bucket: process.env.R2_BUCKET!,
     }),
   ],
+
   secret: process.env.PAYLOAD_SECRET,
+
   sharp,
+
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+
   jobs: {
     access: {
       run: () => true,
