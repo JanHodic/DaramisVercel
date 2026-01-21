@@ -8,7 +8,7 @@ export const PointOfInterestCategories: CollectionConfig = {
     defaultColumns: ['name', 'key'],
   },
   access: {
-    read: isLoggedIn,
+    read: () => true,
     create: isEditorOrAbove,
     update: isEditorOrAbove,
     delete: isEditorOrAbove,

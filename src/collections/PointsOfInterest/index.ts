@@ -5,7 +5,7 @@ export const PointsOfInterest: CollectionConfig = {
   slug: 'pointsOfInterests',
   admin: { useAsTitle: 'name' },
   access: {
-    read: isLoggedIn,
+    read: () => true,
     create: isEditorOrAbove,
     update: isEditorOrAbove,
     delete: isEditorOrAbove,

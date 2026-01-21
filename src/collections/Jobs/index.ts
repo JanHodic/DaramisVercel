@@ -8,7 +8,7 @@ export const Jobs: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'published', 'updatedAt'],
   },
   access: {
-    read: isLoggedIn, // pokud chceš veřejně přes /public/jobs, nech read v adminu klidně jen pro login
+    read: () => true, // pokud chceš veřejně přes /public/jobs, nech read v adminu klidně jen pro login
     create: isEditorOrAbove,
     update: isEditorOrAbove,
     delete: isEditorOrAbove,

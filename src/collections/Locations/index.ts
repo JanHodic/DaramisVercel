@@ -5,7 +5,7 @@ import { isLoggedIn, isEditorOrAbove } from '../../access/index'
 export const Locations: CollectionConfig = {
   slug: 'locations',
   admin: { useAsTitle: 'name' },
-  access: { read: isLoggedIn, create: isEditorOrAbove, update: isEditorOrAbove, delete: isEditorOrAbove },
+  access: { read: () => true, create: isEditorOrAbove, update: isEditorOrAbove, delete: isEditorOrAbove },
   fields: [
     { name: 'name', type: 'text', localized: true, required: true },
     { name: 'centerLat', type: 'number', required: true },

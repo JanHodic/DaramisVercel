@@ -9,7 +9,7 @@ export const Projects: CollectionConfig = {
     defaultColumns: ['title', 'status', 'city', 'updatedAt'],
   },
   access: {
-    read: isLoggedIn,
+    read: () => true,
     create: isEditorOrAbove,
     update: isEditorOrAbove,
     delete: isEditorOrAbove,

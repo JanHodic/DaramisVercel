@@ -4,7 +4,7 @@ import { isLoggedIn, isEditorOrAbove } from '../../access/index'
 export const TimelineItems: CollectionConfig = {
   slug: 'timeline-items',
   admin: { useAsTitle: 'title' },
-  access: { read: isLoggedIn, create: isEditorOrAbove, update: isEditorOrAbove, delete: isEditorOrAbove },
+  access: { read: () => true, create: isEditorOrAbove, update: isEditorOrAbove, delete: isEditorOrAbove },
   defaultSort: 'order',
   fields: [
     {
