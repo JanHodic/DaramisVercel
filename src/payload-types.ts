@@ -815,8 +815,6 @@ export interface TimelineItem {
 export interface UnitConfig {
   id: number;
   name: string;
-  realpadBaseUrl?: string | null;
-  realpadProjectId?: string | null;
   maxCompare?: number | null;
   featuredRules?:
     | {
@@ -828,10 +826,14 @@ export interface UnitConfig {
     | null;
   realpad?: {
     enabled?: boolean | null;
+    baseUrl?: string | null;
     login?: string | null;
+    /**
+     * Stored server-side only.
+     */
     password?: string | null;
     screenId?: number | null;
-    projectId?: number | null;
+    projectId?: string | null;
     developerId?: number | null;
     syncFrequencyMinutes?: number | null;
     lastSyncAt?: string | null;
@@ -1607,8 +1609,6 @@ export interface TimelineItemsSelect<T extends boolean = true> {
  */
 export interface UnitConfigsSelect<T extends boolean = true> {
   name?: T;
-  realpadBaseUrl?: T;
-  realpadProjectId?: T;
   maxCompare?: T;
   featuredRules?:
     | T
@@ -1622,6 +1622,7 @@ export interface UnitConfigsSelect<T extends boolean = true> {
     | T
     | {
         enabled?: T;
+        baseUrl?: T;
         login?: T;
         password?: T;
         screenId?: T;

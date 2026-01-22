@@ -8,9 +8,9 @@ export const UnitConfigs: CollectionConfig = {
   access: { read: isLoggedIn, create: isEditorOrAbove, update: isEditorOrAbove, delete: isEditorOrAbove },
   fields: [
     { name: 'name', type: 'text', localized: true, required: true },
-    { name: 'realpadBaseUrl', type: 'text' },
-    { name: 'realpadProjectId', type: 'text' },
+
     { name: 'maxCompare', type: 'number', defaultValue: 4 },
+
     {
       name: 'featuredRules',
       type: 'array',
@@ -20,17 +20,23 @@ export const UnitConfigs: CollectionConfig = {
         { name: 'direction', type: 'select', options: ['asc', 'desc'], defaultValue: 'asc' },
       ],
     },
+
     {
       name: 'realpad',
       type: 'group',
       fields: [
         { name: 'enabled', type: 'checkbox', defaultValue: false },
 
-        // API credentials (per unitConfig / per project)
+        // Base URL + API credentials (per unitConfig / per project)
+        { name: 'baseUrl', type: 'text' },
         { name: 'login', type: 'text' },
-        { name: 'password', type: 'text' }, // server-side
+        { name: 'password', type: 'text', admin: { description: 'Stored server-side only.' } },
+
         { name: 'screenId', type: 'number' },
-        { name: 'projectId', type: 'number' },
+
+        // ✅ jen JEDEN projectId field (žádný top-level realpadProjectId)
+        { name: 'projectId', type: 'text' },
+
         { name: 'developerId', type: 'number' },
 
         // optional
@@ -41,7 +47,11 @@ export const UnitConfigs: CollectionConfig = {
         {
           name: 'lastSyncStatus',
           type: 'select',
-          options: ['ok', 'error', 'skipped'],
+          options: [
+            { label: 'OK', value: 'ok' },
+            { label: 'Error', value: 'error' },
+            { label: 'Skipped', value: 'skipped' },
+          ],
           admin: { readOnly: true },
         },
         { name: 'lastSyncError', type: 'textarea', admin: { readOnly: true } },
