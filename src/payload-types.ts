@@ -626,68 +626,142 @@ export interface FormBlock {
   blockType: 'formBlock';
 }
 /**
+ * Manage real estate development projects
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects".
  */
 export interface Project {
   id: number;
+  /**
+   * Main project name displayed to users
+   */
   title: string;
-  subtitle?: string | null;
   slug: string;
-  status: 'planned' | 'current' | 'finished';
+  /**
+   * Optional tagline or secondary title
+   */
+  subtitle?: string | null;
+  /**
+   * City where the project is located
+   */
   city?: string | null;
+  /**
+   * Current phase of the project
+   */
+  status: 'planned' | 'current' | 'finished';
+  /**
+   * Main project image for listings and headers
+   */
   cover?: (number | null) | Media;
   /**
-   * 3D vizualizace / viewer (např. Unity WebGL build)
+   * Select which content sections to display for this project. New tabs will appear for each selected section.
    */
-  model3d?: (number | null) | Media;
-  dashboard?: {
-    pinLat?: number | null;
-    pinLng?: number | null;
-    badgeLabel?: string | null;
-    highlights?:
-      | {
-          title: string;
-          value?: string | null;
-          icon?: (number | null) | Media;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  sections?:
-    | {
-        key: 'location' | 'gallery' | 'standards' | 'timeline' | 'units';
-        enabled?: boolean | null;
-        titleOverride?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  location?: (number | null) | Location;
-  gallery?: (number | null) | Gallery;
-  standards?: (number | Media)[] | null;
-  timeline?: (number | null) | Timeline;
+  sections?: ('location' | 'gallery' | 'standards' | 'timeline' | 'units' | 'model3d' | 'amenities')[] | null;
   /**
-   * Realpad PRICELIST sync config (per project). Values are used server-side only.
+   * Settings for project presentation on the dashboard view
    */
-  realpad?: {
-    enabled?: boolean | null;
-    login?: string | null;
+  dashboard?: {
     /**
-     * Stored server-side only. Do NOT expose to frontend.
+     * Latitude coordinate for map pin (e.g., 50.0875)
      */
-    password?: string | null;
-    screenId?: number | null;
-    projectId?: number | null;
-    developerId?: number | null;
+    pinLat?: number | null;
     /**
-     * How often to refresh Realpad data for this project (minutes).
+     * Longitude coordinate for map pin (e.g., 14.4213)
      */
-    syncFrequencyMinutes?: number | null;
-    lastSyncAt?: string | null;
-    lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
-    lastSyncError?: string | null;
+    pinLng?: number | null;
+    /**
+     * Short label shown on project badge (e.g., "New", "Bestseller")
+     */
+    badgeLabel?: string | null;
   };
-  units?: (number | null) | UnitConfig;
+  locationTab?: {
+    /**
+     * Select location configuration with map data and nearby POIs
+     */
+    location?: (number | null) | Location;
+  };
+  galleryTab?: {
+    /**
+     * Select gallery with project photos and renders
+     */
+    gallery?: (number | null) | Gallery;
+  };
+  standardsTab?: {
+    /**
+     * Upload PDF brochures, floor plans, and specification documents
+     */
+    standards?: (number | Media)[] | null;
+  };
+  timelineTab?: {
+    /**
+     * Select timeline with construction phases and milestones
+     */
+    timeline?: (number | null) | Timeline;
+  };
+  unitsTab?: {
+    /**
+     * Select configuration for unit listings and filters
+     */
+    units?: (number | null) | UnitConfig;
+    /**
+     * Configure automatic sync with Realpad pricelist. Credentials are stored securely and never exposed to frontend.
+     */
+    realpad?: {
+      /**
+       * Turn on automatic synchronization with Realpad
+       */
+      enabled?: boolean | null;
+      /**
+       * Realpad account username
+       */
+      login?: string | null;
+      /**
+       * Realpad account password (never exposed to frontend)
+       */
+      password?: string | null;
+      /**
+       * Realpad screen identifier
+       */
+      screenId?: number | null;
+      /**
+       * Realpad project identifier
+       */
+      projectId?: number | null;
+      /**
+       * Realpad developer identifier
+       */
+      developerId?: number | null;
+      /**
+       * How often to sync data from Realpad (in minutes). Default: 60
+       */
+      syncFrequencyMinutes?: number | null;
+      /**
+       * When the last sync occurred
+       */
+      lastSyncAt?: string | null;
+      /**
+       * Status of the last sync attempt
+       */
+      lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
+      /**
+       * Error message if the last sync failed
+       */
+      lastSyncError?: string | null;
+    };
+  };
+  model3dTab?: {
+    /**
+     * 3D visualization file (e.g., Unity WebGL build, glTF model)
+     */
+    model3d?: (number | null) | Media;
+  };
+  amenitiesTab?: {
+    /**
+     * Select amenities and features available in this project
+     */
+    amenities?: (number | Amenity)[] | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1458,54 +1532,68 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface ProjectsSelect<T extends boolean = true> {
   title?: T;
-  subtitle?: T;
   slug?: T;
-  status?: T;
+  subtitle?: T;
   city?: T;
+  status?: T;
   cover?: T;
-  model3d?: T;
+  sections?: T;
   dashboard?:
     | T
     | {
         pinLat?: T;
         pinLng?: T;
         badgeLabel?: T;
-        highlights?:
+      };
+  locationTab?:
+    | T
+    | {
+        location?: T;
+      };
+  galleryTab?:
+    | T
+    | {
+        gallery?: T;
+      };
+  standardsTab?:
+    | T
+    | {
+        standards?: T;
+      };
+  timelineTab?:
+    | T
+    | {
+        timeline?: T;
+      };
+  unitsTab?:
+    | T
+    | {
+        units?: T;
+        realpad?:
           | T
           | {
-              title?: T;
-              value?: T;
-              icon?: T;
-              id?: T;
+              enabled?: T;
+              login?: T;
+              password?: T;
+              screenId?: T;
+              projectId?: T;
+              developerId?: T;
+              syncFrequencyMinutes?: T;
+              lastSyncAt?: T;
+              lastSyncStatus?: T;
+              lastSyncError?: T;
             };
       };
-  sections?:
+  model3dTab?:
     | T
     | {
-        key?: T;
-        enabled?: T;
-        titleOverride?: T;
-        id?: T;
+        model3d?: T;
       };
-  location?: T;
-  gallery?: T;
-  standards?: T;
-  timeline?: T;
-  realpad?:
+  amenitiesTab?:
     | T
     | {
-        enabled?: T;
-        login?: T;
-        password?: T;
-        screenId?: T;
-        projectId?: T;
-        developerId?: T;
-        syncFrequencyMinutes?: T;
-        lastSyncAt?: T;
-        lastSyncStatus?: T;
-        lastSyncError?: T;
+        amenities?: T;
       };
-  units?: T;
   updatedAt?: T;
   createdAt?: T;
 }
