@@ -12,13 +12,7 @@ import { cs } from '@payloadcms/translations/languages/cs'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
-import { Footer } from './Footer/config'
-import { Header } from './Header/config'
-import { plugins } from './plugins'
-import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
 import { Locations } from './collections/Locations'
@@ -27,7 +21,6 @@ import { Galleries } from './collections/Galleries'
 import { Timelines } from './collections/Timelines'
 import { UnitConfigs } from './collections/UnitConfigs'
 import { MapPoints } from './collections/MapPoints'
-import { AppSettings } from './globals/AppSettings'
 import { TimelineItems } from './collections/TimelineItems'
 import { PointOfInterestCategories } from './collections/PointsOfInterestCategories/PointsOfInterestCategories'
 import { Amenities } from './collections/Amenities'
@@ -87,8 +80,6 @@ export default buildConfig({
     },
   },
 
-  editor: defaultLexical,
-
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
@@ -96,8 +87,6 @@ export default buildConfig({
   }),
 
   collections: [
-    Pages,
-    Posts,
     Media,
     Categories,
     Users,
@@ -110,7 +99,6 @@ export default buildConfig({
     UnitConfigs,
     Amenities,
     PointOfInterestCategories,
-    Jobs,
     MapPoints,
   ],
 
@@ -126,8 +114,6 @@ export default buildConfig({
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
   ],
-
-  globals: [Header, Footer, AppSettings],
 
   plugins: [
     openapi({
