@@ -10,21 +10,16 @@ import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
 import { cs } from '@payloadcms/translations/languages/cs'
 
-import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
 import { Locations } from './collections/Locations'
 import { PointsOfInterest } from './collections/PointsOfInterest'
-import { Galleries } from './collections/Galleries'
-import { Timelines } from './collections/Timelines'
 import { UnitConfigs } from './collections/UnitConfigs'
 import { MapPoints } from './collections/MapPoints'
 import { TimelineItems } from './collections/TimelineItems'
 import { PointOfInterestCategories } from './collections/PointsOfInterestCategories/PointsOfInterestCategories'
-import { Amenities } from './collections/Amenities'
-import { Jobs } from './collections/Jobs'
 import { publicEndpoints } from './endpoints/public/public'
 
 const filename = fileURLToPath(import.meta.url)
@@ -88,16 +83,12 @@ export default buildConfig({
 
   collections: [
     Media,
-    Categories,
     Users,
     Projects,
     Locations,
     PointsOfInterest,
-    Galleries,
-    Timelines,
     TimelineItems,
     UnitConfigs,
-    Amenities,
     PointOfInterestCategories,
     MapPoints,
   ],

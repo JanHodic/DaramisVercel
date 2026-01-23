@@ -8,9 +8,9 @@ export const TimelineItems: CollectionConfig = {
   defaultSort: 'order',
   fields: [
     {
-      name: 'timeline',
+      name: 'project',
       type: 'relationship',
-      relationTo: 'timelines',
+      relationTo: 'projects',
       required: true,
       index: true,
     },
@@ -23,12 +23,7 @@ export const TimelineItems: CollectionConfig = {
         { label: 'Custom', value: 'custom' },
         { label: 'Item 1', value: 'item1' },
         { label: 'Item 2', value: 'item2' },
-        { label: 'Item 3', value: 'item3' },
-        { label: 'Item 4', value: 'item4' },
-        { label: 'Item 5', value: 'item5' },
-        { label: 'Item 6', value: 'item6' },
-        { label: 'Item 7', value: 'item7' },
-        { label: 'Item 8', value: 'item8' },
+        // ...
       ],
     },
     { name: 'title', type: 'text', localized: true, required: true },

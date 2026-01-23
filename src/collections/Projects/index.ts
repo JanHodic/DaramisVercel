@@ -2,9 +2,7 @@
 import type { CollectionConfig, Field, RowField } from 'payload'
 import { slugField } from 'payload'
 import { isLoggedIn, isEditorOrAbove } from '../../access/index'
-import { text } from 'payload/shared';
-
-
+import { text } from 'payload/shared'
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
@@ -70,19 +68,19 @@ export const Projects: CollectionConfig = {
                     // 1. Regex pro kontrolu formátu (pouze a-z, 0-9 a pomlčka)
                     // Pokud hodnota existuje a neodpovídá regexu, vrátíme chybovou hlášku.
                     if (val && !/^[a-z0-9-]+$/.test(val)) {
-                      return 'Slug může obsahovat pouze malá písmena (a-z), čísla (0-9) a pomlčky (-). Bez mezer a diakritiky.';
+                      return 'Slug může obsahovat pouze malá písmena (a-z), čísla (0-9) a pomlčky (-). Bez mezer a diakritiky.'
                     }
 
                     // 2. Volitelné: Kontrola, zda nezačíná nebo nekončí pomlčkou
                     if (val && (val.startsWith('-') || val.endsWith('-'))) {
-                      return 'Slug nesmí začínat ani končit pomlčkou.';
+                      return 'Slug nesmí začínat ani končit pomlčkou.'
                     }
 
                     // 3. Zavoláme výchozí textový validátor (řeší 'required', 'maxLength' atd.)
-                    return text(val, options);
+                    return text(val, options)
                   },
-              }
-              ]
+                },
+              ],
             },
             {
               type: 'row',
@@ -279,13 +277,14 @@ export const Projects: CollectionConfig = {
           fields: [
             {
               name: 'gallery',
-              label: { en: 'Gallery Module', cs: 'Modul galerie' },
-              type: 'relationship',
-              relationTo: 'galleries',
+              label: { en: 'Gallery Media', cs: 'Galerie (média)' },
+              type: 'upload',
+              relationTo: 'media',
+              hasMany: true,
               admin: {
                 description: {
-                  en: 'Select gallery with project photos and renders',
-                  cs: 'Vyberte galerii s fotografiemi a vizualizacemi projektu',
+                  en: 'Upload/select images for the project gallery (stored in Media).',
+                  cs: 'Nahrajte / vyberte obrázky pro galerii projektu (uloženo v Media).',
                 },
               },
             },
@@ -333,16 +332,20 @@ export const Projects: CollectionConfig = {
           },
           fields: [
             {
-              name: 'timeline',
-              label: { en: 'Timeline Module', cs: 'Modul časové osy' },
+              name: 'timelineItems',
+              label: { en: 'Timeline Items', cs: 'Položky časové osy' },
               type: 'relationship',
-              relationTo: 'timelines',
+              relationTo: 'timeline-items',
+              hasMany: true,
               admin: {
                 description: {
-                  en: 'Select timeline with construction phases and milestones',
-                  cs: 'Vyberte časovou osu s fázemi výstavby a milníky',
+                  en: 'Select timeline items for this project (items are stored in Timeline Items collection).',
+                  cs: 'Vyber položky časové osy pro tento projekt (položky jsou v kolekci Timeline Items).',
                 },
               },
+              filterOptions: ({ data }) => ({
+                project: { equals: data?.id },
+              }),
             },
           ],
         },
@@ -610,15 +613,40 @@ export const Projects: CollectionConfig = {
             {
               name: 'amenities',
               label: { en: 'Amenities', cs: 'Služby a vybavení' },
-              type: 'relationship',
-              relationTo: 'amenities',
-              hasMany: true,
+              type: 'array',
               admin: {
                 description: {
-                  en: 'Select amenities and features available in this project',
-                  cs: 'Vyberte služby a vybavení dostupné v tomto projektu',
+                  en: 'List amenities/features shown on the project detail.',
+                  cs: 'Seznam služeb/vybavení zobrazený na detailu projektu.',
                 },
               },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'title',
+                      label: { en: 'Title', cs: 'Název' },
+                      type: 'text',
+                      localized: true,
+                      required: true,
+                      admin: { width: '70%' },
+                    },
+                    {
+                      name: 'icon',
+                      label: { en: 'Icon', cs: 'Ikona' },
+                      type: 'text',
+                      admin: { width: '30%', description: { cs: 'Např. "parking", "lift", "wifi".' } },
+                    },
+                  ],
+                },
+                {
+                  name: 'description',
+                  label: { en: 'Description', cs: 'Popis' },
+                  type: 'textarea',
+                  localized: true,
+                },
+              ],
             },
           ],
         },

@@ -68,16 +68,12 @@ export interface Config {
   blocks: {};
   collections: {
     media: Media;
-    categories: Category;
     users: User;
     projects: Project;
     locations: Location;
     pointsOfInterests: PointsOfInterest;
-    galleries: Gallery;
-    timelines: Timeline;
     'timeline-items': TimelineItem;
     unitConfigs: UnitConfig;
-    amenities: Amenity;
     'poi-categories': PoiCategory;
     mapPoints: MapPoint;
     'payload-kv': PayloadKv;
@@ -93,16 +89,12 @@ export interface Config {
   };
   collectionsSelect: {
     media: MediaSelect<false> | MediaSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
     pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
-    galleries: GalleriesSelect<false> | GalleriesSelect<true>;
-    timelines: TimelinesSelect<false> | TimelinesSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
     unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
-    amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
     'poi-categories': PoiCategoriesSelect<false> | PoiCategoriesSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -278,21 +270,6 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -375,9 +352,9 @@ export interface Project {
   };
   galleryTab?: {
     /**
-     * Select gallery with project photos and renders
+     * Upload/select images for the project gallery (stored in Media).
      */
-    gallery?: (number | null) | Gallery;
+    gallery?: (number | Media)[] | null;
   };
   standardsTab?: {
     /**
@@ -387,9 +364,9 @@ export interface Project {
   };
   timelineTab?: {
     /**
-     * Select timeline with construction phases and milestones
+     * Select timeline items for this project (items are stored in Timeline Items collection).
      */
-    timeline?: (number | null) | Timeline;
+    timelineItems?: (number | TimelineItem)[] | null;
   };
   unitsTab?: {
     /**
@@ -450,9 +427,16 @@ export interface Project {
   };
   amenitiesTab?: {
     /**
-     * Select amenities and features available in this project
+     * List amenities/features shown on the project detail.
      */
-    amenities?: (number | Amenity)[] | null;
+    amenities?:
+      | {
+          title: string;
+          icon?: string | null;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -523,49 +507,12 @@ export interface PoiCategory {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "galleries".
- */
-export interface Gallery {
-  id: number;
-  name: string;
-  categories?:
-    | {
-        key: string;
-        label: string;
-        id?: string | null;
-      }[]
-    | null;
-  items?:
-    | {
-        media: number | Media;
-        category?: string | null;
-        caption?: string | null;
-        order?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "timelines".
- */
-export interface Timeline {
-  id: number;
-  name: string;
-  items?: (number | TimelineItem)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "timeline-items".
  */
 export interface TimelineItem {
   id: number;
-  timeline: number | Timeline;
-  preset: 'custom' | 'item1' | 'item2' | 'item3' | 'item4' | 'item5' | 'item6' | 'item7' | 'item8';
+  project: number | Project;
+  preset: 'custom' | 'item1' | 'item2';
   title: string;
   description?: string | null;
   from: string;
@@ -606,18 +553,6 @@ export interface UnitConfig {
     lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
     lastSyncError?: string | null;
   };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "amenities".
- */
-export interface Amenity {
-  id: number;
-  name: string;
-  description?: string | null;
-  image?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -684,10 +619,6 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'categories';
-        value: number | Category;
-      } | null)
-    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
@@ -704,24 +635,12 @@ export interface PayloadLockedDocument {
         value: number | PointsOfInterest;
       } | null)
     | ({
-        relationTo: 'galleries';
-        value: number | Gallery;
-      } | null)
-    | ({
-        relationTo: 'timelines';
-        value: number | Timeline;
-      } | null)
-    | ({
         relationTo: 'timeline-items';
         value: number | TimelineItem;
       } | null)
     | ({
         relationTo: 'unitConfigs';
         value: number | UnitConfig;
-      } | null)
-    | ({
-        relationTo: 'amenities';
-        value: number | Amenity;
       } | null)
     | ({
         relationTo: 'poi-categories';
@@ -884,17 +803,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -954,7 +862,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   timelineTab?:
     | T
     | {
-        timeline?: T;
+        timelineItems?: T;
       };
   unitsTab?:
     | T
@@ -983,7 +891,14 @@ export interface ProjectsSelect<T extends boolean = true> {
   amenitiesTab?:
     | T
     | {
-        amenities?: T;
+        amenities?:
+          | T
+          | {
+              title?: T;
+              icon?: T;
+              description?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1034,45 +949,10 @@ export interface PointsOfInterestsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "galleries_select".
- */
-export interface GalleriesSelect<T extends boolean = true> {
-  name?: T;
-  categories?:
-    | T
-    | {
-        key?: T;
-        label?: T;
-        id?: T;
-      };
-  items?:
-    | T
-    | {
-        media?: T;
-        category?: T;
-        caption?: T;
-        order?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "timelines_select".
- */
-export interface TimelinesSelect<T extends boolean = true> {
-  name?: T;
-  items?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "timeline-items_select".
  */
 export interface TimelineItemsSelect<T extends boolean = true> {
-  timeline?: T;
+  project?: T;
   preset?: T;
   title?: T;
   description?: T;
@@ -1112,17 +992,6 @@ export interface UnitConfigsSelect<T extends boolean = true> {
         lastSyncStatus?: T;
         lastSyncError?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "amenities_select".
- */
-export interface AmenitiesSelect<T extends boolean = true> {
-  name?: T;
-  description?: T;
-  image?: T;
   updatedAt?: T;
   createdAt?: T;
 }
