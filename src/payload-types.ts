@@ -341,23 +341,6 @@ export interface Project {
    * Select which content sections to display for this project. New tabs will appear for each selected section.
    */
   sections?: ('location' | 'gallery' | 'standards' | 'timeline' | 'units' | 'model3d' | 'amenities')[] | null;
-  /**
-   * Settings for project presentation on the dashboard view
-   */
-  dashboard?: {
-    /**
-     * Latitude coordinate for map pin (e.g., 50.0875)
-     */
-    pinLat?: number | null;
-    /**
-     * Longitude coordinate for map pin (e.g., 14.4213)
-     */
-    pinLng?: number | null;
-    /**
-     * Short label shown on project badge (e.g., "New", "Bestseller")
-     */
-    badgeLabel?: string | null;
-  };
   locationTab?: {
     /**
      * Select location configuration with map data and nearby POIs
@@ -813,13 +796,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   heroVideo?: T;
   heroYouTubeUrl?: T;
   sections?: T;
-  dashboard?:
-    | T
-    | {
-        pinLat?: T;
-        pinLng?: T;
-        badgeLabel?: T;
-      };
   locationTab?:
     | T
     | {
