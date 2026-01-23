@@ -163,7 +163,7 @@ export const Projects: CollectionConfig = {
                 { label: { en: 'Gallery / Views', cs: 'Galerie / Pohledy' }, value: 'gallery' },
                 { label: { en: 'Standards / PDFs', cs: 'Standardy / PDF' }, value: 'standards' },
                 { label: { en: 'Timeline', cs: 'Časová osa' }, value: 'timeline' },
-                { label: { en: 'Units / Realpad', cs: 'Jednotky / Realpad' }, value: 'units' },
+                { label: { en: 'Realpad', cs: 'Realpad' }, value: 'units' },
                 { label: { en: '3D Model', cs: '3D model' }, value: 'model3d' },
                 { label: { en: 'Amenities & Features', cs: 'Služby a vybavení' }, value: 'amenities' },
               ],
@@ -350,34 +350,18 @@ export const Projects: CollectionConfig = {
           ],
         },
 
-        // ==================== TAB 7: UNITS & REALPAD (conditional) ====================
+        // ==================== TAB 7: REALPAD (conditional) ====================
         {
           name: 'unitsTab',
-          label: { en: 'Units & Realpad', cs: 'Jednotky & Realpad' },
+          label: { en: 'Realpad', cs: 'Realpad' },
           description: {
-            en: 'Unit listings, availability and Realpad integration',
-            cs: 'Seznam jednotek, dostupnost a integrace s Realpad',
+            en: 'Realpad integration',
+            cs: 'Integrace s Realpad',
           },
           admin: {
             condition: (data) => data?.sections?.includes('units'),
           },
           fields: [
-            {
-              name: 'maxCompare',
-              label: { en: 'Max Compare', cs: 'Maximální porovnání' },
-              type: 'number',
-              defaultValue: 4,
-            },
-            {
-              name: 'featuredRules',
-              label: { en: 'Featured Rules', cs: 'Pravidla pro zvýraznění' },
-              type: 'array',
-              fields: [
-                { name: 'label', type: 'text', localized: true },
-                { name: 'field', type: 'text' }, // "pricePerM2"
-                { name: 'direction', type: 'select', options: ['asc', 'desc'], defaultValue: 'asc' },
-              ],
-            },
             {
               name: 'realpad',
               label: { en: 'Realpad Integration', cs: 'Integrace Realpad' },

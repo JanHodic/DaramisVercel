@@ -367,15 +367,6 @@ export interface Project {
     timelineItems?: (number | TimelineItem)[] | null;
   };
   unitsTab?: {
-    maxCompare?: number | null;
-    featuredRules?:
-      | {
-          label?: string | null;
-          field?: string | null;
-          direction?: ('asc' | 'desc') | null;
-          id?: string | null;
-        }[]
-      | null;
     /**
      * Configure automatic sync with Realpad pricelist. Credentials are stored securely and never exposed to frontend.
      */
@@ -832,15 +823,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   unitsTab?:
     | T
     | {
-        maxCompare?: T;
-        featuredRules?:
-          | T
-          | {
-              label?: T;
-              field?: T;
-              direction?: T;
-              id?: T;
-            };
         realpad?:
           | T
           | {
