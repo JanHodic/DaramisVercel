@@ -363,16 +363,20 @@ export const Projects: CollectionConfig = {
           },
           fields: [
             {
-              name: 'units',
-              label: { en: 'Units Config', cs: 'Konfigurace jednotek' },
-              type: 'relationship',
-              relationTo: 'unitConfigs',
-              admin: {
-                description: {
-                  en: 'Select configuration for unit listings and filters',
-                  cs: 'Vyberte konfiguraci pro seznam jednotek a filtry',
-                },
-              },
+              name: 'maxCompare',
+              label: { en: 'Max Compare', cs: 'Maximální porovnání' },
+              type: 'number',
+              defaultValue: 4,
+            },
+            {
+              name: 'featuredRules',
+              label: { en: 'Featured Rules', cs: 'Pravidla pro zvýraznění' },
+              type: 'array',
+              fields: [
+                { name: 'label', type: 'text', localized: true },
+                { name: 'field', type: 'text' }, // "pricePerM2"
+                { name: 'direction', type: 'select', options: ['asc', 'desc'], defaultValue: 'asc' },
+              ],
             },
             {
               name: 'realpad',
@@ -408,6 +412,11 @@ export const Projects: CollectionConfig = {
                     },
                   },
                   fields: [
+                    {
+                      name: 'baseUrl',
+                      label: { en: 'Base URL', cs: 'Base URL' },
+                      type: 'text',
+                    },
                     {
                       type: 'row',
                       fields: [
@@ -468,7 +477,7 @@ export const Projects: CollectionConfig = {
                         {
                           name: 'projectId',
                           label: { en: 'Project ID', cs: 'ID projektu' },
-                          type: 'number',
+                          type: 'text',
                           admin: {
                             width: '33%',
                             description: {

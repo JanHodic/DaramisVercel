@@ -16,7 +16,6 @@ import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
 import { Locations } from './collections/Locations'
 import { PointsOfInterest } from './collections/PointsOfInterest'
-import { UnitConfigs } from './collections/UnitConfigs'
 import { MapPoints } from './collections/MapPoints'
 import { TimelineItems } from './collections/TimelineItems'
 import { PointOfInterestCategories } from './collections/PointsOfInterestCategories/PointsOfInterestCategories'
@@ -88,7 +87,6 @@ export default buildConfig({
     Locations,
     PointsOfInterest,
     TimelineItems,
-    UnitConfigs,
     PointOfInterestCategories,
     MapPoints,
   ],

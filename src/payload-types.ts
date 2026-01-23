@@ -73,7 +73,6 @@ export interface Config {
     locations: Location;
     pointsOfInterests: PointsOfInterest;
     'timeline-items': TimelineItem;
-    unitConfigs: UnitConfig;
     'poi-categories': PoiCategory;
     mapPoints: MapPoint;
     'payload-kv': PayloadKv;
@@ -94,7 +93,6 @@ export interface Config {
     locations: LocationsSelect<false> | LocationsSelect<true>;
     pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
-    unitConfigs: UnitConfigsSelect<false> | UnitConfigsSelect<true>;
     'poi-categories': PoiCategoriesSelect<false> | PoiCategoriesSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -369,10 +367,15 @@ export interface Project {
     timelineItems?: (number | TimelineItem)[] | null;
   };
   unitsTab?: {
-    /**
-     * Select configuration for unit listings and filters
-     */
-    units?: (number | null) | UnitConfig;
+    maxCompare?: number | null;
+    featuredRules?:
+      | {
+          label?: string | null;
+          field?: string | null;
+          direction?: ('asc' | 'desc') | null;
+          id?: string | null;
+        }[]
+      | null;
     /**
      * Configure automatic sync with Realpad pricelist. Credentials are stored securely and never exposed to frontend.
      */
@@ -381,6 +384,7 @@ export interface Project {
        * Turn on automatic synchronization with Realpad
        */
       enabled?: boolean | null;
+      baseUrl?: string | null;
       /**
        * Realpad account username
        */
@@ -396,7 +400,7 @@ export interface Project {
       /**
        * Realpad project identifier
        */
-      projectId?: number | null;
+      projectId?: string | null;
       /**
        * Realpad developer identifier
        */
@@ -523,41 +527,6 @@ export interface TimelineItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "unitConfigs".
- */
-export interface UnitConfig {
-  id: number;
-  name: string;
-  maxCompare?: number | null;
-  featuredRules?:
-    | {
-        label?: string | null;
-        field?: string | null;
-        direction?: ('asc' | 'desc') | null;
-        id?: string | null;
-      }[]
-    | null;
-  realpad?: {
-    enabled?: boolean | null;
-    baseUrl?: string | null;
-    login?: string | null;
-    /**
-     * Stored server-side only.
-     */
-    password?: string | null;
-    screenId?: number | null;
-    projectId?: string | null;
-    developerId?: number | null;
-    syncFrequencyMinutes?: number | null;
-    lastSyncAt?: string | null;
-    lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
-    lastSyncError?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mapPoints".
  */
 export interface MapPoint {
@@ -637,10 +606,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'timeline-items';
         value: number | TimelineItem;
-      } | null)
-    | ({
-        relationTo: 'unitConfigs';
-        value: number | UnitConfig;
       } | null)
     | ({
         relationTo: 'poi-categories';
@@ -867,11 +832,20 @@ export interface ProjectsSelect<T extends boolean = true> {
   unitsTab?:
     | T
     | {
-        units?: T;
+        maxCompare?: T;
+        featuredRules?:
+          | T
+          | {
+              label?: T;
+              field?: T;
+              direction?: T;
+              id?: T;
+            };
         realpad?:
           | T
           | {
               enabled?: T;
+              baseUrl?: T;
               login?: T;
               password?: T;
               screenId?: T;
@@ -959,39 +933,6 @@ export interface TimelineItemsSelect<T extends boolean = true> {
   from?: T;
   to?: T;
   order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "unitConfigs_select".
- */
-export interface UnitConfigsSelect<T extends boolean = true> {
-  name?: T;
-  maxCompare?: T;
-  featuredRules?:
-    | T
-    | {
-        label?: T;
-        field?: T;
-        direction?: T;
-        id?: T;
-      };
-  realpad?:
-    | T
-    | {
-        enabled?: T;
-        baseUrl?: T;
-        login?: T;
-        password?: T;
-        screenId?: T;
-        projectId?: T;
-        developerId?: T;
-        syncFrequencyMinutes?: T;
-        lastSyncAt?: T;
-        lastSyncStatus?: T;
-        lastSyncError?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
