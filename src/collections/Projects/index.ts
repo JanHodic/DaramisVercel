@@ -1,7 +1,6 @@
 // src/collections/Projects.ts
-import type { CollectionConfig, Field, RowField } from 'payload'
-import { slugField } from 'payload'
-import { isLoggedIn, isEditorOrAbove } from '../../access/index'
+import type { CollectionConfig } from 'payload'
+import { isEditorOrAbove } from '../../access/index'
 import { text } from 'payload/shared'
 
 export const Projects: CollectionConfig = {
@@ -160,8 +159,6 @@ export const Projects: CollectionConfig = {
                 },
               },
             },
-
-            // --- Cover image (only if heroType=image) ---
             {
               name: 'cover',
               label: { en: 'Cover Image', cs: 'Úvodní obrázek' },
@@ -175,8 +172,6 @@ export const Projects: CollectionConfig = {
                 },
               },
             },
-
-            // --- Uploaded hero video (only if heroType=video) ---
             {
               name: 'heroVideo',
               label: { en: 'Hero Video File', cs: 'Úvodní video (soubor)' },
@@ -190,8 +185,6 @@ export const Projects: CollectionConfig = {
                 },
               },
             },
-
-            // --- YouTube URL (only if heroType=youtube) ---
             {
               name: 'heroYouTubeUrl',
               label: { en: 'YouTube URL', cs: 'YouTube URL' },
@@ -213,6 +206,51 @@ export const Projects: CollectionConfig = {
               },
             },
 
+            // ✅ Lokalita je součást Intro (TAB 1), ne samostatná záložka
+            // (pole přesunutá z Locations) + POI přímo na Project
+            {
+              type: 'row',
+              fields: [
+                { name: 'centerLat', label: { en: 'Center Latitude', cs: 'Střed mapy (lat)' }, type: 'number', required: true },
+                { name: 'centerLng', label: { en: 'Center Longitude', cs: 'Střed mapy (lng)' }, type: 'number', required: true },
+                { name: 'defaultZoom', label: { en: 'Default Zoom', cs: 'Výchozí zoom' }, type: 'number', defaultValue: 13 },
+              ],
+              admin: {
+                condition: (data) => data?.sections?.includes('location'),
+              },
+            },
+            {
+              name: 'filters',
+              type: 'array',
+              admin: {
+                condition: (data) => data?.sections?.includes('location'),
+                description: {
+                  en: 'Map filter definitions (categories) for POIs shown on the map.',
+                  cs: 'Definice filtrů (kategorií) pro POI zobrazené na mapě.',
+                },
+              },
+              fields: [
+                { name: 'key', type: 'text', required: true },
+                { name: 'label', type: 'text', localized: true, required: true },
+                { name: 'icon', type: 'upload', relationTo: 'media' },
+                { name: 'defaultOn', type: 'checkbox', defaultValue: true },
+              ],
+            },
+            {
+              name: 'pointsOfInterests',
+              label: { en: 'Points of Interest', cs: 'Body zájmu (POI)' },
+              type: 'relationship',
+              relationTo: 'pointsOfInterests',
+              hasMany: true,
+              admin: {
+                condition: (data) => data?.sections?.includes('location'),
+                description: {
+                  en: 'Select POIs belonging to this project (1:N).',
+                  cs: 'Vyberte POI patřící k tomuto projektu (1:N).',
+                },
+              },
+            },
+
             // --- Sections select (hasMany) ---
             {
               name: 'sections',
@@ -221,8 +259,8 @@ export const Projects: CollectionConfig = {
               hasMany: true,
               admin: {
                 description: {
-                  en: 'Select which content sections to display for this project. New tabs will appear for each selected section.',
-                  cs: 'Vyberte, které obsahové sekce se mají zobrazit pro tento projekt. Pro každou vybranou sekci se objeví nová záložka.',
+                  en: 'Select which content sections to display for this project. Tabs will appear only for selected sections.',
+                  cs: 'Vyberte, které sekce se mají zobrazit pro tento projekt. Záložky se zobrazí pouze pro vybrané sekce.',
                 },
               },
               options: [
@@ -230,7 +268,7 @@ export const Projects: CollectionConfig = {
                 { label: { en: 'Gallery / Views', cs: 'Galerie / Pohledy' }, value: 'gallery' },
                 { label: { en: 'Standards / PDFs', cs: 'Standardy / PDF' }, value: 'standards' },
                 { label: { en: 'Timeline', cs: 'Časová osa' }, value: 'timeline' },
-                { label: { en: 'Units / Realpad', cs: 'Jednotky / Realpad' }, value: 'units' },
+                { label: { en: 'Realpad', cs: 'Realpad' }, value: 'units' },
                 { label: { en: '3D Model', cs: '3D model' }, value: 'model3d' },
                 { label: { en: 'Amenities & Features', cs: 'Služby a vybavení' }, value: 'amenities' },
               ],
@@ -238,34 +276,39 @@ export const Projects: CollectionConfig = {
           ],
         },
 
-        // ==================== TAB 3: LOCATION (conditional) ====================
+        // ==================== TAB 2: DASHBOARD ====================
         {
-          name: 'locationTab',
-          label: { en: 'Location', cs: 'Lokalita' },
+          label: { en: 'Dashboard', cs: 'Přehled' },
           description: {
-            en: 'Project location with map and points of interest',
-            cs: 'Lokace projektu s mapou a body zájmu',
-          },
-          admin: {
-            condition: (data) => data?.sections?.includes('location'),
+            en: 'Configure how the project appears on the main dashboard',
+            cs: 'Nastavení zobrazení projektu na hlavním přehledu',
           },
           fields: [
             {
-              name: 'location',
-              label: { en: 'Location Module', cs: 'Modul lokality' },
-              type: 'relationship',
-              relationTo: 'locations',
+              name: 'dashboard',
+              label: { en: 'Dashboard Settings', cs: 'Nastavení přehledu' },
+              type: 'group',
               admin: {
                 description: {
-                  en: 'Select location configuration with map data and nearby POIs',
-                  cs: 'Vyberte konfiguraci lokality s mapovými daty a blízkými body zájmu',
+                  en: 'Settings for project presentation on the dashboard view',
+                  cs: 'Nastavení prezentace projektu na přehledové stránce',
                 },
               },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'pinLat', label: { en: 'Pin Latitude', cs: 'Zeměpisná šířka' }, type: 'number', admin: { width: '50%' } },
+                    { name: 'pinLng', label: { en: 'Pin Longitude', cs: 'Zeměpisná délka' }, type: 'number', admin: { width: '50%' } },
+                  ],
+                },
+                { name: 'badgeLabel', label: { en: 'Badge Label', cs: 'Štítek' }, type: 'text', localized: true },
+              ],
             },
           ],
         },
 
-        // ==================== TAB 4: GALLERY (conditional) ====================
+        // ==================== TAB 3: GALLERY (conditional) ====================
         {
           name: 'galleryTab',
           label: { en: 'Gallery', cs: 'Galerie' },
@@ -273,9 +316,7 @@ export const Projects: CollectionConfig = {
             en: 'Project images, renders, and visualizations',
             cs: 'Obrázky projektu, rendery a vizualizace',
           },
-          admin: {
-            condition: (data) => data?.sections?.includes('gallery'),
-          },
+          admin: { condition: (data) => data?.sections?.includes('gallery') },
           fields: [
             {
               name: 'gallery',
@@ -283,17 +324,11 @@ export const Projects: CollectionConfig = {
               type: 'upload',
               relationTo: 'media',
               hasMany: true,
-              admin: {
-                description: {
-                  en: 'Upload/select images for the project gallery (stored in Media).',
-                  cs: 'Nahrajte / vyberte obrázky pro galerii projektu (uloženo v Media).',
-                },
-              },
             },
           ],
         },
 
-        // ==================== TAB 5: STANDARDS (conditional) ====================
+        // ==================== TAB 4: STANDARDS (conditional) ====================
         {
           name: 'standardsTab',
           label: { en: 'Standards', cs: 'Standardy' },
@@ -301,9 +336,7 @@ export const Projects: CollectionConfig = {
             en: 'PDFs, brochures, and specification documents',
             cs: 'PDF soubory, brožury a dokumenty se specifikacemi',
           },
-          admin: {
-            condition: (data) => data?.sections?.includes('standards'),
-          },
+          admin: { condition: (data) => data?.sections?.includes('standards') },
           fields: [
             {
               name: 'standards',
@@ -311,17 +344,11 @@ export const Projects: CollectionConfig = {
               type: 'upload',
               relationTo: 'media',
               hasMany: true,
-              admin: {
-                description: {
-                  en: 'Upload PDF brochures, floor plans, and specification documents',
-                  cs: 'Nahrajte PDF brožury, půdorysy a dokumenty se specifikacemi',
-                },
-              },
             },
           ],
         },
 
-        // ==================== TAB 6: TIMELINE (conditional) ====================
+        // ==================== TAB 5: TIMELINE (conditional) ====================
         {
           name: 'timelineTab',
           label: { en: 'Timeline', cs: 'Časová osa' },
@@ -329,9 +356,7 @@ export const Projects: CollectionConfig = {
             en: 'Project milestones and progress tracking',
             cs: 'Milníky projektu a sledování průběhu',
           },
-          admin: {
-            condition: (data) => data?.sections?.includes('timeline'),
-          },
+          admin: { condition: (data) => data?.sections?.includes('timeline') },
           fields: [
             {
               name: 'timelineItems',
@@ -339,12 +364,6 @@ export const Projects: CollectionConfig = {
               type: 'relationship',
               relationTo: 'timeline-items',
               hasMany: true,
-              admin: {
-                description: {
-                  en: 'Select timeline items for this project (items are stored in Timeline Items collection).',
-                  cs: 'Vyber položky časové osy pro tento projekt (položky jsou v kolekci Timeline Items).',
-                },
-              },
               filterOptions: ({ data }) => ({
                 project: { equals: data?.id },
               }),
@@ -352,84 +371,33 @@ export const Projects: CollectionConfig = {
           ],
         },
 
-        // ==================== TAB 7: UNITS & REALPAD (conditional) ====================
+        // ==================== TAB 6: REALPAD (conditional) ====================
         {
           name: 'unitsTab',
-          label: { en: 'Units & Realpad', cs: 'Jednotky & Realpad' },
+          label: { en: 'Realpad', cs: 'Realpad' },
           description: {
-            en: 'Unit listings, availability and Realpad integration',
-            cs: 'Seznam jednotek, dostupnost a integrace s Realpad',
+            en: 'Realpad integration',
+            cs: 'Integrace Realpad',
           },
-          admin: {
-            condition: (data) => data?.sections?.includes('units'),
-          },
+          admin: { condition: (data) => data?.sections?.includes('units') },
           fields: [
             {
               name: 'realpad',
               label: { en: 'Realpad Integration', cs: 'Integrace Realpad' },
               type: 'group',
-              admin: {
-                description: {
-                  en: 'Configure automatic sync with Realpad pricelist. Credentials are stored securely and never exposed to frontend.',
-                  cs: 'Nastavení automatické synchronizace s ceníkem Realpad. Přihlašovací údaje jsou bezpečně uloženy a nikdy nejsou vystaveny frontendu.',
-                },
-              },
               fields: [
-                {
-                  name: 'enabled',
-                  label: { en: 'Enable Realpad Sync', cs: 'Povolit synchronizaci Realpad' },
-                  type: 'checkbox',
-                  defaultValue: false,
-                  admin: {
-                    description: {
-                      en: 'Turn on automatic synchronization with Realpad',
-                      cs: 'Zapnout automatickou synchronizaci s Realpad',
-                    },
-                  },
-                },
+                { name: 'enabled', label: { en: 'Enable Realpad Sync', cs: 'Povolit synchronizaci Realpad' }, type: 'checkbox', defaultValue: false },
                 {
                   type: 'collapsible',
                   label: { en: 'API Credentials', cs: 'API přihlašovací údaje' },
-                  admin: {
-                    initCollapsed: true,
-                    description: {
-                      en: 'Realpad login credentials (stored server-side only)',
-                      cs: 'Přihlašovací údaje Realpad (uloženy pouze na serveru)',
-                    },
-                  },
+                  admin: { initCollapsed: true },
                   fields: [
-                    {
-                      name: 'baseUrl',
-                      label: { en: 'Base URL', cs: 'Base URL' },
-                      type: 'text',
-                    },
+                    { name: 'baseUrl', label: { en: 'Base URL', cs: 'Base URL' }, type: 'text' },
                     {
                       type: 'row',
                       fields: [
-                        {
-                          name: 'login',
-                          label: { en: 'Username', cs: 'Uživatelské jméno' },
-                          type: 'text',
-                          admin: {
-                            width: '50%',
-                            description: {
-                              en: 'Realpad account username',
-                              cs: 'Uživatelské jméno účtu Realpad',
-                            },
-                          },
-                        },
-                        {
-                          name: 'password',
-                          label: { en: 'Password', cs: 'Heslo' },
-                          type: 'text',
-                          admin: {
-                            width: '50%',
-                            description: {
-                              en: 'Realpad account password (never exposed to frontend)',
-                              cs: 'Heslo účtu Realpad (nikdy nevystaveno frontendu)',
-                            },
-                          },
-                        },
+                        { name: 'login', label: { en: 'Username', cs: 'Uživatelské jméno' }, type: 'text', admin: { width: '50%' } },
+                        { name: 'password', label: { en: 'Password', cs: 'Heslo' }, type: 'text', admin: { width: '50%' } },
                       ],
                     },
                   ],
@@ -437,108 +405,33 @@ export const Projects: CollectionConfig = {
                 {
                   type: 'collapsible',
                   label: { en: 'Realpad IDs', cs: 'Realpad ID' },
-                  admin: {
-                    initCollapsed: false,
-                    description: {
-                      en: 'Identifiers from your Realpad account',
-                      cs: 'Identifikátory z vašeho účtu Realpad',
-                    },
-                  },
+                  admin: { initCollapsed: false },
                   fields: [
                     {
                       type: 'row',
                       fields: [
-                        {
-                          name: 'screenId',
-                          label: { en: 'Screen ID', cs: 'ID obrazovky' },
-                          type: 'number',
-                          admin: {
-                            width: '33%',
-                            description: {
-                              en: 'Realpad screen identifier',
-                              cs: 'Identifikátor obrazovky Realpad',
-                            },
-                          },
-                        },
-                        {
-                          name: 'projectId',
-                          label: { en: 'Project ID', cs: 'ID projektu' },
-                          type: 'text',
-                          admin: {
-                            width: '33%',
-                            description: {
-                              en: 'Realpad project identifier',
-                              cs: 'Identifikátor projektu Realpad',
-                            },
-                          },
-                        },
-                        {
-                          name: 'developerId',
-                          label: { en: 'Developer ID', cs: 'ID developera' },
-                          type: 'number',
-                          admin: {
-                            width: '33%',
-                            description: {
-                              en: 'Realpad developer identifier',
-                              cs: 'Identifikátor developera Realpad',
-                            },
-                          },
-                        },
+                        { name: 'screenId', label: { en: 'Screen ID', cs: 'ID obrazovky' }, type: 'number', admin: { width: '33%' } },
+                        { name: 'projectId', label: { en: 'Project ID', cs: 'ID projektu' }, type: 'text', admin: { width: '33%' } },
+                        { name: 'developerId', label: { en: 'Developer ID', cs: 'ID developera' }, type: 'number', admin: { width: '33%' } },
                       ],
                     },
-                    {
-                      name: 'syncFrequencyMinutes',
-                      label: { en: 'Sync Frequency', cs: 'Frekvence synchronizace' },
-                      type: 'number',
-                      defaultValue: 60,
-                      admin: {
-                        description: {
-                          en: 'How often to sync data from Realpad (in minutes). Default: 60',
-                          cs: 'Jak často synchronizovat data z Realpad (v minutách). Výchozí: 60',
-                        },
-                      },
-                    },
+                    { name: 'syncFrequencyMinutes', label: { en: 'Sync Frequency', cs: 'Frekvence synchronizace' }, type: 'number', defaultValue: 60 },
                   ],
                 },
                 {
                   type: 'collapsible',
                   label: { en: 'Sync Status', cs: 'Stav synchronizace' },
-                  admin: {
-                    initCollapsed: true,
-                    description: {
-                      en: 'Automatically updated sync information (read-only)',
-                      cs: 'Automaticky aktualizované informace o synchronizaci (pouze pro čtení)',
-                    },
-                  },
+                  admin: { initCollapsed: true },
                   fields: [
                     {
                       type: 'row',
                       fields: [
-                        {
-                          name: 'lastSyncAt',
-                          label: { en: 'Last Sync Time', cs: 'Čas poslední synchronizace' },
-                          type: 'date',
-                          admin: {
-                            readOnly: true,
-                            width: '50%',
-                            description: {
-                              en: 'When the last sync occurred',
-                              cs: 'Kdy proběhla poslední synchronizace',
-                            },
-                          },
-                        },
+                        { name: 'lastSyncAt', label: { en: 'Last Sync Time', cs: 'Čas poslední synchronizace' }, type: 'date', admin: { readOnly: true, width: '50%' } },
                         {
                           name: 'lastSyncStatus',
                           label: { en: 'Last Sync Result', cs: 'Výsledek poslední synchronizace' },
                           type: 'select',
-                          admin: {
-                            readOnly: true,
-                            width: '50%',
-                            description: {
-                              en: 'Status of the last sync attempt',
-                              cs: 'Stav posledního pokusu o synchronizaci',
-                            },
-                          },
+                          admin: { readOnly: true, width: '50%' },
                           options: [
                             { label: { en: 'OK', cs: 'OK' }, value: 'ok' },
                             { label: { en: 'Error', cs: 'Chyba' }, value: 'error' },
@@ -547,18 +440,7 @@ export const Projects: CollectionConfig = {
                         },
                       ],
                     },
-                    {
-                      name: 'lastSyncError',
-                      label: { en: 'Error Details', cs: 'Detaily chyby' },
-                      type: 'textarea',
-                      admin: {
-                        readOnly: true,
-                        description: {
-                          en: 'Error message if the last sync failed',
-                          cs: 'Chybová zpráva, pokud poslední synchronizace selhala',
-                        },
-                      },
-                    },
+                    { name: 'lastSyncError', label: { en: 'Error Details', cs: 'Detaily chyby' }, type: 'textarea', admin: { readOnly: true } },
                   ],
                 },
               ],
@@ -566,7 +448,7 @@ export const Projects: CollectionConfig = {
           ],
         },
 
-        // ==================== TAB 8: 3D MODEL (conditional) ====================
+        // ==================== TAB 7: 3D MODEL (conditional) ====================
         {
           name: 'model3dTab',
           label: { en: '3D Model', cs: '3D model' },
@@ -574,26 +456,18 @@ export const Projects: CollectionConfig = {
             en: '3D visualization and interactive model',
             cs: '3D vizualizace a interaktivní model',
           },
-          admin: {
-            condition: (data) => data?.sections?.includes('model3d'),
-          },
+          admin: { condition: (data) => data?.sections?.includes('model3d') },
           fields: [
             {
               name: 'model3d',
               label: { en: '3D Model File', cs: 'Soubor 3D modelu' },
               type: 'upload',
               relationTo: 'media',
-              admin: {
-                description: {
-                  en: '3D visualization file (e.g., Unity WebGL build, glTF model)',
-                  cs: '3D vizualizace (např. Unity WebGL build, glTF model)',
-                },
-              },
             },
           ],
         },
 
-        // ==================== TAB 9: AMENITIES (conditional) ====================
+        // ==================== TAB 8: AMENITIES (conditional) ====================
         {
           name: 'amenitiesTab',
           label: { en: 'Amenities', cs: 'Služby a vybavení' },
@@ -601,46 +475,21 @@ export const Projects: CollectionConfig = {
             en: 'Project amenities, features and highlights',
             cs: 'Služby, vybavení a přednosti projektu',
           },
-          admin: {
-            condition: (data) => data?.sections?.includes('amenities'),
-          },
+          admin: { condition: (data) => data?.sections?.includes('amenities') },
           fields: [
             {
               name: 'amenities',
               label: { en: 'Amenities', cs: 'Služby a vybavení' },
               type: 'array',
-              admin: {
-                description: {
-                  en: 'List amenities/features shown on the project detail.',
-                  cs: 'Seznam služeb/vybavení zobrazený na detailu projektu.',
-                },
-              },
               fields: [
                 {
                   type: 'row',
                   fields: [
-                    {
-                      name: 'title',
-                      label: { en: 'Title', cs: 'Název' },
-                      type: 'text',
-                      localized: true,
-                      required: true,
-                      admin: { width: '70%' },
-                    },
-                    {
-                      name: 'icon',
-                      label: { en: 'Icon', cs: 'Ikona' },
-                      type: 'text',
-                      admin: { width: '30%', description: { cs: 'Např. "parking", "lift", "wifi".' } },
-                    },
+                    { name: 'title', label: { en: 'Title', cs: 'Název' }, type: 'text', localized: true, required: true, admin: { width: '70%' } },
+                    { name: 'icon', label: { en: 'Icon', cs: 'Ikona' }, type: 'text', admin: { width: '30%' } },
                   ],
                 },
-                {
-                  name: 'description',
-                  label: { en: 'Description', cs: 'Popis' },
-                  type: 'textarea',
-                  localized: true,
-                },
+                { name: 'description', label: { en: 'Description', cs: 'Popis' }, type: 'textarea', localized: true },
               ],
             },
           ],

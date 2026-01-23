@@ -70,10 +70,8 @@ export interface Config {
     media: Media;
     users: User;
     projects: Project;
-    locations: Location;
     pointsOfInterests: PointsOfInterest;
     'timeline-items': TimelineItem;
-    'poi-categories': PoiCategory;
     mapPoints: MapPoint;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
@@ -90,10 +88,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
-    locations: LocationsSelect<false> | LocationsSelect<true>;
     pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
-    'poi-categories': PoiCategoriesSelect<false> | PoiCategoriesSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -337,92 +333,65 @@ export interface Project {
    * Paste a full YouTube URL (watch or youtu.be).
    */
   heroYouTubeUrl?: string | null;
+  centerLat: number;
+  centerLng: number;
+  defaultZoom?: number | null;
   /**
-   * Select which content sections to display for this project. New tabs will appear for each selected section.
+   * Map filter definitions (categories) for POIs shown on the map.
+   */
+  filters?:
+    | {
+        key: string;
+        label: string;
+        icon?: (number | null) | Media;
+        defaultOn?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Select POIs belonging to this project (1:N).
+   */
+  pointsOfInterests?: (number | PointsOfInterest)[] | null;
+  /**
+   * Select which content sections to display for this project. Tabs will appear only for selected sections.
    */
   sections?: ('location' | 'gallery' | 'standards' | 'timeline' | 'units' | 'model3d' | 'amenities')[] | null;
-  locationTab?: {
-    /**
-     * Select location configuration with map data and nearby POIs
-     */
-    location?: (number | null) | Location;
+  /**
+   * Settings for project presentation on the dashboard view
+   */
+  dashboard?: {
+    pinLat?: number | null;
+    pinLng?: number | null;
+    badgeLabel?: string | null;
   };
   galleryTab?: {
-    /**
-     * Upload/select images for the project gallery (stored in Media).
-     */
     gallery?: (number | Media)[] | null;
   };
   standardsTab?: {
-    /**
-     * Upload PDF brochures, floor plans, and specification documents
-     */
     standards?: (number | Media)[] | null;
   };
   timelineTab?: {
-    /**
-     * Select timeline items for this project (items are stored in Timeline Items collection).
-     */
     timelineItems?: (number | TimelineItem)[] | null;
   };
   unitsTab?: {
-    /**
-     * Configure automatic sync with Realpad pricelist. Credentials are stored securely and never exposed to frontend.
-     */
     realpad?: {
-      /**
-       * Turn on automatic synchronization with Realpad
-       */
       enabled?: boolean | null;
       baseUrl?: string | null;
-      /**
-       * Realpad account username
-       */
       login?: string | null;
-      /**
-       * Realpad account password (never exposed to frontend)
-       */
       password?: string | null;
-      /**
-       * Realpad screen identifier
-       */
       screenId?: number | null;
-      /**
-       * Realpad project identifier
-       */
       projectId?: string | null;
-      /**
-       * Realpad developer identifier
-       */
       developerId?: number | null;
-      /**
-       * How often to sync data from Realpad (in minutes). Default: 60
-       */
       syncFrequencyMinutes?: number | null;
-      /**
-       * When the last sync occurred
-       */
       lastSyncAt?: string | null;
-      /**
-       * Status of the last sync attempt
-       */
       lastSyncStatus?: ('ok' | 'error' | 'skipped') | null;
-      /**
-       * Error message if the last sync failed
-       */
       lastSyncError?: string | null;
     };
   };
   model3dTab?: {
-    /**
-     * 3D visualization file (e.g., Unity WebGL build, glTF model)
-     */
     model3d?: (number | null) | Media;
   };
   amenitiesTab?: {
-    /**
-     * List amenities/features shown on the project detail.
-     */
     amenities?:
       | {
           title: string;
@@ -437,35 +406,19 @@ export interface Project {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "locations".
- */
-export interface Location {
-  id: number;
-  name: string;
-  centerLat: number;
-  centerLng: number;
-  defaultZoom?: number | null;
-  filters?:
-    | {
-        key: string;
-        label: string;
-        icon?: (number | null) | Media;
-        defaultOn?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  pointsOfInterests?: (number | PointsOfInterest)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pointsOfInterests".
  */
 export interface PointsOfInterest {
   id: number;
+  /**
+   * This POI belongs to a single project.
+   */
+  project: number | Project;
   name: string;
-  category: number | PoiCategory;
+  /**
+   * Category enum (stored directly on the POI).
+   */
+  category: 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport';
   lat: number;
   lng: number;
   distanceText?: string | null;
@@ -478,24 +431,6 @@ export interface PointsOfInterest {
         id?: string | null;
       }[]
     | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "poi-categories".
- */
-export interface PoiCategory {
-  id: number;
-  /**
-   * Technický klíč (např. school, shop, park)
-   */
-  key: string;
-  name: string;
-  /**
-   * Ikona kategorie (volitelné)
-   */
-  icon?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -586,20 +521,12 @@ export interface PayloadLockedDocument {
         value: number | Project;
       } | null)
     | ({
-        relationTo: 'locations';
-        value: number | Location;
-      } | null)
-    | ({
         relationTo: 'pointsOfInterests';
         value: number | PointsOfInterest;
       } | null)
     | ({
         relationTo: 'timeline-items';
         value: number | TimelineItem;
-      } | null)
-    | ({
-        relationTo: 'poi-categories';
-        value: number | PoiCategory;
       } | null)
     | ({
         relationTo: 'mapPoints';
@@ -795,11 +722,26 @@ export interface ProjectsSelect<T extends boolean = true> {
   cover?: T;
   heroVideo?: T;
   heroYouTubeUrl?: T;
-  sections?: T;
-  locationTab?:
+  centerLat?: T;
+  centerLng?: T;
+  defaultZoom?: T;
+  filters?:
     | T
     | {
-        location?: T;
+        key?: T;
+        label?: T;
+        icon?: T;
+        defaultOn?: T;
+        id?: T;
+      };
+  pointsOfInterests?: T;
+  sections?: T;
+  dashboard?:
+    | T
+    | {
+        pinLat?: T;
+        pinLng?: T;
+        badgeLabel?: T;
       };
   galleryTab?:
     | T
@@ -857,31 +799,10 @@ export interface ProjectsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "locations_select".
- */
-export interface LocationsSelect<T extends boolean = true> {
-  name?: T;
-  centerLat?: T;
-  centerLng?: T;
-  defaultZoom?: T;
-  filters?:
-    | T
-    | {
-        key?: T;
-        label?: T;
-        icon?: T;
-        defaultOn?: T;
-        id?: T;
-      };
-  pointsOfInterests?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pointsOfInterests_select".
  */
 export interface PointsOfInterestsSelect<T extends boolean = true> {
+  project?: T;
   name?: T;
   category?: T;
   lat?: T;
@@ -911,17 +832,6 @@ export interface TimelineItemsSelect<T extends boolean = true> {
   from?: T;
   to?: T;
   order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "poi-categories_select".
- */
-export interface PoiCategoriesSelect<T extends boolean = true> {
-  key?: T;
-  name?: T;
-  icon?: T;
   updatedAt?: T;
   createdAt?: T;
 }
