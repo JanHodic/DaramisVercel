@@ -65,18 +65,12 @@ export const Projects: CollectionConfig = {
                     },
                   },
                   validate: async (val: any, options: any) => {
-                    // 1. Regex pro kontrolu formátu (pouze a-z, 0-9 a pomlčka)
-                    // Pokud hodnota existuje a neodpovídá regexu, vrátíme chybovou hlášku.
                     if (val && !/^[a-z0-9-]+$/.test(val)) {
                       return 'Slug může obsahovat pouze malá písmena (a-z), čísla (0-9) a pomlčky (-). Bez mezer a diakritiky.'
                     }
-
-                    // 2. Volitelné: Kontrola, zda nezačíná nebo nekončí pomlčkou
                     if (val && (val.startsWith('-') || val.endsWith('-'))) {
                       return 'Slug nesmí začínat ani končit pomlčkou.'
                     }
-
-                    // 3. Zavoláme výchozí textový validátor (řeší 'required', 'maxLength' atd.)
                     return text(val, options)
                   },
                 },
@@ -133,19 +127,92 @@ export const Projects: CollectionConfig = {
                   ],
                 },
                 {
-                  name: 'cover',
-                  label: { en: 'Cover Image', cs: 'Úvodní obrázek' },
+                  name: 'logo',
+                  label: { en: 'Project Logo', cs: 'Logo projektu' },
                   type: 'upload',
                   relationTo: 'media',
                   admin: {
                     description: {
-                      en: 'Main project image for listings and headers',
-                      cs: 'Hlavní obrázek projektu pro výpisy a záhlaví',
+                      en: 'Optional project logo (stored in Media).',
+                      cs: 'Volitelné logo projektu (uloženo v Media).',
                     },
                   },
                 },
               ],
             },
+
+            // --- Hero media type selector (image / uploaded video / YouTube) ---
+            {
+              name: 'heroType',
+              label: { en: 'Hero Type', cs: 'Typ úvodního média' },
+              type: 'select',
+              required: true,
+              defaultValue: 'image',
+              options: [
+                { label: { en: 'Image', cs: 'Obrázek' }, value: 'image' },
+                { label: { en: 'Uploaded Video', cs: 'Video (nahrané)' }, value: 'video' },
+                { label: { en: 'YouTube', cs: 'YouTube' }, value: 'youtube' },
+              ],
+              admin: {
+                description: {
+                  en: 'Choose whether the project hero is an image, an uploaded video, or a YouTube video.',
+                  cs: 'Zvolte, zda úvodní médium bude obrázek, nahrané video nebo YouTube video.',
+                },
+              },
+            },
+
+            // --- Cover image (only if heroType=image) ---
+            {
+              name: 'cover',
+              label: { en: 'Cover Image', cs: 'Úvodní obrázek' },
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                condition: (data) => (data as any)?.heroType === 'image',
+                description: {
+                  en: 'Main project image for listings and headers',
+                  cs: 'Hlavní obrázek projektu pro výpisy a záhlaví',
+                },
+              },
+            },
+
+            // --- Uploaded hero video (only if heroType=video) ---
+            {
+              name: 'heroVideo',
+              label: { en: 'Hero Video File', cs: 'Úvodní video (soubor)' },
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                condition: (data) => (data as any)?.heroType === 'video',
+                description: {
+                  en: 'Upload a video file to use as the hero media.',
+                  cs: 'Nahrajte video soubor pro úvodní sekci.',
+                },
+              },
+            },
+
+            // --- YouTube URL (only if heroType=youtube) ---
+            {
+              name: 'heroYouTubeUrl',
+              label: { en: 'YouTube URL', cs: 'YouTube URL' },
+              type: 'text',
+              admin: {
+                condition: (data) => (data as any)?.heroType === 'youtube',
+                description: {
+                  en: 'Paste a full YouTube URL (watch or youtu.be).',
+                  cs: 'Vložte celou YouTube URL (watch nebo youtu.be).',
+                },
+              },
+              validate: (val: any) => {
+                if (!val) return true
+                const s = String(val).trim()
+                if (!/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(s)) {
+                  return 'Zadejte platnou YouTube URL.'
+                }
+                return true
+              },
+            },
+
             // --- Sections select (hasMany) ---
             {
               name: 'sections',
@@ -163,7 +230,7 @@ export const Projects: CollectionConfig = {
                 { label: { en: 'Gallery / Views', cs: 'Galerie / Pohledy' }, value: 'gallery' },
                 { label: { en: 'Standards / PDFs', cs: 'Standardy / PDF' }, value: 'standards' },
                 { label: { en: 'Timeline', cs: 'Časová osa' }, value: 'timeline' },
-                { label: { en: 'Realpad', cs: 'Realpad' }, value: 'units' },
+                { label: { en: 'Units / Realpad', cs: 'Jednotky / Realpad' }, value: 'units' },
                 { label: { en: '3D Model', cs: '3D model' }, value: 'model3d' },
                 { label: { en: 'Amenities & Features', cs: 'Služby a vybavení' }, value: 'amenities' },
               ],
@@ -350,13 +417,13 @@ export const Projects: CollectionConfig = {
           ],
         },
 
-        // ==================== TAB 7: REALPAD (conditional) ====================
+        // ==================== TAB 7: UNITS & REALPAD (conditional) ====================
         {
           name: 'unitsTab',
-          label: { en: 'Realpad', cs: 'Realpad' },
+          label: { en: 'Units & Realpad', cs: 'Jednotky & Realpad' },
           description: {
-            en: 'Realpad integration',
-            cs: 'Integrace s Realpad',
+            en: 'Unit listings, availability and Realpad integration',
+            cs: 'Seznam jednotek, dostupnost a integrace s Realpad',
           },
           admin: {
             condition: (data) => data?.sections?.includes('units'),

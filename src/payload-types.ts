@@ -318,9 +318,25 @@ export interface Project {
    */
   status: 'planned' | 'current' | 'finished';
   /**
+   * Optional project logo (stored in Media).
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Choose whether the project hero is an image, an uploaded video, or a YouTube video.
+   */
+  heroType: 'image' | 'video' | 'youtube';
+  /**
    * Main project image for listings and headers
    */
   cover?: (number | null) | Media;
+  /**
+   * Upload a video file to use as the hero media.
+   */
+  heroVideo?: (number | null) | Media;
+  /**
+   * Paste a full YouTube URL (watch or youtu.be).
+   */
+  heroYouTubeUrl?: string | null;
   /**
    * Select which content sections to display for this project. New tabs will appear for each selected section.
    */
@@ -791,7 +807,11 @@ export interface ProjectsSelect<T extends boolean = true> {
   subtitle?: T;
   city?: T;
   status?: T;
+  logo?: T;
+  heroType?: T;
   cover?: T;
+  heroVideo?: T;
+  heroYouTubeUrl?: T;
   sections?: T;
   dashboard?:
     | T
