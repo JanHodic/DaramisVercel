@@ -8,6 +8,7 @@ import React from 'react'
 
 import { importMap } from './admin/importMap.js'
 import './custom.scss'
+import 'leaflet/dist/leaflet.css'
 
 type Args = {
   children: React.ReactNode

@@ -213,14 +213,14 @@ export const Projects: CollectionConfig = {
                 { name: 'defaultZoom', label: { en: 'Default Zoom', cs: 'Výchozí zoom' }, type: 'number', defaultValue: 13 },
               ],
               admin: {
-                condition: (data) => data?.sections?.includes('location'),
+                condition: (data) => !data?.id || data?.sections?.includes('location'),
               },
             },
             {
               type: 'ui',
               name: 'projectMap',
               admin: {
-                condition: (data) => data?.sections?.includes('location'),
+                condition: () => true,
                 components: {
                   Field: 'src/components/admin/ProjectMapField#ProjectMapField',
                 },
