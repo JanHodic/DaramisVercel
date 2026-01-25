@@ -44,6 +44,17 @@ export const PointsOfInterest: CollectionConfig = {
       },
     },
 
+    {
+      name: 'poiMap',
+      type: 'ui',
+      admin: {
+        position: 'main',
+        components: {
+          Field: 'src/components/admin/POIMapField#POIMapField',
+        },
+      },
+    },
+
     { name: 'name', label: { en: 'Name', cs: 'Název' }, type: 'text', localized: true, required: true },
 
     // category = enum (no poi-categories collection)

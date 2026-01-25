@@ -205,9 +205,6 @@ export const Projects: CollectionConfig = {
                 return true
               },
             },
-
-            // ✅ Lokalita je součást Intro (TAB 1), ne samostatná záložka
-            // (pole přesunutá z Locations) + POI přímo na Project
             {
               type: 'row',
               fields: [
@@ -217,6 +214,16 @@ export const Projects: CollectionConfig = {
               ],
               admin: {
                 condition: (data) => data?.sections?.includes('location'),
+              },
+            },
+            {
+              type: 'ui',
+              name: 'projectMap',
+              admin: {
+                condition: (data) => data?.sections?.includes('location'),
+                components: {
+                  Field: 'src/components/admin/ProjectMapField#ProjectMapField',
+                },
               },
             },
             {

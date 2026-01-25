@@ -60,7 +60,7 @@ export default buildConfig({
       ],
     },
     importMap: {
-      baseDir: path.resolve(dirname),
+      baseDir: path.resolve(process.cwd()),
     },
     user: Users.slug,
     livePreview: {
