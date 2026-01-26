@@ -4,17 +4,30 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useField, useDocumentInfo } from '@payloadcms/ui'
 import type { LeafletMouseEvent } from 'leaflet'
-import { useMapEvents } from 'react-leaflet'
+import { useMap, useMapEvents } from 'react-leaflet'
 
 function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
   useMapEvents({
     click(e: LeafletMouseEvent) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const oe = (e as any).originalEvent as MouseEvent | undefined
+      const target = (oe?.target as HTMLElement | null) ?? null
+
+      // ⛔ ignore clicks on leaflet controls (zoom + / - etc.)
+      if (target?.closest?.('.leaflet-control')) return
+
       oe?.stopPropagation?.()
       onClick(e.latlng.lat, e.latlng.lng)
     },
   })
+  return null
+}
+
+function MapViewSync({ center, zoom }: { center: { lat: number; lng: number }; zoom: number }) {
+  const map = useMap()
+  useEffect(() => {
+    map.setView([center.lat, center.lng], zoom, { animate: false })
+  }, [map, center.lat, center.lng, zoom])
   return null
 }
 
@@ -50,10 +63,25 @@ function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms))
 }
 
+type POICategory = 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport'
+
+type POIItem = {
+  name?: Record<string, string> | string
+  category: POICategory
+  lat: number
+  lng: number
+  distanceText?: Record<string, string> | string
+  description?: Record<string, string> | string
+  logo?: string
+  links?: Array<{ label?: Record<string, string> | string; url?: string }>
+}
+
 export function ProjectMapField() {
   const centerLatField = useField<number>({ path: 'centerLat' })
   const centerLngField = useField<number>({ path: 'centerLng' })
   const zoomField = useField<number>({ path: 'defaultZoom' })
+
+  const poiField = useField<POIItem[] | undefined>({ path: 'pointsOfInterests' })
 
   const { id: currentDocId } = useDocumentInfo() as any
   const isSaved = Boolean(currentDocId)
@@ -67,25 +95,35 @@ export function ProjectMapField() {
   const pendingFirstClickRef = useRef<null | { lat: number; lng: number }>(null)
   const saveAttemptedRef = useRef(false)
 
+  // first click = set project position, next clicks = add POI
+  const didSetProjectPositionRef = useRef(false)
+
   const [isClient, setIsClient] = useState(false)
 
-  // ✅ zajistí, že se MapContainer renderuje až na clientu
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  // ✅ DEFAULTY NA CREATE: nikdy nenech required/NOT NULL pole prázdné
+  // ✅ DEFAULTY jen na CREATE (na edit nešahej, jinak se přepíše uložená poloha)
   useEffect(() => {
+    if (isSaved) return
+
     const latMissing = typeof centerLatField.value !== 'number'
     const lngMissing = typeof centerLngField.value !== 'number'
     const zoomMissing = typeof zoomField.value !== 'number'
 
-    // nastav jen když chybí (nepřepisuj existující)
     if (latMissing) centerLatField.setValue(50.0755)
     if (lngMissing) centerLngField.setValue(14.4378)
     if (zoomMissing) zoomField.setValue(13)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // záměrně jen jednou na mount
+  }, [isSaved])
+
+  // pokud už má projekt pozici (edit existujícího), hned přepni do "POI mód"
+  useEffect(() => {
+    if (typeof centerLatField.value === 'number' && typeof centerLngField.value === 'number' && isSaved) {
+      didSetProjectPositionRef.current = true
+    }
+  }, [centerLatField.value, centerLngField.value, isSaved])
 
   // Leaflet icon fix
   useEffect(() => {
@@ -116,23 +154,58 @@ export function ProjectMapField() {
     return Number.isFinite(z) ? z : 13
   }, [zoomField.value])
 
+  const pois = useMemo(() => (Array.isArray(poiField.value) ? poiField.value : []), [poiField.value])
+
+  const makePOIName = useCallback((index1Based: number) => `POI ${index1Based}`, [])
+
+  const addPOIAt = useCallback(
+    (lat: number, lng: number) => {
+      if (!poiField || typeof poiField.setValue !== 'function') {
+        setUiError(locale === 'cs' ? 'Pole POI není dostupné na formuláři.' : 'POI field is not available on the form.')
+        return
+      }
+
+      const nextIndex = pois.length + 1
+      const newPOI: POIItem = {
+        name: { [locale]: makePOIName(nextIndex) },
+        category: 'school',
+        lat,
+        lng,
+        links: [],
+      }
+
+      poiField.setValue([...pois, newPOI])
+    },
+    [locale, makePOIName, poiField, pois]
+  )
+
   const onMapClick = useCallback(
     (lat: number, lng: number) => {
       setUiError('')
 
-      centerLatField.setValue(lat)
-      centerLngField.setValue(lng)
+      // 1) první klik = poloha projektu (+ autosave s kontrolou)
+      if (!didSetProjectPositionRef.current) {
+        didSetProjectPositionRef.current = true
 
-      if (!isSaved && !saveAttemptedRef.current) {
-        saveAttemptedRef.current = true
-        pendingFirstClickRef.current = { lat, lng }
-        setAutoSaving(true)
+        centerLatField.setValue(lat)
+        centerLngField.setValue(lng)
+
+        if (!isSaved && !saveAttemptedRef.current) {
+          saveAttemptedRef.current = true
+          pendingFirstClickRef.current = { lat, lng }
+          setAutoSaving(true)
+        }
+
+        return
       }
+
+      // 2) další kliky = přidávání POI
+      addPOIAt(lat, lng)
     },
-    [centerLatField, centerLngField, isSaved]
+    [addPOIAt, centerLatField, centerLngField, isSaved]
   )
 
-  // autosave při prvním kliku (bez čekání na přesné propsání hodnot do field.value)
+  // ✅ autosave až ve chvíli, kdy payload opravdu propsal hodnoty do field.value (kontrola – NESMÍ ZMIZET)
   useEffect(() => {
     if (isSaved) {
       pendingFirstClickRef.current = null
@@ -142,6 +215,11 @@ export function ProjectMapField() {
 
     if (!autoSaving) return
     if (!pendingFirstClickRef.current) return
+
+    const desired = pendingFirstClickRef.current
+    const latOk = typeof centerLatField.value === 'number' && Math.abs(centerLatField.value - desired.lat) < 1e-9
+    const lngOk = typeof centerLngField.value === 'number' && Math.abs(centerLngField.value - desired.lng) < 1e-9
+    if (!latOk || !lngOk) return
 
     ;(async () => {
       await sleep(80)
@@ -165,12 +243,12 @@ export function ProjectMapField() {
   return (
     <div style={{ display: 'grid', gap: 10 }}>
       <div style={{ fontSize: 13, opacity: 0.85 }}>
-        <div style={{ fontWeight: 700, opacity: 0.95 }}>{locale === 'cs' ? 'Poloha projektu' : 'Project position'}</div>
+        <div style={{ fontWeight: 700, opacity: 0.95 }}>
+          {locale === 'cs' ? 'Poloha projektu a POI' : 'Project position & POIs'}
+        </div>
 
         {!isSaved ? (
-          <div style={{ marginTop: 6, color: '#b45309' }}>
-            {autoSaving ? (locale === 'cs' ? 'Ukládám…' : 'Saving…') : null}
-          </div>
+          <div style={{ marginTop: 6, color: '#b45309' }}>{autoSaving ? (locale === 'cs' ? 'Ukládám…' : 'Saving…') : null}</div>
         ) : null}
 
         {uiError ? <div style={{ marginTop: 6, color: '#b91c1c' }}>{uiError}</div> : null}
@@ -179,8 +257,16 @@ export function ProjectMapField() {
       <div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, overflow: 'hidden' }}>
         <div style={{ height: 420, width: '100%' }}>
           {isClient ? (
-            <MapContainer center={[center.lat, center.lng]} zoom={zoom} style={{ height: '100%', width: '100%' }} keyboard={false}>
+            <MapContainer
+              center={[center.lat, center.lng]}
+              zoom={zoom}
+              style={{ height: '100%', width: '100%' }}
+              keyboard={false}
+            >
               <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+              {/* ✅ důležité: aby se POI načetly/ukázaly hned po načtení dat (bez prvního kliku) */}
+              <MapViewSync center={center} zoom={zoom} />
 
               <MapClickHandler onClick={onMapClick} />
 
@@ -188,7 +274,7 @@ export function ProjectMapField() {
                 <Marker position={[centerLatField.value, centerLngField.value]}>
                   <Popup>
                     <div style={{ fontSize: 13 }}>
-                      <div style={{ fontWeight: 700 }}>{locale === 'cs' ? 'Střed mapy' : 'Map center'}</div>
+                      <div style={{ fontWeight: 700 }}>{locale === 'cs' ? 'Poloha projektu' : 'Project position'}</div>
                       <div style={{ opacity: 0.75, marginTop: 4 }}>
                         {centerLatField.value.toFixed(6)}, {centerLngField.value.toFixed(6)}
                       </div>
@@ -196,6 +282,27 @@ export function ProjectMapField() {
                   </Popup>
                 </Marker>
               ) : null}
+
+              {/* ✅ POI markery se renderují hned z hodnot ve form state */}
+              {pois.map((p, i) => (
+                <Marker key={`${p.lat}-${p.lng}-${i}`} position={[p.lat, p.lng]}>
+                  <Popup>
+                    <div style={{ fontSize: 13 }}>
+                      <div style={{ fontWeight: 700 }}>
+                        {typeof p.name === 'string'
+                          ? p.name
+                          : (p.name as any)?.[locale] ?? (p.name as any)?.cs ?? (p.name as any)?.en ?? `POI ${i + 1}`}
+                      </div>
+                      <div style={{ opacity: 0.75, marginTop: 4 }}>
+                        {p.lat.toFixed(6)}, {p.lng.toFixed(6)}
+                      </div>
+                      <div style={{ opacity: 0.7, marginTop: 6 }}>
+                        {locale === 'cs' ? 'Kategorie:' : 'Category:'} {p.category}
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
             </MapContainer>
           ) : (
             <div style={{ height: '100%', display: 'grid', placeItems: 'center', fontSize: 13, opacity: 0.75 }}>
