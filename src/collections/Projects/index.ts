@@ -323,10 +323,16 @@ export const Projects: CollectionConfig = {
           fields: [
             {
               name: 'gallery',
-              label: { en: 'Gallery Media', cs: 'Galerie (média)' },
+              label: { en: 'Project Uploads', cs: 'Nahraná média projektu' },
               type: 'upload',
               relationTo: 'media',
               hasMany: true,
+              admin: {
+                description: {
+                  en: 'Upload media directly here. Captions are stored on the uploaded Media item (Title/Caption).',
+                  cs: 'Nahrajte média přímo zde. Popisky řešte přímo u nahraného souboru v Media (Title/Caption).',
+                },
+              },
             },
           ],
         },

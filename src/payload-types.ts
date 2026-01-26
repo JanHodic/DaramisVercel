@@ -362,6 +362,9 @@ export interface Project {
       }[]
     | null;
   galleryTab?: {
+    /**
+     * Upload media directly here. Captions are stored on the uploaded Media item (Title/Caption).
+     */
     gallery?: (number | Media)[] | null;
   };
   standardsTab?: {
