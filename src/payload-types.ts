@@ -71,7 +71,6 @@ export interface Config {
     users: User;
     projects: Project;
     'timeline-items': TimelineItem;
-    mapPoints: MapPoint;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
@@ -88,7 +87,6 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
-    mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -409,46 +407,11 @@ export interface Project {
  */
 export interface TimelineItem {
   id: number;
-  project: number | Project;
   preset: 'custom' | 'item1' | 'item2';
   title: string;
   description?: string | null;
   from: string;
   to?: string | null;
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "mapPoints".
- */
-export interface MapPoint {
-  id: number;
-  /**
-   * Ke kterému projektu bod patří
-   */
-  project: number | Project;
-  name: string;
-  /**
-   * Zeměpisná šířka
-   */
-  lat: number;
-  /**
-   * Zeměpisná délka
-   */
-  lng: number;
-  /**
-   * 3D model, který se otevře po kliknutí
-   */
-  model3d?: string | null;
-  /**
-   * Náhled do popupu (bez načítání 3D)
-   */
-  poster?: (number | null) | Media;
-  /**
-   * Volitelné řazení bodů
-   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -492,10 +455,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'timeline-items';
         value: number | TimelineItem;
-      } | null)
-    | ({
-        relationTo: 'mapPoints';
-        value: number | MapPoint;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -769,27 +728,11 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "timeline-items_select".
  */
 export interface TimelineItemsSelect<T extends boolean = true> {
-  project?: T;
   preset?: T;
   title?: T;
   description?: T;
   from?: T;
   to?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "mapPoints_select".
- */
-export interface MapPointsSelect<T extends boolean = true> {
-  project?: T;
-  name?: T;
-  lat?: T;
-  lng?: T;
-  model3d?: T;
-  poster?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;

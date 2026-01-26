@@ -367,9 +367,6 @@ export const Projects: CollectionConfig = {
               type: 'relationship',
               relationTo: 'timeline-items',
               hasMany: true,
-              filterOptions: ({ data }) => ({
-                project: { equals: data?.id },
-              }),
             },
           ],
         },

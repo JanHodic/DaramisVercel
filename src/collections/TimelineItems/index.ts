@@ -8,13 +8,6 @@ export const TimelineItems: CollectionConfig = {
   defaultSort: 'order',
   fields: [
     {
-      name: 'project',
-      type: 'relationship',
-      relationTo: 'projects',
-      required: true,
-      index: true,
-    },
-    {
       name: 'preset',
       type: 'select',
       required: true,

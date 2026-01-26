@@ -14,7 +14,6 @@ import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
-import { MapPoints } from './collections/MapPoints'
 import { TimelineItems } from './collections/TimelineItems'
 import { publicEndpoints } from './endpoints/public/public'
 
@@ -82,7 +81,6 @@ export default buildConfig({
     Users,
     Projects,
     TimelineItems,
-    MapPoints,
   ],
 
   cors: [
