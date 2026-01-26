@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, Fragment } from 'react'
 import dynamic from 'next/dynamic'
 import { useField, useDocumentInfo } from '@payloadcms/ui'
 import type { LeafletMouseEvent } from 'leaflet'
@@ -76,6 +76,12 @@ type POIItem = {
   links?: Array<{ label?: Record<string, string> | string; url?: string }>
 }
 
+function getPOIName(p: POIItem, locale: 'cs' | 'en', fallback: string) {
+  if (typeof p.name === 'string') return p.name
+  const anyName = p.name as any
+  return anyName?.[locale] ?? anyName?.cs ?? anyName?.en ?? fallback
+}
+
 export function ProjectMapField() {
   const centerLatField = useField<number>({ path: 'centerLat' })
   const centerLngField = useField<number>({ path: 'centerLng' })
@@ -100,11 +106,27 @@ export function ProjectMapField() {
 
   const [isClient, setIsClient] = useState(false)
 
+  // ⏱️ throttle for "save on click" (so we don't spam saves when user clicks a lot)
+  const lastSaveAtRef = useRef(0)
+
+  const clickSave = useCallback(() => {
+    const now = Date.now()
+    if (now - lastSaveAtRef.current < 900) return
+    lastSaveAtRef.current = now
+
+    const saveBtn = findSaveButton()
+    if (!saveBtn) {
+      setUiError(locale === 'cs' ? 'Nenašel jsem tlačítko Save/Uložit v adminu.' : 'Could not find the Save button in admin.')
+      return
+    }
+    saveBtn.click()
+  }, [locale])
+
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  // ✅ DEFAULTY jen na CREATE (na edit nešahej, jinak se přepíše uložená poloha)
+  // ✅ DEFAULTY jen na CREATE
   useEffect(() => {
     if (isSaved) return
 
@@ -156,10 +178,63 @@ export function ProjectMapField() {
 
   const pois = useMemo(() => (Array.isArray(poiField.value) ? poiField.value : []), [poiField.value])
 
+  // ✅ fix: POI se musí "držet nahrané" — Payload někdy hydratuje array mutací (UI se nepřekreslí)
+  // -> udržujeme interní "verzi" POI podle signature a tím vynutíme re-render markerů bez kliknutí.
+  const [poiRenderVersion, setPoiRenderVersion] = useState(0)
+  const lastPoiSigRef = useRef<string>('')
+
+  const [poisStable, setPoisStable] = useState<POIItem[]>([])
+
+  useEffect(() => {
+    if (!isClient) return
+
+    let alive = true
+    const tick = () => {
+      if (!alive) return
+        const arr = Array.isArray(poiField.value) ? poiField.value : []
+
+        // ✅ Guard: Payload během save/hydratace umí POI na chvíli vyprázdnit.
+        // Nechceme, aby markery zmizely => pokud už něco máme, prázdný stav ignoruj.
+        if (arr.length === 0) {
+        // pokud už jsme někdy měli POI, nedovol transientnímu [] je "smazat" z UI
+        if (poisStable.length > 0) return
+
+        // pokud jsme nikdy nic neměli, dovol prázdno (např. nový dokument)
+        const sigEmpty = ''
+        if (sigEmpty !== lastPoiSigRef.current) {
+            lastPoiSigRef.current = sigEmpty
+            setPoiRenderVersion((v) => v + 1)
+        }
+        return
+        }
+
+        const sig = arr
+        .map((p) => `${p.lat.toFixed(6)}|${p.lng.toFixed(6)}|${p.category}|${getPOIName(p, locale, '')}`)
+        .join(';;')
+
+        if (sig !== lastPoiSigRef.current) {
+        lastPoiSigRef.current = sig
+        setPoisStable(arr.slice()) // nebo [...arr]
+        setPoiRenderVersion((v) => v + 1)
+        }
+
+    }
+
+    tick()
+    const id = window.setInterval(tick, 350)
+
+    return () => {
+      alive = false
+      window.clearInterval(id)
+    }
+  }, [isClient, poiField, locale, poisStable.length])
+
+  const mapKey = useMemo(() => `${currentDocId ?? 'new'}-${poiRenderVersion}`, [currentDocId, poiRenderVersion])
+
   const makePOIName = useCallback((index1Based: number) => `POI ${index1Based}`, [])
 
   const addPOIAt = useCallback(
-    (lat: number, lng: number) => {
+    async (lat: number, lng: number) => {
       if (!poiField || typeof poiField.setValue !== 'function') {
         setUiError(locale === 'cs' ? 'Pole POI není dostupné na formuláři.' : 'POI field is not available on the form.')
         return
@@ -175,8 +250,12 @@ export function ProjectMapField() {
       }
 
       poiField.setValue([...pois, newPOI])
+
+      // ✅ SAVE NA KLIKNUTÍ (nezměněno)
+      await sleep(80)
+      clickSave()
     },
-    [locale, makePOIName, poiField, pois]
+    [clickSave, locale, makePOIName, poiField, pois]
   )
 
   const onMapClick = useCallback(
@@ -194,15 +273,21 @@ export function ProjectMapField() {
           saveAttemptedRef.current = true
           pendingFirstClickRef.current = { lat, lng }
           setAutoSaving(true)
+        } else {
+          // ✅ SAVE NA KLIKNUTÍ (nezměněno)
+          ;(async () => {
+            await sleep(80)
+            clickSave()
+          })()
         }
 
         return
       }
 
-      // 2) další kliky = přidávání POI
-      addPOIAt(lat, lng)
+      // 2) další kliky = přidávání POI (+ save)
+      void addPOIAt(lat, lng)
     },
-    [addPOIAt, centerLatField, centerLngField, isSaved]
+    [addPOIAt, centerLatField, centerLngField, clickSave, isSaved]
   )
 
   // ✅ autosave až ve chvíli, kdy payload opravdu propsal hodnoty do field.value (kontrola – NESMÍ ZMIZET)
@@ -243,9 +328,7 @@ export function ProjectMapField() {
   return (
     <div style={{ display: 'grid', gap: 10 }}>
       <div style={{ fontSize: 13, opacity: 0.85 }}>
-        <div style={{ fontWeight: 700, opacity: 0.95 }}>
-          {locale === 'cs' ? 'Poloha projektu a POI' : 'Project position & POIs'}
-        </div>
+        <div style={{ fontWeight: 700, opacity: 0.95 }}>{locale === 'cs' ? 'Poloha projektu a POI' : 'Project position & POIs'}</div>
 
         {!isSaved ? (
           <div style={{ marginTop: 6, color: '#b45309' }}>{autoSaving ? (locale === 'cs' ? 'Ukládám…' : 'Saving…') : null}</div>
@@ -257,15 +340,9 @@ export function ProjectMapField() {
       <div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, overflow: 'hidden' }}>
         <div style={{ height: 420, width: '100%' }}>
           {isClient ? (
-            <MapContainer
-              center={[center.lat, center.lng]}
-              zoom={zoom}
-              style={{ height: '100%', width: '100%' }}
-              keyboard={false}
-            >
+            <MapContainer key={mapKey} center={[center.lat, center.lng]} zoom={zoom} style={{ height: '100%', width: '100%' }} keyboard={false}>
               <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-              {/* ✅ důležité: aby se POI načetly/ukázaly hned po načtení dat (bez prvního kliku) */}
               <MapViewSync center={center} zoom={zoom} />
 
               <MapClickHandler onClick={onMapClick} />
@@ -283,26 +360,24 @@ export function ProjectMapField() {
                 </Marker>
               ) : null}
 
-              {/* ✅ POI markery se renderují hned z hodnot ve form state */}
-              {pois.map((p, i) => (
-                <Marker key={`${p.lat}-${p.lng}-${i}`} position={[p.lat, p.lng]}>
-                  <Popup>
-                    <div style={{ fontSize: 13 }}>
-                      <div style={{ fontWeight: 700 }}>
-                        {typeof p.name === 'string'
-                          ? p.name
-                          : (p.name as any)?.[locale] ?? (p.name as any)?.cs ?? (p.name as any)?.en ?? `POI ${i + 1}`}
+              {/* ✅ POI markery se renderují stabilně (key přes poiRenderVersion) */}
+              <Fragment key={poiRenderVersion as any}>
+                {poisStable.map((p, i) => (
+                  <Marker key={`${p.lat}-${p.lng}-${i}`} position={[p.lat, p.lng]}>
+                    <Popup>
+                      <div style={{ fontSize: 13 }}>
+                        <div style={{ fontWeight: 700 }}>{getPOIName(p, locale, `POI ${i + 1}`)}</div>
+                        <div style={{ opacity: 0.75, marginTop: 4 }}>
+                          {p.lat.toFixed(6)}, {p.lng.toFixed(6)}
+                        </div>
+                        <div style={{ opacity: 0.7, marginTop: 6 }}>
+                          {locale === 'cs' ? 'Kategorie:' : 'Category:'} {p.category}
+                        </div>
                       </div>
-                      <div style={{ opacity: 0.75, marginTop: 4 }}>
-                        {p.lat.toFixed(6)}, {p.lng.toFixed(6)}
-                      </div>
-                      <div style={{ opacity: 0.7, marginTop: 6 }}>
-                        {locale === 'cs' ? 'Kategorie:' : 'Category:'} {p.category}
-                      </div>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
+                    </Popup>
+                  </Marker>
+                ))}
+              </Fragment>
             </MapContainer>
           ) : (
             <div style={{ height: '100%', display: 'grid', placeItems: 'center', fontSize: 13, opacity: 0.75 }}>
