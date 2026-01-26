@@ -395,7 +395,7 @@ export interface Project {
     amenities?:
       | {
           title: string;
-          icon?: string | null;
+          image?: (number | null) | Media;
           description?: string | null;
           id?: string | null;
         }[]
@@ -718,7 +718,7 @@ export interface ProjectsSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              icon?: T;
+              image?: T;
               description?: T;
               id?: T;
             };

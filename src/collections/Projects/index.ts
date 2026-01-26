@@ -472,7 +472,6 @@ export const Projects: CollectionConfig = {
             },
           ],
         },
-
         // ==================== TAB 8: AMENITIES (conditional) ====================
         {
           name: 'amenitiesTab',
@@ -491,11 +490,29 @@ export const Projects: CollectionConfig = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'title', label: { en: 'Title', cs: 'Název' }, type: 'text', localized: true, required: true, admin: { width: '70%' } },
-                    { name: 'icon', label: { en: 'Icon', cs: 'Ikona' }, type: 'text', admin: { width: '30%' } },
+                    {
+                      name: 'title',
+                      label: { en: 'Title', cs: 'Název' },
+                      type: 'text',
+                      localized: true,
+                      required: true,
+                      admin: { width: '70%' },
+                    },
+                    {
+                      name: 'image',
+                      label: { en: 'Image', cs: 'Obrázek' },
+                      type: 'upload',
+                      relationTo: 'media',
+                      admin: { width: '30%' },
+                    },
                   ],
                 },
-                { name: 'description', label: { en: 'Description', cs: 'Popis' }, type: 'textarea', localized: true },
+                {
+                  name: 'description',
+                  label: { en: 'Description', cs: 'Popis' },
+                  type: 'textarea',
+                  localized: true,
+                },
               ],
             },
           ],
