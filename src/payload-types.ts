@@ -70,7 +70,6 @@ export interface Config {
     media: Media;
     users: User;
     projects: Project;
-    pointsOfInterests: PointsOfInterest;
     'timeline-items': TimelineItem;
     mapPoints: MapPoint;
     'payload-kv': PayloadKv;
@@ -88,7 +87,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
-    pointsOfInterests: PointsOfInterestsSelect<false> | PointsOfInterestsSelect<true>;
     'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
     mapPoints: MapPointsSelect<false> | MapPointsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -318,6 +316,10 @@ export interface Project {
    */
   logo?: (number | null) | Media;
   /**
+   * Select which content sections to display for this project. Tabs will appear only for selected sections.
+   */
+  sections?: ('location' | 'gallery' | 'standards' | 'timeline' | 'units' | 'model3d' | 'amenities')[] | null;
+  /**
    * Choose whether the project hero is an image, an uploaded video, or a YouTube video.
    */
   heroType: 'image' | 'video' | 'youtube';
@@ -337,33 +339,30 @@ export interface Project {
   centerLng: number;
   defaultZoom?: number | null;
   /**
-   * Map filter definitions (categories) for POIs shown on the map.
+   * POIs are stored directly on the Project (owned objects).
    */
-  filters?:
+  pointsOfInterests?:
     | {
-        key: string;
-        label: string;
-        icon?: (number | null) | Media;
-        defaultOn?: boolean | null;
+        name: string;
+        /**
+         * Category enum (stored directly on the POI).
+         */
+        category: 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport';
+        lat: number;
+        lng: number;
+        distanceText?: string | null;
+        description?: string | null;
+        logo?: (number | null) | Media;
+        links?:
+          | {
+              label?: string | null;
+              url?: string | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
-  /**
-   * Select POIs belonging to this project (1:N).
-   */
-  pointsOfInterests?: (number | PointsOfInterest)[] | null;
-  /**
-   * Select which content sections to display for this project. Tabs will appear only for selected sections.
-   */
-  sections?: ('location' | 'gallery' | 'standards' | 'timeline' | 'units' | 'model3d' | 'amenities')[] | null;
-  /**
-   * Settings for project presentation on the dashboard view
-   */
-  dashboard?: {
-    pinLat?: number | null;
-    pinLng?: number | null;
-    badgeLabel?: string | null;
-  };
   galleryTab?: {
     gallery?: (number | Media)[] | null;
   };
@@ -401,36 +400,6 @@ export interface Project {
         }[]
       | null;
   };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pointsOfInterests".
- */
-export interface PointsOfInterest {
-  id: number;
-  /**
-   * This POI belongs to a single project.
-   */
-  project: number | Project;
-  name: string;
-  /**
-   * Category enum (stored directly on the POI).
-   */
-  category: 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport';
-  lat: number;
-  lng: number;
-  distanceText?: string | null;
-  description?: string | null;
-  logo?: (number | null) | Media;
-  links?:
-    | {
-        label?: string | null;
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -519,10 +488,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'projects';
         value: number | Project;
-      } | null)
-    | ({
-        relationTo: 'pointsOfInterests';
-        value: number | PointsOfInterest;
       } | null)
     | ({
         relationTo: 'timeline-items';
@@ -718,6 +683,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   city?: T;
   status?: T;
   logo?: T;
+  sections?: T;
   heroType?: T;
   cover?: T;
   heroVideo?: T;
@@ -725,23 +691,24 @@ export interface ProjectsSelect<T extends boolean = true> {
   centerLat?: T;
   centerLng?: T;
   defaultZoom?: T;
-  filters?:
+  pointsOfInterests?:
     | T
     | {
-        key?: T;
-        label?: T;
-        icon?: T;
-        defaultOn?: T;
+        name?: T;
+        category?: T;
+        lat?: T;
+        lng?: T;
+        distanceText?: T;
+        description?: T;
+        logo?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              id?: T;
+            };
         id?: T;
-      };
-  pointsOfInterests?: T;
-  sections?: T;
-  dashboard?:
-    | T
-    | {
-        pinLat?: T;
-        pinLng?: T;
-        badgeLabel?: T;
       };
   galleryTab?:
     | T
@@ -793,29 +760,6 @@ export interface ProjectsSelect<T extends boolean = true> {
               description?: T;
               id?: T;
             };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pointsOfInterests_select".
- */
-export interface PointsOfInterestsSelect<T extends boolean = true> {
-  project?: T;
-  name?: T;
-  category?: T;
-  lat?: T;
-  lng?: T;
-  distanceText?: T;
-  description?: T;
-  logo?: T;
-  links?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;

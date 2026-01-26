@@ -140,6 +140,29 @@ export const Projects: CollectionConfig = {
               ],
             },
 
+            // --- Sections select (hasMany) ---
+            {
+              name: 'sections',
+              label: { en: 'Enabled Sections', cs: 'Povolené sekce' },
+              type: 'select',
+              hasMany: true,
+              admin: {
+                description: {
+                  en: 'Select which content sections to display for this project. Tabs will appear only for selected sections.',
+                  cs: 'Vyberte, které sekce se mají zobrazit pro tento projekt. Záložky se zobrazí pouze pro vybrané sekce.',
+                },
+              },
+              options: [
+                { label: { en: 'Location & Surroundings', cs: 'Lokalita a okolí' }, value: 'location' },
+                { label: { en: 'Gallery / Views', cs: 'Galerie / Pohledy' }, value: 'gallery' },
+                { label: { en: 'Standards / PDFs', cs: 'Standardy / PDF' }, value: 'standards' },
+                { label: { en: 'Timeline', cs: 'Časová osa' }, value: 'timeline' },
+                { label: { en: 'Realpad', cs: 'Realpad' }, value: 'units' },
+                { label: { en: '3D Model', cs: '3D model' }, value: 'model3d' },
+                { label: { en: 'Amenities & Features', cs: 'Služby a vybavení' }, value: 'amenities' },
+              ],
+            },
+
             // --- Hero media type selector (image / uploaded video / YouTube) ---
             {
               name: 'heroType',
@@ -205,6 +228,7 @@ export const Projects: CollectionConfig = {
                 return true
               },
             },
+
             {
               type: 'row',
               fields: [
@@ -226,90 +250,62 @@ export const Projects: CollectionConfig = {
                 },
               },
             },
+            
+            // ✅ changed: POI are now owned objects on Project (no relationship)
             {
-              name: 'filters',
+              name: 'pointsOfInterests',
+              label: { en: 'Points of Interest', cs: 'Body zájmu (POI)' },
               type: 'array',
               admin: {
                 condition: (data) => data?.sections?.includes('location'),
                 description: {
-                  en: 'Map filter definitions (categories) for POIs shown on the map.',
-                  cs: 'Definice filtrů (kategorií) pro POI zobrazené na mapě.',
+                  en: 'POIs are stored directly on the Project (owned objects).',
+                  cs: 'POI se ukládají přímo na Projekt (vlastněné objekty).',
                 },
               },
               fields: [
-                { name: 'key', type: 'text', required: true },
-                { name: 'label', type: 'text', localized: true, required: true },
-                { name: 'icon', type: 'upload', relationTo: 'media' },
-                { name: 'defaultOn', type: 'checkbox', defaultValue: true },
-              ],
-            },
-            {
-              name: 'pointsOfInterests',
-              label: { en: 'Points of Interest', cs: 'Body zájmu (POI)' },
-              type: 'relationship',
-              relationTo: 'pointsOfInterests',
-              hasMany: true,
-              admin: {
-                condition: (data) => data?.sections?.includes('location'),
-                description: {
-                  en: 'Select POIs belonging to this project (1:N).',
-                  cs: 'Vyberte POI patřící k tomuto projektu (1:N).',
-                },
-              },
-            },
-
-            // --- Sections select (hasMany) ---
-            {
-              name: 'sections',
-              label: { en: 'Enabled Sections', cs: 'Povolené sekce' },
-              type: 'select',
-              hasMany: true,
-              admin: {
-                description: {
-                  en: 'Select which content sections to display for this project. Tabs will appear only for selected sections.',
-                  cs: 'Vyberte, které sekce se mají zobrazit pro tento projekt. Záložky se zobrazí pouze pro vybrané sekce.',
-                },
-              },
-              options: [
-                { label: { en: 'Location & Surroundings', cs: 'Lokalita a okolí' }, value: 'location' },
-                { label: { en: 'Gallery / Views', cs: 'Galerie / Pohledy' }, value: 'gallery' },
-                { label: { en: 'Standards / PDFs', cs: 'Standardy / PDF' }, value: 'standards' },
-                { label: { en: 'Timeline', cs: 'Časová osa' }, value: 'timeline' },
-                { label: { en: 'Realpad', cs: 'Realpad' }, value: 'units' },
-                { label: { en: '3D Model', cs: '3D model' }, value: 'model3d' },
-                { label: { en: 'Amenities & Features', cs: 'Služby a vybavení' }, value: 'amenities' },
-              ],
-            },
-          ],
-        },
-
-        // ==================== TAB 2: DASHBOARD ====================
-        {
-          label: { en: 'Dashboard', cs: 'Přehled' },
-          description: {
-            en: 'Configure how the project appears on the main dashboard',
-            cs: 'Nastavení zobrazení projektu na hlavním přehledu',
-          },
-          fields: [
-            {
-              name: 'dashboard',
-              label: { en: 'Dashboard Settings', cs: 'Nastavení přehledu' },
-              type: 'group',
-              admin: {
-                description: {
-                  en: 'Settings for project presentation on the dashboard view',
-                  cs: 'Nastavení prezentace projektu na přehledové stránce',
-                },
-              },
-              fields: [
+                { name: 'name', label: { en: 'Name', cs: 'Název' }, type: 'text', localized: true, required: true },
                 {
-                  type: 'row',
+                  name: 'category',
+                  label: { en: 'Category', cs: 'Kategorie' },
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: { en: 'School', cs: 'Škola' }, value: 'school' },
+                    { label: { en: 'Shop', cs: 'Obchod' }, value: 'shop' },
+                    { label: { en: 'Park', cs: 'Park' }, value: 'park' },
+                    { label: { en: 'Public Transport', cs: 'MHD' }, value: 'transport' },
+                    { label: { en: 'Restaurant', cs: 'Restaurace' }, value: 'restaurant' },
+                    { label: { en: 'Pharmacy', cs: 'Lékárna' }, value: 'pharmacy' },
+                    { label: { en: 'Hospital', cs: 'Nemocnice' }, value: 'hospital' },
+                    { label: { en: 'Sport', cs: 'Sport' }, value: 'sport' },
+                  ],
+                  admin: {
+                    description: {
+                      en: 'Category enum (stored directly on the POI).',
+                      cs: 'Kategorie jako enum (uloženo přímo v POI).',
+                    },
+                  },
+                },
+                { name: 'lat', label: { en: 'Latitude', cs: 'Zeměpisná šířka' }, type: 'number', required: true },
+                { name: 'lng', label: { en: 'Longitude', cs: 'Zeměpisná délka' }, type: 'number', required: true },
+                { name: 'distanceText', label: { en: 'Distance Text', cs: 'Text vzdálenosti' }, type: 'text', localized: true },
+                { name: 'description', label: { en: 'Description', cs: 'Popis' }, type: 'textarea', localized: true },
+                {
+                  name: 'logo',
+                  label: { en: 'Logo', cs: 'Logo' },
+                  type: 'upload',
+                  relationTo: 'media',
+                },
+                {
+                  name: 'links',
+                  label: { en: 'Links', cs: 'Odkazy' },
+                  type: 'array',
                   fields: [
-                    { name: 'pinLat', label: { en: 'Pin Latitude', cs: 'Zeměpisná šířka' }, type: 'number', admin: { width: '50%' } },
-                    { name: 'pinLng', label: { en: 'Pin Longitude', cs: 'Zeměpisná délka' }, type: 'number', admin: { width: '50%' } },
+                    { name: 'label', label: { en: 'Label', cs: 'Popisek' }, type: 'text', localized: true },
+                    { name: 'url', label: { en: 'URL', cs: 'URL' }, type: 'text' },
                   ],
                 },
-                { name: 'badgeLabel', label: { en: 'Badge Label', cs: 'Štítek' }, type: 'text', localized: true },
               ],
             },
           ],

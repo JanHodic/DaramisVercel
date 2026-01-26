@@ -132,7 +132,7 @@ export function ProjectMapField() {
     [centerLatField, centerLngField, isSaved]
   )
 
-  // autosave až ve chvíli, kdy payload opravdu propsal hodnoty do field.value
+  // autosave při prvním kliku (bez čekání na přesné propsání hodnot do field.value)
   useEffect(() => {
     if (isSaved) {
       pendingFirstClickRef.current = null
@@ -143,14 +143,8 @@ export function ProjectMapField() {
     if (!autoSaving) return
     if (!pendingFirstClickRef.current) return
 
-    const desired = pendingFirstClickRef.current
-    const latOk = typeof centerLatField.value === 'number' && Math.abs(centerLatField.value - desired.lat) < 1e-9
-    const lngOk = typeof centerLngField.value === 'number' && Math.abs(centerLngField.value - desired.lng) < 1e-9
-
-    if (!latOk || !lngOk) return
-
     ;(async () => {
-      await sleep(80) // o něco delší než dřív
+      await sleep(80)
 
       const saveBtn = findSaveButton()
       if (!saveBtn) {
