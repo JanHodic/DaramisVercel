@@ -6,6 +6,8 @@ import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e0
 import { FolderTableCell as FolderTableCell_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 import { FolderField as FolderField_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 import { ProjectMapField as ProjectMapField_8dd31d82ed5ae4ab1ec9bc6bea3b03ea } from 'src/components/admin/ProjectMapField'
+import { default as default_a94065406fe3d2013af05baee8a363cd } from 'src/components/admin/LocalizedPresetText'
+import { default as default_12ccb6db8f949ca7e2025db1ff94b0c4 } from 'src/components/admin/LocalizedPresetTextArea'
 import { FolderTypeField as FolderTypeField_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
 import { default as default_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { default as default_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
@@ -22,6 +24,8 @@ export const importMap = {
   "@payloadcms/ui/rsc#FolderTableCell": FolderTableCell_ab83ff7e88da8d3530831f296ec4756a,
   "@payloadcms/ui/rsc#FolderField": FolderField_ab83ff7e88da8d3530831f296ec4756a,
   "src/components/admin/ProjectMapField#ProjectMapField": ProjectMapField_8dd31d82ed5ae4ab1ec9bc6bea3b03ea,
+  "src/components/admin/LocalizedPresetText#default": default_a94065406fe3d2013af05baee8a363cd,
+  "src/components/admin/LocalizedPresetTextArea#default": default_12ccb6db8f949ca7e2025db1ff94b0c4,
   "@payloadcms/ui#FolderTypeField": FolderTypeField_3817bf644402e67bfe6577f60ef982de,
   "@/components/admin/Icon#default": default_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#default": default_a44df17d0fc3dcd873dae43dc3bf66bd,

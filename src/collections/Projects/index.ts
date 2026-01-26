@@ -370,9 +370,64 @@ export const Projects: CollectionConfig = {
             {
               name: 'timelineItems',
               label: { en: 'Timeline Items', cs: 'Položky časové osy' },
-              type: 'relationship',
-              relationTo: 'timeline-items',
-              hasMany: true,
+              type: 'array',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'title',
+                      label: { en: 'Title', cs: 'Název' },
+                      type: 'text',
+                      localized: true,
+                      required: true,
+                      admin: {
+                        width: '50%',
+                        components: {
+                          Field: {
+                            path: 'src/components/admin/LocalizedPresetText',
+                            clientProps: {
+                              presets: [
+                                { value: 'planning', label: { en: 'Planning', cs: 'Plánování' }, text: { en: 'Planning', cs: 'Plánování' } },
+                                { value: 'construction', label: { en: 'Construction', cs: 'Výstavba' }, text: { en: 'Construction', cs: 'Výstavba' } },
+                                { value: 'handover', label: { en: 'Handover', cs: 'Předání' }, text: { en: 'Handover', cs: 'Předání' } },
+                              ],
+                            },
+                          },
+                        },
+                      },
+                    },
+                    {
+                      name: 'description',
+                      label: { en: 'Description', cs: 'Popis' },
+                      type: 'textarea',
+                      localized: true,
+                      admin: {
+                        width: '50%',
+                        components: {
+                          Field: {
+                            path: 'src/components/admin/LocalizedPresetTextArea',
+                            clientProps: {
+                              presets: [
+                                { value: 'short', label: { en: 'Short', cs: 'Krátký' }, text: { en: 'Short milestone description.', cs: 'Krátký popis milníku.' } },
+                                {
+                                  value: 'detailed',
+                                  label: { en: 'Detailed', cs: 'Detailní' },
+                                  text: {
+                                    en: 'Detailed milestone description with context and progress.',
+                                    cs: 'Detailní popis milníku včetně kontextu a průběhu.',
+                                  },
+                                },
+                                { value: 'completion', label: { en: 'Completion', cs: 'Dokončení' }, text: { en: 'Finalization and completion steps.', cs: 'Finalizace a kroky k dokončení.' } },
+                              ],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },

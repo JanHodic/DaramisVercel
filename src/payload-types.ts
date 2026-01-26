@@ -371,7 +371,13 @@ export interface Project {
     standards?: (number | Media)[] | null;
   };
   timelineTab?: {
-    timelineItems?: (number | TimelineItem)[] | null;
+    timelineItems?:
+      | {
+          title: string;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   unitsTab?: {
     realpad?: {
@@ -685,7 +691,13 @@ export interface ProjectsSelect<T extends boolean = true> {
   timelineTab?:
     | T
     | {
-        timelineItems?: T;
+        timelineItems?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              id?: T;
+            };
       };
   unitsTab?:
     | T
