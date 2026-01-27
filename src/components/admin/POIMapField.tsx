@@ -1,5 +1,5 @@
 'use client'
-
+/*
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -257,25 +257,9 @@ export function POIMapField() {
           <div style={{ fontWeight: 700, opacity: 0.95 }}>{locale === 'cs' ? 'POI mapa' : 'POI map'}</div>
           <div style={{ marginTop: 2 }}>
             {locale === 'cs'
-              ? 'Klik do mapy nastaví lat/lng tohoto POI. Zároveň můžeš založit nový POI nebo mazat existující.'
-              : 'Click sets lat/lng for this POI. You can also create a new POI or delete existing ones.'}
+              ? 'Klik do mapy nastaví lat/lng tohoto POI.'
+              : 'Click sets lat/lng for this POI.'}
           </div>
-
-          {!isSaved ? (
-            <div style={{ marginTop: 6, color: '#b45309' }}>
-              {locale === 'cs'
-                ? 'Tip: Nejprve vyplň povinná pole a ulož POI. Pak klik do mapy bude nastavovat lat/lng bez otravného potvrzování odchodu.'
-                : 'Tip: First fill required fields and save the POI. Then map clicks will set lat/lng without the leave-page confirmation.'}
-            </div>
-          ) : null}
-
-          {!projectId ? (
-            <div style={{ marginTop: 6, color: '#b45309' }}>
-              {locale === 'cs'
-                ? 'Nejdřív vyber Projekt (pole "project").'
-                : 'Select a Project first (the "project" field).'}
-            </div>
-          ) : null}
         </div>
 
         <button
@@ -320,8 +304,8 @@ export function POIMapField() {
 
               <MapClickHandler onClick={onMapClick} />
 
-              {/* Marker pro aktuálně editovaný POI (lat/lng pole) – jen když máme čísla */}
-              {typeof latField.value === 'number' && typeof lngField.value === 'number' ? (
+              {/* Marker pro aktuálně editovaný POI (lat/lng pole) – jen když máme čísla */
+              {/*{typeof latField.value === 'number' && typeof lngField.value === 'number' ? (
                 <Marker position={[latField.value, lngField.value]}>
                   <Popup>
                     <div style={{ fontSize: 13 }}>
@@ -335,7 +319,7 @@ export function POIMapField() {
               ) : null}
 
               {/* Existující POI v projektu */}
-              {visiblePois.map((p) => (
+              /*{visiblePois.map((p) => (
                 <Marker key={p.id} position={[p.lat, p.lng]}>
                   <Popup>
                     <div style={{ display: 'grid', gap: 8 }}>
@@ -390,8 +374,8 @@ export function POIMapField() {
                 </Marker>
               ))}
 
-              {/* Draft marker pro nový POI */}
-              {draft ? (
+              {/* Draft marker pro nový POI */
+              /*{draft ? (
                 <Marker position={[draft.lat, draft.lng]}>
                   <Popup>
                     <div style={{ fontSize: 13 }}>
@@ -404,15 +388,14 @@ export function POIMapField() {
           </div>
         </div>
 
-        {/* Panel pro vytvoření nového POI z kliknutí */}
-        <div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, padding: 12 }}>
+        {/* Panel pro vytvoření nového POI z kliknutí */
+        /*<div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, padding: 12 }}>
           <div style={{ fontWeight: 700, fontSize: 13 }}>
-            {locale === 'cs' ? 'Přidat nový POI (klikem)' : 'Add new POI (by click)'}
+            {locale === 'cs' ? 'Posunout POI (myší)' : 'Move a POI (with cursor)'}
           </div>
 
           {!projectId ? (
             <div style={{ marginTop: 10, fontSize: 13, opacity: 0.75 }}>
-              {locale === 'cs' ? 'Nejdřív vyber projekt.' : 'Pick a project first.'}
             </div>
           ) : !draft ? (
             <div style={{ marginTop: 10, fontSize: 13, opacity: 0.75 }}>
@@ -499,10 +482,216 @@ export function POIMapField() {
               </div>
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  )
+}*/
 
-          <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(0,0,0,0.08)', fontSize: 12, opacity: 0.75 }}>
-            {locale === 'cs' ? `POI v projektu: ${visiblePois.length}` : `POIs in project: ${visiblePois.length}`}
-          </div>
+import { useCallback, useEffect, useMemo } from 'react'
+import dynamic from 'next/dynamic'
+import { useField } from '@payloadcms/ui'
+import type { LeafletMouseEvent } from 'leaflet'
+import { useMapEvents } from 'react-leaflet'
+
+type Localized = { cs?: string; en?: string }
+
+const POI_CATEGORIES = [
+  { label: { en: 'School', cs: 'Škola' }, value: 'school' },
+  { label: { en: 'Shop', cs: 'Obchod' }, value: 'shop' },
+  { label: { en: 'Park', cs: 'Park' }, value: 'park' },
+  { label: { en: 'Public Transport', cs: 'MHD' }, value: 'transport' },
+  { label: { en: 'Restaurant', cs: 'Restaurace' }, value: 'restaurant' },
+  { label: { en: 'Pharmacy', cs: 'Lékárna' }, value: 'pharmacy' },
+  { label: { en: 'Hospital', cs: 'Nemocnice' }, value: 'hospital' },
+  { label: { en: 'Sport', cs: 'Sport' }, value: 'sport' },
+] as const
+
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e: LeafletMouseEvent) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const oe = (e as any).originalEvent as MouseEvent | undefined
+      const target = (oe?.target as HTMLElement | null) ?? null
+
+      // ⛔ ignore clicks on leaflet controls (zoom + / - etc.)
+      if (target?.closest?.('.leaflet-control')) return
+
+      oe?.stopPropagation?.()
+      onClick(e.latlng.lat, e.latlng.lng)
+    },
+  })
+  return null
+}
+
+function readLocalized(val: Localized | string | undefined, locale: 'cs' | 'en') {
+  if (!val) return ''
+  if (typeof val === 'string') return val
+  return val[locale] ?? val.en ?? val.cs ?? ''
+}
+
+function getLabel(v: string, locale: 'cs' | 'en') {
+  return POI_CATEGORIES.find((c) => c.value === v)?.label?.[locale] ?? v
+}
+
+// React-Leaflet dynamic imports (admin běží v Nextu, SSR off)
+const MapContainer = dynamic(() => import('react-leaflet').then((m) => m.MapContainer), { ssr: false })
+const TileLayer = dynamic(() => import('react-leaflet').then((m) => m.TileLayer), { ssr: false })
+const Marker = dynamic(() => import('react-leaflet').then((m) => m.Marker), { ssr: false })
+const Popup = dynamic(() => import('react-leaflet').then((m) => m.Popup), { ssr: false })
+
+type Props = {
+  // Payload posílá do Field komponenty props včetně "path" (např. locationTab.pointsOfInterests.0.poiMap)
+  path: string
+  readOnly?: boolean
+}
+
+export function POIMapField({ path, readOnly }: Props) {
+  // ✅ locale z <html lang="...">
+  const locale: 'cs' | 'en' =
+    typeof document !== 'undefined' && document?.documentElement?.lang?.startsWith('en') ? 'en' : 'cs'
+
+  // ✅ itemPath = cesta k array itemu, do kterého patří lat/lng/name/category
+  //    path = "...poiMap" => itemPath = "..."
+  const itemPath = useMemo(() => path.replace(/\.poiMap$/, ''), [path])
+
+  // ✅ napojení na správné fieldy V ARRAY ITEMU
+  const latField = useField<number>({ path: `${itemPath}.lat` })
+  const lngField = useField<number>({ path: `${itemPath}.lng` })
+  const nameField = useField<Localized | string | undefined>({ path: `${itemPath}.name` })
+  const categoryField = useField<string | undefined>({ path: `${itemPath}.category` })
+
+  // ✅ Project center (pro default lat/lng)
+  // itemPath je třeba: "locationTab.pointsOfInterests.0"
+  // tabPrefix => "locationTab"
+  const tabPrefix = useMemo(() => itemPath.split('.pointsOfInterests')[0], [itemPath])
+  const centerLatField = useField<number>({ path: `${tabPrefix}.centerLat` })
+  const centerLngField = useField<number>({ path: `${tabPrefix}.centerLng` })
+  const zoomField = useField<number>({ path: `${tabPrefix}.defaultZoom` })
+
+  // Leaflet icon fix
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const L = (await import('leaflet')).default
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        delete (L.Icon.Default.prototype as any)._getIconUrl
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+          iconUrl: '/leaflet/marker-icon.png',
+          shadowUrl: '/leaflet/marker-shadow.png',
+        })
+      } catch {
+        // ignore
+      }
+    })()
+  }, [])
+
+  // ✅ default lat/lng (jen když chybí) = center mapy projektu
+  useEffect(() => {
+    const hasLat = typeof latField.value === 'number'
+    const hasLng = typeof lngField.value === 'number'
+    const cLat = typeof centerLatField.value === 'number' ? centerLatField.value : 50.0755
+    const cLng = typeof centerLngField.value === 'number' ? centerLngField.value : 14.4378
+
+    if (!hasLat) latField.setValue(cLat)
+    if (!hasLng) lngField.setValue(cLng)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [centerLatField.value, centerLngField.value])
+
+  const zoom = useMemo(() => {
+    const z = typeof zoomField.value === 'number' ? zoomField.value : 13
+    return Number.isFinite(z) ? z : 13
+  }, [zoomField.value])
+
+  const center = useMemo(() => {
+    // pro mapu používáme lat/lng POI (pokud existuje), jinak střed projektu
+    const cLat = typeof centerLatField.value === 'number' ? centerLatField.value : 50.0755
+    const cLng = typeof centerLngField.value === 'number' ? centerLngField.value : 14.4378
+    const lat = typeof latField.value === 'number' ? latField.value : cLat
+    const lng = typeof lngField.value === 'number' ? lngField.value : cLng
+    return { lat, lng }
+  }, [latField.value, lngField.value, centerLatField.value, centerLngField.value])
+
+  const setLatLng = useCallback(
+    (lat: number, lng: number) => {
+      if (readOnly) return
+      latField.setValue(lat)
+      lngField.setValue(lng)
+    },
+    [latField, lngField, readOnly]
+  )
+
+  const onMapClick = useCallback(
+    (lat: number, lng: number) => {
+      setLatLng(lat, lng)
+    },
+    [setLatLng]
+  )
+
+  // ✅ tahání markerem -> dragend aktualizuje pole
+  const markerHandlers = useMemo(() => {
+    return {
+      dragend: (e: any) => {
+        const marker = e?.target
+        const ll = marker?.getLatLng?.()
+        if (!ll) return
+        setLatLng(Number(ll.lat), Number(ll.lng))
+      },
+    }
+  }, [setLatLng])
+
+  const title = useMemo(() => readLocalized(nameField.value as any, locale) || (locale === 'cs' ? 'POI' : 'POI'), [
+    nameField.value,
+    locale,
+  ])
+
+  const catLabel = useMemo(() => getLabel(String(categoryField.value ?? ''), locale), [categoryField.value, locale])
+
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      <div style={{ fontSize: 13, opacity: 0.85 }}>
+        <div style={{ fontWeight: 700, opacity: 0.95 }}>{locale === 'cs' ? 'POI mapa' : 'POI map'}</div>
+        <div style={{ marginTop: 2 }}>
+          {locale === 'cs'
+            ? 'Klik do mapy nebo tažení markeru nastaví lat/lng tohoto POI (propíše se do polí nad mapou).'
+            : 'Click the map or drag the marker to set lat/lng for this POI (updates the fields above).'}
+        </div>
+        <div style={{ marginTop: 6, fontSize: 12, opacity: 0.7 }}>
+          {title}
+          {categoryField.value ? ` • ${catLabel}` : ''}
+        </div>
+      </div>
+
+      <div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, overflow: 'hidden' }}>
+        <div style={{ height: 360, width: '100%' }}>
+          <MapContainer center={[center.lat, center.lng]} zoom={zoom} style={{ height: '100%', width: '100%' }} keyboard={false}>
+            <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+            <MapClickHandler onClick={onMapClick} />
+
+            {typeof latField.value === 'number' && typeof lngField.value === 'number' ? (
+              <Marker
+                position={[latField.value, lngField.value]}
+                draggable={!readOnly}
+                eventHandlers={markerHandlers}
+              >
+                <Popup>
+                  <div style={{ fontSize: 13 }}>
+                    <div style={{ fontWeight: 700 }}>{locale === 'cs' ? 'Tento POI' : 'This POI'}</div>
+                    <div style={{ opacity: 0.75, marginTop: 4 }}>
+                      {latField.value.toFixed(6)}, {lngField.value.toFixed(6)}
+                    </div>
+                    {categoryField.value ? (
+                      <div style={{ opacity: 0.7, marginTop: 6 }}>
+                        {locale === 'cs' ? 'Kategorie:' : 'Category:'} {catLabel}
+                      </div>
+                    ) : null}
+                  </div>
+                </Popup>
+              </Marker>
+            ) : null}
+          </MapContainer>
         </div>
       </div>
     </div>

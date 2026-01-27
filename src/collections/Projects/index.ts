@@ -263,21 +263,13 @@ export const Projects: CollectionConfig = {
             // ✅ POI are owned objects on Project (no relationship)
             {
               name: 'pointsOfInterests',
-              label: { en: 'Points of Interest', cs: 'Body zájmu (POI)' },
               type: 'array',
-              admin: {
-                description: {
-                  en: 'POIs are stored directly on the Project (owned objects).',
-                  cs: 'POI se ukládají přímo na Projekt (vlastněné objekty).',
-                },
-              },
               fields: [
-                { name: 'name', label: { en: 'Name', cs: 'Název' }, type: 'text', localized: true, required: true },
-                {
-                  name: 'category',
-                  label: { en: 'Category', cs: 'Kategorie' },
+                { name: 'name', type: 'text', localized: true, required: true },
+                {   name: 'category',
                   type: 'select',
                   required: true,
+                  defaultValue: 'school',
                   options: [
                     { label: { en: 'School', cs: 'Škola' }, value: 'school' },
                     { label: { en: 'Shop', cs: 'Obchod' }, value: 'shop' },
@@ -287,35 +279,26 @@ export const Projects: CollectionConfig = {
                     { label: { en: 'Pharmacy', cs: 'Lékárna' }, value: 'pharmacy' },
                     { label: { en: 'Hospital', cs: 'Nemocnice' }, value: 'hospital' },
                     { label: { en: 'Sport', cs: 'Sport' }, value: 'sport' },
-                  ],
+                  ],},
+
+                { name: 'lat', type: 'number', required: true },
+                { name: 'lng', type: 'number', required: true },
+
+                {
+                  type: 'ui',
+                  name: 'poiMap',
                   admin: {
-                    description: {
-                      en: 'Category enum (stored directly on the POI).',
-                      cs: 'Kategorie jako enum (uloženo přímo v POI).',
+                    components: {
+                      Field: 'src/components/admin/POIMapField#POIMapField',
                     },
                   },
                 },
-                { name: 'lat', label: { en: 'Latitude', cs: 'Zeměpisná šířka' }, type: 'number', required: true },
-                { name: 'lng', label: { en: 'Longitude', cs: 'Zeměpisná délka' }, type: 'number', required: true },
-                { name: 'distanceText', label: { en: 'Distance Text', cs: 'Text vzdálenosti' }, type: 'text', localized: true },
-                { name: 'description', label: { en: 'Description', cs: 'Popis' }, type: 'textarea', localized: true },
-                {
-                  name: 'logo',
-                  label: { en: 'Logo', cs: 'Logo' },
-                  type: 'upload',
-                  relationTo: 'media',
-                },
-                {
-                  name: 'links',
-                  label: { en: 'Links', cs: 'Odkazy' },
-                  type: 'array',
-                  fields: [
-                    { name: 'label', label: { en: 'Label', cs: 'Popisek' }, type: 'text', localized: true },
-                    { name: 'url', label: { en: 'URL', cs: 'URL' }, type: 'text' },
-                  ],
-                },
+
+                { name: 'distanceText', type: 'text', localized: true },
+                { name: 'description', type: 'textarea', localized: true },
+                // ...
               ],
-            },
+            }
           ],
         },
 

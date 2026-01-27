@@ -335,28 +335,14 @@ export interface Project {
     centerLat: number;
     centerLng: number;
     defaultZoom?: number | null;
-    /**
-     * POIs are stored directly on the Project (owned objects).
-     */
     pointsOfInterests?:
       | {
           name: string;
-          /**
-           * Category enum (stored directly on the POI).
-           */
           category: 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport';
           lat: number;
           lng: number;
           distanceText?: string | null;
           description?: string | null;
-          logo?: (number | null) | Media;
-          links?:
-            | {
-                label?: string | null;
-                url?: string | null;
-                id?: string | null;
-              }[]
-            | null;
           id?: string | null;
         }[]
       | null;
@@ -652,14 +638,6 @@ export interface ProjectsSelect<T extends boolean = true> {
               lng?: T;
               distanceText?: T;
               description?: T;
-              logo?: T;
-              links?:
-                | T
-                | {
-                    label?: T;
-                    url?: T;
-                    id?: T;
-                  };
               id?: T;
             };
       };
