@@ -14,7 +14,6 @@ import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
-import { TimelineItems } from './collections/TimelineItems'
 import { publicEndpoints } from './endpoints/public/public'
 
 const filename = fileURLToPath(import.meta.url)
@@ -80,7 +79,6 @@ export default buildConfig({
     Media,
     Users,
     Projects,
-    TimelineItems,
   ],
 
   cors: [

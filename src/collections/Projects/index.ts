@@ -228,7 +228,19 @@ export const Projects: CollectionConfig = {
                 return true
               },
             },
+          ],
+        },
 
+        // ==================== TAB 2: LOCATION & SURROUNDINGS (conditional) ====================
+        {
+          name: 'locationTab',
+          label: { en: 'Location & Surroundings', cs: 'Lokalita a okolí' },
+          description: {
+            en: 'Map, points of interest and surroundings',
+            cs: 'Mapa, body zájmu a okolí projektu',
+          },
+          admin: { condition: (data) => data?.sections?.includes('location') },
+          fields: [
             {
               type: 'row',
               fields: [
@@ -236,9 +248,6 @@ export const Projects: CollectionConfig = {
                 { name: 'centerLng', label: { en: 'Center Longitude', cs: 'Střed mapy (lng)' }, type: 'number', required: true },
                 { name: 'defaultZoom', label: { en: 'Default Zoom', cs: 'Výchozí zoom' }, type: 'number', defaultValue: 13 },
               ],
-              admin: {
-                condition: (data) => !data?.id || data?.sections?.includes('location'),
-              },
             },
             {
               type: 'ui',
@@ -250,14 +259,13 @@ export const Projects: CollectionConfig = {
                 },
               },
             },
-            
-            // ✅ changed: POI are now owned objects on Project (no relationship)
+
+            // ✅ POI are owned objects on Project (no relationship)
             {
               name: 'pointsOfInterests',
               label: { en: 'Points of Interest', cs: 'Body zájmu (POI)' },
               type: 'array',
               admin: {
-                condition: (data) => data?.sections?.includes('location'),
                 description: {
                   en: 'POIs are stored directly on the Project (owned objects).',
                   cs: 'POI se ukládají přímo na Projekt (vlastněné objekty).',

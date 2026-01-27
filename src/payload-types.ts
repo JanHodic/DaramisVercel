@@ -70,7 +70,6 @@ export interface Config {
     media: Media;
     users: User;
     projects: Project;
-    'timeline-items': TimelineItem;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
@@ -86,7 +85,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
-    'timeline-items': TimelineItemsSelect<false> | TimelineItemsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -333,34 +331,36 @@ export interface Project {
    * Paste a full YouTube URL (watch or youtu.be).
    */
   heroYouTubeUrl?: string | null;
-  centerLat: number;
-  centerLng: number;
-  defaultZoom?: number | null;
-  /**
-   * POIs are stored directly on the Project (owned objects).
-   */
-  pointsOfInterests?:
-    | {
-        name: string;
-        /**
-         * Category enum (stored directly on the POI).
-         */
-        category: 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport';
-        lat: number;
-        lng: number;
-        distanceText?: string | null;
-        description?: string | null;
-        logo?: (number | null) | Media;
-        links?:
-          | {
-              label?: string | null;
-              url?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
+  locationTab?: {
+    centerLat: number;
+    centerLng: number;
+    defaultZoom?: number | null;
+    /**
+     * POIs are stored directly on the Project (owned objects).
+     */
+    pointsOfInterests?:
+      | {
+          name: string;
+          /**
+           * Category enum (stored directly on the POI).
+           */
+          category: 'school' | 'shop' | 'park' | 'transport' | 'restaurant' | 'pharmacy' | 'hospital' | 'sport';
+          lat: number;
+          lng: number;
+          distanceText?: string | null;
+          description?: string | null;
+          logo?: (number | null) | Media;
+          links?:
+            | {
+                label?: string | null;
+                url?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   galleryTab?: {
     /**
      * Upload media directly here. Captions are stored on the uploaded Media item (Title/Caption).
@@ -412,21 +412,6 @@ export interface Project {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "timeline-items".
- */
-export interface TimelineItem {
-  id: number;
-  preset: 'custom' | 'item1' | 'item2';
-  title: string;
-  description?: string | null;
-  from: string;
-  to?: string | null;
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -460,10 +445,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'projects';
         value: number | Project;
-      } | null)
-    | ({
-        relationTo: 'timeline-items';
-        value: number | TimelineItem;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -656,27 +637,31 @@ export interface ProjectsSelect<T extends boolean = true> {
   cover?: T;
   heroVideo?: T;
   heroYouTubeUrl?: T;
-  centerLat?: T;
-  centerLng?: T;
-  defaultZoom?: T;
-  pointsOfInterests?:
+  locationTab?:
     | T
     | {
-        name?: T;
-        category?: T;
-        lat?: T;
-        lng?: T;
-        distanceText?: T;
-        description?: T;
-        logo?: T;
-        links?:
+        centerLat?: T;
+        centerLng?: T;
+        defaultZoom?: T;
+        pointsOfInterests?:
           | T
           | {
-              label?: T;
-              url?: T;
+              name?: T;
+              category?: T;
+              lat?: T;
+              lng?: T;
+              distanceText?: T;
+              description?: T;
+              logo?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    id?: T;
+                  };
               id?: T;
             };
-        id?: T;
       };
   galleryTab?:
     | T
@@ -735,20 +720,6 @@ export interface ProjectsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "timeline-items_select".
- */
-export interface TimelineItemsSelect<T extends boolean = true> {
-  preset?: T;
-  title?: T;
-  description?: T;
-  from?: T;
-  to?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
