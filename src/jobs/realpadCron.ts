@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import cron from 'node-cron'
 import payload from 'payload'
 import { realpadGetProject, toArray } from '../services/realpad/fetchProject'
@@ -12,7 +15,7 @@ function pickAttrs(flat: any): Record<string, string> {
   }
   return out
 }
-/*
+
 export function startRealpadCron() {
   cron.schedule('0 * * * *', async () => {
     const projects = await payload.find({
@@ -82,4 +85,4 @@ export function startRealpadCron() {
       }
     }
   })
-}*/
+}
