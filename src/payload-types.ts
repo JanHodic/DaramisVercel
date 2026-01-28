@@ -130,22 +130,7 @@ export interface UserAuthOperations {
  */
 export interface Media {
   id: number;
-  alt?: string | null;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  title: string;
   /**
    * External source mapping (e.g. Realpad resource UID)
    */
@@ -483,8 +468,7 @@ export interface PayloadMigration {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  caption?: T;
+  title?: T;
   external?:
     | T
     | {

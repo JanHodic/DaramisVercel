@@ -23,15 +23,9 @@ export const Media: CollectionConfig = {
   },
   fields: [
     {
-      name: 'alt',
+      name: 'title',
       type: 'text',
-    },
-    {
-      name: 'caption',
-      type: 'richText',
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => [...rootFeatures, FixedToolbarFeature(), InlineToolbarFeature()],
-      }),
+      required: true,
     },
 
     // --- External source mapping (Realpad)

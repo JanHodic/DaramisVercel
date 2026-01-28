@@ -3,23 +3,79 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useField, useDocumentInfo } from '@payloadcms/ui'
-import type { LeafletMouseEvent } from 'leaflet'
 import { useMap, useMapEvents } from 'react-leaflet'
+
+function forceImmediateSave() {
+  const btn =
+    document.querySelector('form button[type="submit"]') ||
+    document.querySelector('button[data-action="save"]')
+
+  if (btn instanceof HTMLButtonElement && !btn.disabled) {
+    btn.click()
+  }
+}
+
+function MapZoomFieldSync({
+  onZoom,
+  onSaveAfterZoom,
+  throttleRef,
+  throttleMs = 800,
+}: {
+  onZoom: (z: number) => void
+  onSaveAfterZoom: () => void
+  throttleRef: React.MutableRefObject<number>
+  throttleMs?: number
+}) {
+  useMapEvents({
+    zoomend(e) {
+      const z = e.target.getZoom?.()
+      if (typeof z !== 'number') return
+
+      // 1) nejdřív zapiš zoom do fieldu
+      onZoom(z)
+
+      // 2) throttle: save max 1x za throttleMs
+      const now = Date.now()
+      if (now - throttleRef.current < throttleMs) return
+      throttleRef.current = now
+
+      // 3) save až v dalším ticku (aby se field value propsala)
+      const prev = window.onbeforeunload
+      window.onbeforeunload = null
+
+      setTimeout(() => {
+        onSaveAfterZoom()
+
+        // vrať hlášku zpátky
+        setTimeout(() => {
+          window.onbeforeunload = prev
+        }, 0)
+      }, 0)
+    },
+  })
+
+  return null
+}
 
 function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
   useMapEvents({
-    click(e: LeafletMouseEvent) {
+    click(e) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const oe = (e as any).originalEvent as MouseEvent | undefined
       const target = (oe?.target as HTMLElement | null) ?? null
 
-      // ⛔ ignore clicks on leaflet controls (zoom + / - etc.)
+      // ignoruj kliky na zoom ovládání
       if (target?.closest?.('.leaflet-control')) return
 
       oe?.stopPropagation?.()
+
+      // 🔥 OKAMŽITÝ SAVE – PŘED změnou stavu
+      forceImmediateSave()
+
       onClick(e.latlng.lat, e.latlng.lng)
     },
   })
+
   return null
 }
 
@@ -67,9 +123,16 @@ const DEFAULT_CENTER = { lat: 50.0755, lng: 14.4378 }
 const DEFAULT_ZOOM = 13
 
 export function ProjectMapField() {
-const centerLatField = useField<number>({ path: 'locationTab.centerLat' })
-const centerLngField = useField<number>({ path: 'locationTab.centerLng' })
-const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
+  const centerLatField = useField<number>({ path: 'locationTab.centerLat' })
+  const centerLngField = useField<number>({ path: 'locationTab.centerLng' })
+  const zoomField = useField<number>({ path: 'locationTab.defaultZoom' })
+
+  const mapRef = useRef<any>(null)
+
+  const getCurrentMapZoom = useCallback(() => {
+    const z = mapRef.current?.getZoom?.()
+    return typeof z === 'number' && Number.isFinite(z) ? z : undefined
+  }, [])
 
   const { id: currentDocId } = useDocumentInfo() as any
   const isSaved = Boolean(currentDocId)
@@ -88,14 +151,22 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
   const pendingFirstMoveRef = useRef<null | { lat: number; lng: number }>(null)
   const saveAttemptedRef = useRef(false)
 
-  const clickSave = useCallback(() => {
-    const now = Date.now()
-    if (now - lastSaveAtRef.current < 900) return
-    lastSaveAtRef.current = now
+  function MapInstanceRef({ mapRef }: { mapRef: React.MutableRefObject<any> }) {
+    const map = useMap()
+    useEffect(() => {
+        mapRef.current = map
+    }, [map, mapRef])
+    return null
+  }
 
+  const clickSave = useCallback(() => {
     const saveBtn = findSaveButton()
     if (!saveBtn) {
-      setUiError(locale === 'cs' ? 'Nenašel jsem tlačítko Save/Uložit v adminu.' : 'Could not find the Save button in admin.')
+      setUiError(
+        locale === 'cs'
+          ? 'Nenašel jsem tlačítko Save/Uložit v adminu.'
+          : 'Could not find the Save button in admin.'
+      )
       return
     }
     saveBtn.click()
@@ -134,8 +205,14 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
   }, [])
 
   const center = useMemo(() => {
-    const lat = typeof centerLatField.value === 'number' && Number.isFinite(centerLatField.value) ? centerLatField.value : DEFAULT_CENTER.lat
-    const lng = typeof centerLngField.value === 'number' && Number.isFinite(centerLngField.value) ? centerLngField.value : DEFAULT_CENTER.lng
+    const lat =
+      typeof centerLatField.value === 'number' && Number.isFinite(centerLatField.value)
+        ? centerLatField.value
+        : DEFAULT_CENTER.lat
+    const lng =
+      typeof centerLngField.value === 'number' && Number.isFinite(centerLngField.value)
+        ? centerLngField.value
+        : DEFAULT_CENTER.lng
     return { lat, lng }
   }, [centerLatField.value, centerLngField.value])
 
@@ -144,36 +221,42 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
     return z
   }, [zoomField.value])
 
-  const applyPosition = useCallback(
-    (lat: number, lng: number) => {
-      setUiError('')
+    const applyPosition = useCallback(
+    (lat: number, lng: number, zoomFromMap?: number) => {
+        setUiError('')
 
-      centerLatField.setValue(lat)
-      centerLngField.setValue(lng)
+        centerLatField.setValue(lat)
+        centerLngField.setValue(lng)
 
-      // nový dokument: první move udělá autosave až když jsou hodnoty opravdu propsané
-      if (!isSaved && !saveAttemptedRef.current) {
+        // ✅ uložit zoom jen při změně polohy (když ho máme)
+        if (typeof zoomFromMap === 'number' && Number.isFinite(zoomFromMap)) {
+        zoomField.setValue(zoomFromMap)
+        }
+
+        // nový dokument: první move udělá autosave až když jsou hodnoty opravdu propsané
+        if (!isSaved && !saveAttemptedRef.current) {
         saveAttemptedRef.current = true
         pendingFirstMoveRef.current = { lat, lng }
         setAutoSaving(true)
         return
-      }
+        }
 
-      // uložený dokument / další pohyby -> save hned (throttled)
-      ;(async () => {
+        // uložený dokument / další pohyby -> save hned
+        ;(async () => {
         await sleep(80)
         clickSave()
-      })()
+        })()
     },
-    [centerLatField, centerLngField, clickSave, isSaved]
-  )
+    [centerLatField, centerLngField, zoomField, clickSave, isSaved]
+    )
 
-  const onMapClick = useCallback(
+    const onMapClick = useCallback(
     (lat: number, lng: number) => {
-      applyPosition(lat, lng)
+        const z = getCurrentMapZoom()
+        applyPosition(lat, lng, z)
     },
-    [applyPosition]
-  )
+    [applyPosition, getCurrentMapZoom]
+    )
 
   // ✅ autosave až ve chvíli, kdy payload opravdu propsal hodnoty do field.value
   useEffect(() => {
@@ -196,7 +279,11 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
 
       const saveBtn = findSaveButton()
       if (!saveBtn) {
-        setUiError(locale === 'cs' ? 'Nenašel jsem tlačítko Save/Uložit v adminu.' : 'Could not find the Save button in admin.')
+        setUiError(
+          locale === 'cs'
+            ? 'Nenašel jsem tlačítko Save/Uložit v adminu.'
+            : 'Could not find the Save button in admin.'
+        )
         setAutoSaving(false)
         saveAttemptedRef.current = false
         pendingFirstMoveRef.current = null
@@ -215,10 +302,14 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
   return (
     <div style={{ display: 'grid', gap: 10 }}>
       <div style={{ fontSize: 13, opacity: 0.85 }}>
-        <div style={{ fontWeight: 700, opacity: 0.95 }}>{locale === 'cs' ? 'Poloha projektu' : 'Project position'}</div>
+        <div style={{ fontWeight: 700, opacity: 0.95 }}>
+          {locale === 'cs' ? 'Poloha projektu' : 'Project position'}
+        </div>
 
         {!isSaved ? (
-          <div style={{ marginTop: 6, color: '#b45309' }}>{autoSaving ? (locale === 'cs' ? 'Ukládám…' : 'Saving…') : null}</div>
+          <div style={{ marginTop: 6, color: '#b45309' }}>
+            {autoSaving ? (locale === 'cs' ? 'Ukládám…' : 'Saving…') : null}
+          </div>
         ) : null}
 
         {uiError ? <div style={{ marginTop: 6, color: '#b91c1c' }}>{uiError}</div> : null}
@@ -227,8 +318,27 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
       <div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, overflow: 'hidden' }}>
         <div style={{ height: 420, width: '100%' }}>
           {isClient ? (
-            <MapContainer key={mapKey} center={[center.lat, center.lng]} zoom={zoom} style={{ height: '100%', width: '100%' }} keyboard={false}>
-              <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <MapContainer
+              key={mapKey}
+              center={[center.lat, center.lng]}
+              zoom={zoom}
+              style={{ height: '100%', width: '100%' }}
+              keyboard={false}
+            >
+              <TileLayer
+                attribution="&copy; OpenStreetMap contributors"
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+
+              <MapInstanceRef mapRef={mapRef} />
+
+              {/* ✅ klíčová oprava: uložit až po zoomend */}
+              <MapZoomFieldSync
+                onZoom={(z) => zoomField.setValue(z)}
+                onSaveAfterZoom={clickSave}
+                throttleRef={lastSaveAtRef}
+                throttleMs={800}
+              />
 
               <MapViewSync center={center} zoom={zoom} />
               <MapClickHandler onClick={onMapClick} />
@@ -237,14 +347,16 @@ const zoomField      = useField<number>({ path: 'locationTab.defaultZoom' })
               <Marker
                 position={[center.lat, center.lng]}
                 draggable
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 eventHandlers={{
-                  dragend: (e: any) => {
-                    const m = e?.target
-                    const ll = m?.getLatLng?.()
-                    if (!ll) return
-                    applyPosition(ll.lat, ll.lng)
+                  dragstart: () => {
+                    forceImmediateSave()
                   },
+                    dragend: (e) => {
+                    const ll = e.target.getLatLng()
+                    forceImmediateSave()
+                    const z = getCurrentMapZoom()
+                    applyPosition(ll.lat, ll.lng, z)
+                    },
                 }}
               >
                 <Popup>
