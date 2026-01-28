@@ -2,17 +2,17 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { unstable_cache } from 'next/cache'
 
-export async function getRedirects(depth = 1) {
-  const payload = await getPayload({ config: configPromise })
+export async function getRedirects(_depth = 1) {
+  const _payload = await getPayload({ config: configPromise })
 
-  /*const { docs: redirects } = await payload?.find({
+  /*const { docs: redirects } = await _payload.find({
     collection: 'redirects' as any,
-    depth,
+    depth: _depth,
     limit: 1000,
     pagination: false,
   })*/
 
-  return []//redirects
+  return [] // redirects
 }
 
 /**
