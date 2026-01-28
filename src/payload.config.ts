@@ -30,6 +30,12 @@ if (!connectionString) {
   throw new Error('Missing POSTGRES_URL / DATABASE_URL / NEON_DATABASE_URL')
 }
 
+const serverURL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+
+const isString = (v: unknown): v is string => typeof v === 'string' && v.length > 0
+
 export default buildConfig({
   // ✅ Admin UI language (labels/buttons in CMS)
   i18n: {
@@ -45,10 +51,6 @@ export default buildConfig({
   },
 
   endpoints: [...publicEndpoints],
-
-  serverURL:
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined),
 
 
   admin: {
@@ -102,7 +104,7 @@ export default buildConfig({
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
-  ].filter(Boolean),
+  ].filter(isString),
 
   csrf: [
     'http://localhost:3001',
