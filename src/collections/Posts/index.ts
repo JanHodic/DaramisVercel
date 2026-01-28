@@ -7,6 +7,6 @@ export const Post: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'slug', type: 'text', required: true, unique: true },
-    { name: 'content', type: 'richText' },
+    { name: 'content', type: 'textarea' },
   ],
 }
