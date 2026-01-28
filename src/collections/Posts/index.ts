@@ -1,7 +1,7 @@
 // src/collections/Posts.ts
 import type { CollectionConfig } from 'payload'
 
-export default const Post: CollectionConfig = {
+export const Post: CollectionConfig = {
   slug: 'post',
   admin: { useAsTitle: 'title' },
   fields: [
