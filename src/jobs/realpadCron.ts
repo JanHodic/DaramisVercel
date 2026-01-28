@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import cron from 'node-cron'
+/*import cron from 'node-cron'
 import payload from 'payload'
 import { realpadGetProject, toArray } from '../services/realpad/fetchProject'
 
@@ -85,4 +85,14 @@ export function startRealpadCron() {
       }
     }
   })
+}*/
+
+import _cron from 'node-cron'
+import _payload from 'payload'
+import { realpadGetProject as _realpadGetProject, toArray as _toArray } from '../services/realpad/fetchProject'
+
+function _pickAttrs(flat: unknown): Record<string, string> {
+  return {}
 }
+
+export function startRealpadCron() {}
