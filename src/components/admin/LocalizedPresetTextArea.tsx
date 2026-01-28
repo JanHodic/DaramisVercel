@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { useField, useLocale, SelectInput } from '@payloadcms/ui'
+import { SelectInput, useField, useLocale } from '@payloadcms/ui'
 
 type Preset = {
   value: string
@@ -65,9 +65,8 @@ export default function LocalizedPresetTextArea({ path, readOnly, clientProps }:
         />
       </div>
 
-      <div className="field-type__wrap">
+      <div className="field-type__wrap localized-preset-field__select">
         <SelectInput
-          // “name/path” tady slouží jen UI, neukládá se do dat
           name={`${path}-preset`}
           path={`${path}-preset`}
           options={options}

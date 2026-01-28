@@ -31,7 +31,6 @@ const FALLBACK_PRESETS: Preset[] = [
 export default function LocalizedPresetText({ path, readOnly, clientProps }: Props) {
   const presets = clientProps?.presets?.length ? clientProps.presets : FALLBACK_PRESETS
 
-  // ✅ localized field v adminu = string pro aktuální locale
   const { value, setValue } = useField<string>({ path })
   const localeKey = getLocaleKey(useLocale())
 
@@ -65,25 +64,23 @@ export default function LocalizedPresetText({ path, readOnly, clientProps }: Pro
         />
       </div>
 
-      <div className="field-type__wrap">
-        <div className="localized-preset-field__select">
-          <SelectInput
-            name={`${path}-preset`}
-            path={`${path}-preset`}
-            options={options}
-            value={selected || matched || ''}
-            onChange={(val: any) => {
-              const next = typeof val === 'string' ? val : val?.value
-              if (!next) return
+      <div className="field-type__wrap localized-preset-field__select">
+        <SelectInput
+          name={`${path}-preset`}
+          path={`${path}-preset`}
+          options={options}
+          value={selected || matched || ''}
+          onChange={(val: any) => {
+            const next = typeof val === 'string' ? val : val?.value
+            if (!next) return
 
-              setSelected(next)
-              const preset = presets.find((p) => p.value === next)
-              if (preset) apply(preset.text[localeKey])
-            }}
-            isClearable
-            placeholder="Vyber předvolbu…"
-          />
-        </div>
+            setSelected(next)
+            const preset = presets.find((p) => p.value === next)
+            if (preset) apply(preset.text[localeKey])
+          }}
+          isClearable
+          placeholder="Vyber předvolbu…"
+        />
       </div>
     </div>
   )
