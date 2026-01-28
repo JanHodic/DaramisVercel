@@ -46,7 +46,10 @@ export default buildConfig({
 
   endpoints: [...publicEndpoints],
 
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
+  serverURL:
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined),
+
 
   admin: {
     theme: 'light',
