@@ -21,6 +21,15 @@ import { Page } from './collections/Pages'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const connectionString =
+  process.env.POSTGRES_URL ||
+  process.env.DATABASE_URL ||
+  process.env.NEON_DATABASE_URL
+
+if (!connectionString) {
+  throw new Error('Missing POSTGRES_URL / DATABASE_URL / NEON_DATABASE_URL')
+}
+
 export default buildConfig({
   // ✅ Admin UI language (labels/buttons in CMS)
   i18n: {
