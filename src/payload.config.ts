@@ -17,6 +17,7 @@ import { Projects } from './collections/Projects'
 import { publicEndpoints } from './endpoints/public/public'
 import { Post } from './collections/Posts'
 import { Page } from './collections/Pages'
+import { isString } from 'util'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -29,6 +30,11 @@ const connectionString =
 if (!connectionString) {
   throw new Error('Missing POSTGRES_URL / DATABASE_URL / NEON_DATABASE_URL')
 }
+
+// ✅ single source of truth for runtime URL (prod + preview)
+const serverURL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
 
 export default buildConfig({
   // ✅ Admin UI language (labels/buttons in CMS)
@@ -46,10 +52,8 @@ export default buildConfig({
 
   endpoints: [...publicEndpoints],
 
-  serverURL:
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined),
-
+  // ✅ must match actual host (prod/preview) or cookies + CSRF break
+  serverURL,
 
   admin: {
     theme: 'light',
@@ -85,30 +89,28 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString,
     },
   }),
 
-  collections: [
-    Media,
-    Users,
-    Projects,
-    Post,
-    Page
-  ],
+  collections: [Media, Users, Projects, Post, Page],
 
+  // ✅ include the actual serverURL so admin can call /api on same host
   cors: [
+    serverURL,
     getServerSideURL(),
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
-  ].filter(Boolean),
+  ].filter(isString),
 
+  // ✅ same for CSRF (especially important if admin origin differs)
   csrf: [
+    serverURL,
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
-  ],
+  ].filter(isString),
 
   plugins: [
     openapi({
