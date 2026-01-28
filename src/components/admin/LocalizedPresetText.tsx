@@ -31,7 +31,6 @@ const FALLBACK_PRESETS: Preset[] = [
 export default function LocalizedPresetText({ path, readOnly, clientProps }: Props) {
   const presets = clientProps?.presets?.length ? clientProps.presets : FALLBACK_PRESETS
 
-  // ✅ localized field v adminu = string pro aktuální locale
   const { value, setValue } = useField<string>({ path })
   const localeKey = getLocaleKey(useLocale())
 
@@ -46,73 +45,41 @@ export default function LocalizedPresetText({ path, readOnly, clientProps }: Pro
   }, [presets, current, localeKey])
 
   return (
-    <div style={{ display: 'grid', gap: 10 }}>
-      <div style={{ fontSize: 12, opacity: 0.8, marginBottom: -6 }}>Titulek</div>
+    <div className="field-type text localized-preset-field">
+      <label className="field-label">Titulek</label>
 
-      <input
-        value={current}
-        onChange={(e) => apply(e.target.value)}
-        disabled={!!readOnly}
-        style={{
-          width: '100%',
-          height: 44,
-          borderRadius: 8,
-          border: '1px solid var(--theme-elevation-150)',
-          background: 'var(--theme-input-bg)',
-          color: 'var(--theme-text)',
-          padding: '0 12px',
-          outline: 'none',
-        }}
-      />
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 44px', gap: 10, alignItems: 'center' }}>
-        <select
-          value={selected || matched || ''}
-          onChange={(e) => {
-            const next = e.target.value
-            setSelected(next)
-
-            const preset = presets.find((p) => p.value === next)
-            if (preset) apply(preset.text[localeKey])
-          }}
+      <div className="field-type__wrap">
+        <input
+          className="input"
+          value={current}
+          onChange={(e) => apply(e.target.value)}
           disabled={!!readOnly}
-          style={{
-            width: '100%',
-            height: 44,
-            borderRadius: 8,
-            border: '1px solid var(--theme-elevation-150)',
-            background: 'var(--theme-input-bg)',
-            color: 'var(--theme-text)',
-            padding: '0 12px',
-          }}
-        >
-          <option value="" disabled>
-            Vyber předvolbu…
-          </option>
-          {presets.map((p) => (
-            <option key={p.value} value={p.value}>
-              {p.label[localeKey]}
+        />
+      </div>
+
+      <div className="localized-preset-field__row">
+        <div className="field-type__wrap">
+          <select
+            value={selected || matched || ''}
+            onChange={(e) => {
+              const next = e.target.value
+              setSelected(next)
+
+              const preset = presets.find((p) => p.value === next)
+              if (preset) apply(preset.text[localeKey])
+            }}
+            disabled={!!readOnly}
+          >
+            <option value="" disabled>
+              Vyber předvolbu…
             </option>
-          ))}
-        </select>
-
-        <button
-          type="button"
-          onClick={() => setSelected('')}
-          disabled={!!readOnly}
-          style={{
-            height: 44,
-            width: 44,
-            borderRadius: 8,
-            border: '1px solid var(--theme-elevation-150)',
-            background: 'var(--theme-elevation-0)',
-            color: 'var(--theme-text)',
-            cursor: readOnly ? 'not-allowed' : 'pointer',
-          }}
-          title="Vyčistit"
-        >
-          ×
-        </button>
+            {presets.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label[localeKey]}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   )

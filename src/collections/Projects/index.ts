@@ -155,7 +155,7 @@ export const Projects: CollectionConfig = {
               options: [
                 { label: { en: 'Location & Surroundings', cs: 'Lokalita a okolí' }, value: 'location' },
                 { label: { en: 'Gallery / Views', cs: 'Galerie / Pohledy' }, value: 'gallery' },
-                { label: { en: 'Standards / PDFs', cs: 'Standardy / PDF' }, value: 'standards' },
+                { label: { en: 'Documents / PDFs', cs: 'Podklady / PDF' }, value: 'standards' },
                 { label: { en: 'Timeline', cs: 'Časová osa' }, value: 'timeline' },
                 { label: { en: 'Realpad', cs: 'Realpad' }, value: 'units' },
                 { label: { en: '3D Model', cs: '3D model' }, value: 'model3d' },
@@ -331,7 +331,7 @@ export const Projects: CollectionConfig = {
         // ==================== TAB 4: STANDARDS (conditional) ====================
         {
           name: 'standardsTab',
-          label: { en: 'Standards', cs: 'Standardy' },
+          label: { en: 'Documents', cs: 'Podklady' },
           description: {
             en: 'PDFs, brochures, and specification documents',
             cs: 'PDF soubory, brožury a dokumenty se specifikacemi',

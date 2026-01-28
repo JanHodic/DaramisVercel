@@ -162,15 +162,46 @@ export function ProjectMapField() {
   const clickSave = useCallback(() => {
     const saveBtn = findSaveButton()
     if (!saveBtn) {
-      setUiError(
-        locale === 'cs'
-          ? 'Nenašel jsem tlačítko Save/Uložit v adminu.'
-          : 'Could not find the Save button in admin.'
-      )
       return
     }
     saveBtn.click()
   }, [locale])
+
+  const setZoomAndSyncMap = useCallback(
+  (nextZoom: number) => {
+    // clamp (podle potřeby)
+    const z = Math.max(1, Math.min(20, nextZoom))
+
+    // 1) změň field (to je to „zdroj pravdy“)
+    zoomField.setValue(z)
+
+    // 2) přizpůsob mapu hned
+    mapRef.current?.setZoom?.(z, { animate: false })
+
+    // 3) volitelné: uložit hned, aby to nezůstalo dirty
+    const prev = window.onbeforeunload
+    window.onbeforeunload = null
+    setTimeout(() => {
+      clickSave()
+      setTimeout(() => {
+        window.onbeforeunload = prev
+      }, 0)
+    }, 0)
+  },
+  [zoomField, clickSave]
+)
+
+  const zoomIn = useCallback(() => {
+    const current =
+        typeof zoomField.value === 'number' && Number.isFinite(zoomField.value) ? zoomField.value : DEFAULT_ZOOM
+    setZoomAndSyncMap(current + 1)
+    }, [zoomField.value, setZoomAndSyncMap])
+
+  const zoomOut = useCallback(() => {
+    const current =
+        typeof zoomField.value === 'number' && Number.isFinite(zoomField.value) ? zoomField.value : DEFAULT_ZOOM
+    setZoomAndSyncMap(current - 1)
+    }, [zoomField.value, setZoomAndSyncMap])
 
   useEffect(() => setIsClient(true), [])
 
@@ -305,6 +336,9 @@ export function ProjectMapField() {
         <div style={{ fontWeight: 700, opacity: 0.95 }}>
           {locale === 'cs' ? 'Poloha projektu' : 'Project position'}
         </div>
+        <div style={{ fontWeight: 700, opacity: 0.95 }}>
+          {locale === 'cs' ? 'Klikněte do mapy pro určení polohy projektu' : 'Click to map for project positioning'}
+        </div>
 
         {!isSaved ? (
           <div style={{ marginTop: 6, color: '#b45309' }}>
@@ -316,15 +350,38 @@ export function ProjectMapField() {
       </div>
 
       <div style={{ border: '1px solid rgba(0,0,0,0.12)', borderRadius: 14, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <button
+            type="button"
+            onClick={zoomOut}
+            style={{ border: '1px solid rgba(0,0,0,0.15)', borderRadius: 10, padding: '8px 12px', cursor: 'pointer' }}
+        >
+            –
+        </button>
+
+        <div style={{ fontSize: 13, opacity: 0.8, minWidth: 60, textAlign: 'center' }}>
+            Zoom: {typeof zoomField.value === 'number' ? zoomField.value : DEFAULT_ZOOM}
+        </div>
+            <button
+                type="button"
+                onClick={zoomIn}
+                style={{ border: '1px solid rgba(0,0,0,0.15)', borderRadius: 10, padding: '8px 12px', cursor: 'pointer' }}
+            >
+                +
+            </button>
+        </div>
+
         <div style={{ height: 420, width: '100%' }}>
           {isClient ? (
             <MapContainer
               key={mapKey}
+              zoomControl={false}
               center={[center.lat, center.lng]}
               zoom={zoom}
               style={{ height: '100%', width: '100%' }}
               keyboard={false}
             >
+              <MapInstanceRef mapRef={mapRef} />
               <TileLayer
                 attribution="&copy; OpenStreetMap contributors"
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
