@@ -31,8 +31,9 @@ if (!connectionString) {
 }
 
 const serverURL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+  process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.NEXT_PUBLIC_SERVER_URL
 
 const isString = (v: unknown): v is string => typeof v === 'string' && v.length > 0
 
@@ -100,6 +101,7 @@ export default buildConfig({
   ],
 
   cors: [
+    serverURL,
     getServerSideURL(),
     'http://localhost:3001',
     'http://127.0.0.1:3001',
@@ -107,6 +109,7 @@ export default buildConfig({
   ].filter(isString),
 
   csrf: [
+    serverURL,
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'http://172.20.10.10:3001',
