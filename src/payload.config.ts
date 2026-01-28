@@ -15,6 +15,7 @@ import { Users } from './collections/Users'
 import { getServerSideURL } from './utilities/getURL'
 import { Projects } from './collections/Projects'
 import { publicEndpoints } from './endpoints/public/public'
+import { Post } from './collections/Posts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -79,6 +80,7 @@ export default buildConfig({
     Media,
     Users,
     Projects,
+    Post
   ],
 
   cors: [
