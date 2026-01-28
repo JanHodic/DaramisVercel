@@ -279,6 +279,9 @@ export interface Project {
    * Main project name displayed to users
    */
   title: string;
+  /**
+   * Description
+   */
   slug: string;
   /**
    * Optional tagline or secondary title

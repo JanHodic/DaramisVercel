@@ -59,8 +59,8 @@ export const Projects: CollectionConfig = {
                   label: { en: 'URL project Slug', cs: 'URL slug projektu' },
                   admin: {
                     description: {
-                      en: '',
-                      cs: '',
+                      en: 'Description',
+                      cs: 'Popis',
                     },
                   },
                   validate: async (val: any, options: any) => {
@@ -263,10 +263,16 @@ export const Projects: CollectionConfig = {
             // ✅ POI are owned objects on Project (no relationship)
             {
               name: 'pointsOfInterests',
+              label: { en: 'Points of Interest', cs: 'Body zájmu' },
+              labels: {
+                singular: { en: 'Point of Interest', cs: 'Bod zájmu' },
+                plural: { en: 'Points of Interest', cs: 'Body zájmu' },
+              },
               type: 'array',
               fields: [
-                { name: 'name', type: 'text', localized: true, required: true },
-                {   name: 'category',
+                { name: 'name', label: { en: 'Name', cs: 'Název' }, type: 'text', localized: true, required: true },
+                { name: 'category',
+                  label: { en: 'Category', cs: 'Kategorie' },
                   type: 'select',
                   required: true,
                   defaultValue: 'school',
@@ -281,12 +287,13 @@ export const Projects: CollectionConfig = {
                     { label: { en: 'Sport', cs: 'Sport' }, value: 'sport' },
                   ],},
 
-                { name: 'lat', type: 'number', required: true },
-                { name: 'lng', type: 'number', required: true },
+                { name: 'lat', label: { en: 'Latitude', cs: 'Zeměpisná šířka (lat)' }, type: 'number', required: true },
+                { name: 'lng', label: { en: 'Longitude', cs: 'Zeměpisná délka (lng)' }, type: 'number', required: true },
 
                 {
                   type: 'ui',
                   name: 'poiMap',
+                  label: { en: 'POI map', cs: 'Mapa bodu zájmu' },
                   admin: {
                     components: {
                       Field: 'src/components/admin/POIMapField#POIMapField',
@@ -294,9 +301,10 @@ export const Projects: CollectionConfig = {
                   },
                 },
 
-                { name: 'distanceText', type: 'text', localized: true },
-                { name: 'description', type: 'textarea', localized: true },
-                // ...
+                { name: 'distanceText', 
+                  label: { en: 'Distance (text)', cs: 'Vzdálenost (text)' },
+                  type: 'text', localized: true },
+                { name: 'description', label: { en: 'Description', cs: 'Popis' }, type: 'textarea', localized: true },
               ],
             }
           ],
@@ -361,6 +369,10 @@ export const Projects: CollectionConfig = {
             {
               name: 'timelineItems',
               label: { en: 'Timeline Items', cs: 'Položky časové osy' },
+              labels: {
+                singular: { en: 'Point of Interest', cs: 'Položka časové' },
+                plural: { en: 'Timeline Items', cs: 'Pložky časové osy' },
+              },
               type: 'array',
               fields: [
                 {
@@ -532,6 +544,10 @@ export const Projects: CollectionConfig = {
               name: 'amenities',
               label: { en: 'Amenities', cs: 'Služby a vybavení' },
               type: 'array',
+              labels: {
+                singular: { cs: "Služba", en: "Amenity" },
+                plural: { cs: "Služby", en: "Amenities" },
+              },
               fields: [
                 {
                   type: 'row',
