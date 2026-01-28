@@ -4,15 +4,7 @@ import { unstable_cache } from 'next/cache'
 
 export async function getRedirects(_depth = 1) {
   const _payload = await getPayload({ config: configPromise })
-
-  /*const { docs: redirects } = await _payload.find({
-    collection: 'redirects' as any,
-    depth: _depth,
-    limit: 1000,
-    pagination: false,
-  })*/
-
-  return [] // redirects
+  return []
 }
 
 /**

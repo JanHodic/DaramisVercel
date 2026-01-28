@@ -12,7 +12,7 @@ function pickAttrs(flat: any): Record<string, string> {
   }
   return out
 }
-
+/*
 export function startRealpadCron() {
   cron.schedule('0 * * * *', async () => {
     const projects = await payload.find({
@@ -82,4 +82,4 @@ export function startRealpadCron() {
       }
     }
   })
-}
+}*/
