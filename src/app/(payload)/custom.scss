@@ -19,6 +19,15 @@
   font-display: swap;
 }
 
+.localized-preset-field__select {
+  width: 100%;
+}
+
+.localized-preset-field__select > * {
+  width: 100%;
+}
+
+
 @font-face {
   font-family: 'Matter';
   src: url('/fonts/Matter-Light.otf') format('opentype');

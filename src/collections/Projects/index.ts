@@ -264,31 +264,40 @@ export const Projects: CollectionConfig = {
             {
               name: 'pointsOfInterests',
               label: { en: 'Points of Interest', cs: 'Body zájmu' },
-              labels: {
-                singular: { en: 'Point of Interest', cs: 'Bod zájmu' },
-                plural: { en: 'Points of Interest', cs: 'Body zájmu' },
-              },
+              labels: { singular: 'Bod zájmu', plural: 'Body zájmu' },
               type: 'array',
               fields: [
-                { name: 'name', label: { en: 'Name', cs: 'Název' }, type: 'text', localized: true, required: true },
-                { name: 'category',
-                  label: { en: 'Category', cs: 'Kategorie' },
-                  type: 'select',
-                  required: true,
-                  defaultValue: 'school',
-                  options: [
-                    { label: { en: 'School', cs: 'Škola' }, value: 'school' },
-                    { label: { en: 'Shop', cs: 'Obchod' }, value: 'shop' },
-                    { label: { en: 'Park', cs: 'Park' }, value: 'park' },
-                    { label: { en: 'Public Transport', cs: 'MHD' }, value: 'transport' },
-                    { label: { en: 'Restaurant', cs: 'Restaurace' }, value: 'restaurant' },
-                    { label: { en: 'Pharmacy', cs: 'Lékárna' }, value: 'pharmacy' },
-                    { label: { en: 'Hospital', cs: 'Nemocnice' }, value: 'hospital' },
-                    { label: { en: 'Sport', cs: 'Sport' }, value: 'sport' },
-                  ],},
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'name', label: { en: 'Name', cs: 'Název' }, type: 'text', localized: true, required: true },
+                    {
+                      name: 'category',
+                      label: { en: 'Category', cs: 'Kategorie' },
+                      type: 'select',
+                      required: true,
+                      defaultValue: 'school',
+                      options: [
+                        { label: { en: 'School', cs: 'Škola' }, value: 'school' },
+                        { label: { en: 'Shop', cs: 'Obchod' }, value: 'shop' },
+                        { label: { en: 'Park', cs: 'Park' }, value: 'park' },
+                        { label: { en: 'Public Transport', cs: 'MHD' }, value: 'transport' },
+                        { label: { en: 'Restaurant', cs: 'Restaurace' }, value: 'restaurant' },
+                        { label: { en: 'Pharmacy', cs: 'Lékárna' }, value: 'pharmacy' },
+                        { label: { en: 'Hospital', cs: 'Nemocnice' }, value: 'hospital' },
+                        { label: { en: 'Sport', cs: 'Sport' }, value: 'sport' },
+                      ],
+                    },
+                  ],
+                },
 
-                { name: 'lat', label: { en: 'Latitude', cs: 'Zeměpisná šířka (lat)' }, type: 'number', required: true },
-                { name: 'lng', label: { en: 'Longitude', cs: 'Zeměpisná délka (lng)' }, type: 'number', required: true },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'lat', label: { en: 'Latitude', cs: 'Zeměpisná šířka (lat)' }, type: 'number', required: true },
+                    { name: 'lng', label: { en: 'Longitude', cs: 'Zeměpisná délka (lng)' }, type: 'number', required: true },
+                  ],
+                },
 
                 {
                   type: 'ui',
@@ -301,12 +310,20 @@ export const Projects: CollectionConfig = {
                   },
                 },
 
-                { name: 'distanceText', 
+                { 
+                  name: 'distanceText',
                   label: { en: 'Distance (text)', cs: 'Vzdálenost (text)' },
-                  type: 'text', localized: true },
-                { name: 'description', label: { en: 'Description', cs: 'Popis' }, type: 'textarea', localized: true },
+                  type: 'text',
+                  localized: true,
+                },
+                {
+                  name: 'description',
+                  label: { en: 'Description', cs: 'Popis' },
+                  type: 'textarea',
+                  localized: true,
+                },
               ],
-            }
+            },
           ],
         },
 
@@ -369,10 +386,13 @@ export const Projects: CollectionConfig = {
             {
               name: 'timelineItems',
               label: { en: 'Timeline Items', cs: 'Položky časové osy' },
+
+              // Payload array labels nejsou localized -> musí být string
               labels: {
-                singular: { en: 'Point of Interest', cs: 'Položka časové' },
-                plural: { en: 'Timeline Items', cs: 'Pložky časové osy' },
+                singular: 'Položka časové osy',
+                plural: 'Položky časové osy',
               },
+
               type: 'array',
               fields: [
                 {
@@ -380,7 +400,7 @@ export const Projects: CollectionConfig = {
                   fields: [
                     {
                       name: 'title',
-                      label: { en: 'Title', cs: 'Název' },
+                      label: { en: 'Title', cs: 'Titulek' },
                       type: 'text',
                       localized: true,
                       required: true,
@@ -390,6 +410,10 @@ export const Projects: CollectionConfig = {
                           Field: {
                             path: 'src/components/admin/LocalizedPresetText',
                             clientProps: {
+                              description: {
+                                en: 'Choose a preset or type a custom title.',
+                                cs: 'Vyberte předvolbu nebo napište vlastní titulek.',
+                              },
                               presets: [
                                 { value: 'planning', label: { en: 'Planning', cs: 'Plánování' }, text: { en: 'Planning', cs: 'Plánování' } },
                                 { value: 'construction', label: { en: 'Construction', cs: 'Výstavba' }, text: { en: 'Construction', cs: 'Výstavba' } },
@@ -411,6 +435,10 @@ export const Projects: CollectionConfig = {
                           Field: {
                             path: 'src/components/admin/LocalizedPresetTextArea',
                             clientProps: {
+                              description: {
+                                en: 'Choose a preset or write a short milestone description.',
+                                cs: 'Vyberte předvolbu nebo napište krátký popis milníku.',
+                              },
                               presets: [
                                 { value: 'short', label: { en: 'Short', cs: 'Krátký' }, text: { en: 'Short milestone description.', cs: 'Krátký popis milníku.' } },
                                 {

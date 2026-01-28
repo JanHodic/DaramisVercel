@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { useField, useLocale } from '@payloadcms/ui'
+import { SelectInput, TextInput, useField, useLocale } from '@payloadcms/ui'
 
 type Preset = {
   value: string
@@ -31,6 +31,7 @@ const FALLBACK_PRESETS: Preset[] = [
 export default function LocalizedPresetText({ path, readOnly, clientProps }: Props) {
   const presets = clientProps?.presets?.length ? clientProps.presets : FALLBACK_PRESETS
 
+  // ✅ localized field v adminu = string pro aktuální locale
   const { value, setValue } = useField<string>({ path })
   const localeKey = getLocaleKey(useLocale())
 
@@ -44,41 +45,44 @@ export default function LocalizedPresetText({ path, readOnly, clientProps }: Pro
     return hit?.value ?? ''
   }, [presets, current, localeKey])
 
-  return (
-    <div className="field-type text localized-preset-field">
-      <label className="field-label">Titulek</label>
+  const options = useMemo(
+    () =>
+      presets.map((p) => ({
+        label: p.label[localeKey],
+        value: p.value,
+      })),
+    [presets, localeKey],
+  )
 
+  return (
+    <div className="localized-preset-field">
       <div className="field-type__wrap">
-        <input
-          className="input"
+        <TextInput
+          path={path}
           value={current}
-          onChange={(e) => apply(e.target.value)}
-          disabled={!!readOnly}
+          onChange={(e: any) => apply(e?.target?.value ?? '')}
+          readOnly={!!readOnly}
         />
       </div>
 
-      <div className="localized-preset-field__row">
-        <div className="field-type__wrap">
-          <select
+      <div className="field-type__wrap">
+        <div className="localized-preset-field__select">
+          <SelectInput
+            name={`${path}-preset`}
+            path={`${path}-preset`}
+            options={options}
             value={selected || matched || ''}
-            onChange={(e) => {
-              const next = e.target.value
-              setSelected(next)
+            onChange={(val: any) => {
+              const next = typeof val === 'string' ? val : val?.value
+              if (!next) return
 
+              setSelected(next)
               const preset = presets.find((p) => p.value === next)
               if (preset) apply(preset.text[localeKey])
             }}
-            disabled={!!readOnly}
-          >
-            <option value="" disabled>
-              Vyber předvolbu…
-            </option>
-            {presets.map((p) => (
-              <option key={p.value} value={p.value}>
-                {p.label[localeKey]}
-              </option>
-            ))}
-          </select>
+            isClearable
+            placeholder="Vyber předvolbu…"
+          />
         </div>
       </div>
     </div>

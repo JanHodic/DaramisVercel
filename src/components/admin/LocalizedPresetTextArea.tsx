@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { useField, useLocale } from '@payloadcms/ui'
+import { useField, useLocale, SelectInput } from '@payloadcms/ui'
 
 type Preset = {
   value: string
@@ -44,10 +44,17 @@ export default function LocalizedPresetTextArea({ path, readOnly, clientProps }:
     return hit?.value ?? ''
   }, [presets, current, localeKey])
 
-  return (
-    <div className="field-type textarea localized-preset-field">
-      <label className="field-label">Popis</label>
+  const options = useMemo(
+    () =>
+      presets.map((p) => ({
+        label: p.label[localeKey],
+        value: p.value,
+      })),
+    [presets, localeKey],
+  )
 
+  return (
+    <div className="localized-preset-field">
       <div className="field-type__wrap">
         <textarea
           className="textarea"
@@ -58,29 +65,24 @@ export default function LocalizedPresetTextArea({ path, readOnly, clientProps }:
         />
       </div>
 
-      <div className="localized-preset-field__row">
-        <div className="field-type__wrap">
-          <select
-            value={selected || matched || ''}
-            onChange={(e) => {
-              const next = e.target.value
-              setSelected(next)
+      <div className="field-type__wrap">
+        <SelectInput
+          // “name/path” tady slouží jen UI, neukládá se do dat
+          name={`${path}-preset`}
+          path={`${path}-preset`}
+          options={options}
+          value={selected || matched || ''}
+          onChange={(val: any) => {
+            const next = typeof val === 'string' ? val : val?.value
+            if (!next) return
 
-              const preset = presets.find((p) => p.value === next)
-              if (preset) apply(preset.text[localeKey])
-            }}
-            disabled={!!readOnly}
-          >
-            <option value="" disabled>
-              Vyber předvolbu…
-            </option>
-            {presets.map((p) => (
-              <option key={p.value} value={p.value}>
-                {p.label[localeKey]}
-              </option>
-            ))}
-          </select>
-        </div>
+            setSelected(next)
+            const preset = presets.find((p) => p.value === next)
+            if (preset) apply(preset.text[localeKey])
+          }}
+          isClearable
+          placeholder="Vyber předvolbu…"
+        />
       </div>
     </div>
   )
