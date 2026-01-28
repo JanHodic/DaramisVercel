@@ -71,6 +71,7 @@ export interface Config {
     users: User;
     projects: Project;
     post: Post;
+    page: Page;
     'payload-kv': PayloadKv;
     'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
@@ -87,6 +88,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     post: PostSelect<false> | PostSelect<true>;
+    page: PageSelect<false> | PageSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -400,6 +402,18 @@ export interface Post {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  slug: string;
+  content?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -437,6 +451,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'post';
         value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'page';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -711,6 +729,17 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "post_select".
  */
 export interface PostSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page_select".
+ */
+export interface PageSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   content?: T;

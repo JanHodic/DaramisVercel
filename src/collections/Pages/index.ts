@@ -2,7 +2,7 @@
 import type { CollectionConfig } from 'payload'
 
 export const Page: CollectionConfig = {
-  slug: 'post',
+  slug: 'page',
   admin: { useAsTitle: 'title' },
   fields: [
     { name: 'title', type: 'text', required: true },
