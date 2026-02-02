@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { PDFDocument } from '@/lib/types';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { PDFDocument } from '../../lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { AspectRatio } from '../../components/ui/aspect-ratio';
+import { ScrollArea } from '../../components/ui/scroll-area';
 import { ArrowLeft, Maximize2, FileText, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface PDFStandardsProps {
   pdfs: PDFDocument[];

@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Unit, UnitStatus, Disposition } from '@/lib/types';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Unit, UnitStatus, Disposition } from '../../lib/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '../../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Slider } from '../../components/ui/slider';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
+import { ScrollArea } from '../../components/ui/scroll-area';
+import { AspectRatio } from '../../components/ui/aspect-ratio';
 import { X, ArrowLeft, RotateCcw, Scale, Home, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface UnitsTableProps {
   units: Unit[];

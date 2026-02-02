@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import { Project } from '@/lib/types';
+import { Project } from '../../lib/types';
 
 interface ProjectIntroProps {
   project: Project;

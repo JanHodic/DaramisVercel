@@ -1,7 +1,7 @@
 "use client";
 
 import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
-import { Gallery } from "@/app/(frontend)/components/projects/Gallery";
+import { Gallery } from "src/app/(frontend)/components/projects/Gallery";
 import { useParams } from "next/navigation";
 
 
