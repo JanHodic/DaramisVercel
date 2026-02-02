@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { UnitsTable } from "@/components/projects/UnitsTable";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+import { UnitsTable } from "../../../../components/projects/UnitsTable";
+import { usePublicProjectBySlug } from "../../../../api/public.hooks";
 
 export default function UnitsPage() {
   const params = useParams();
