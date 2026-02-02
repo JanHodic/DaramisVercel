@@ -2,11 +2,11 @@
 
 import Image from 'next/image';
 import { X, ExternalLink } from 'lucide-react';
-import { MapLocation, LocationCategory } from '@/lib/types';
+import { MapLocation, LocationCategory } from '../../../lib/types';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { cn } from '@/lib/utils';
+import { ScrollArea } from '../../../components/ui/scroll-area';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import { cn } from '../../../lib/utils';
 
 interface LocationDetailPanelProps {
   location: MapLocation | null;
