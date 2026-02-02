@@ -1,0 +1,158 @@
+{
+  "timeline": {
+    "rezidence-modra": [
+      {
+        "id": "planning",
+        "name": "Projektová příprava",
+        "description": "Zpracování projektové dokumentace a získání stavebního povolení",
+        "dateFrom": "Q1 2024",
+        "dateTo": "Q2 2024",
+        "order": 1
+      },
+      {
+        "id": "foundation",
+        "name": "Základy a hrubá stavba",
+        "description": "Výkopové práce, základová deska a hrubá stavba skeletu budovy",
+        "dateFrom": "Q3 2024",
+        "dateTo": "Q1 2025",
+        "order": 2
+      },
+      {
+        "id": "construction",
+        "name": "Dokončovací práce",
+        "description": "Instalace rozvodů, fasáda, okna a vnitřní omítky",
+        "dateFrom": "Q2 2025",
+        "dateTo": "Q4 2025",
+        "order": 3
+      },
+      {
+        "id": "finishing",
+        "name": "Finální úpravy",
+        "description": "Podlahy, obklady, sanita a elektroinstalace v bytech",
+        "dateFrom": "Q1 2026",
+        "dateTo": "Q2 2026",
+        "order": 4
+      },
+      {
+        "id": "approval",
+        "name": "Kolaudace",
+        "description": "Kolaudační řízení a získání kolaudačního souhlasu",
+        "dateTo": "Q3 2026",
+        "order": 5
+      },
+      {
+        "id": "handover",
+        "name": "Předání bytů",
+        "description": "Předání bytových jednotek novým majitelům",
+        "dateTo": "Q4 2026",
+        "order": 6
+      }
+    ],
+    "viladomy-krc": [
+      {
+        "id": "planning",
+        "name": "Projektová příprava",
+        "description": "Architektonický návrh a stavební povolení",
+        "dateFrom": "Q2 2024",
+        "dateTo": "Q3 2024",
+        "order": 1
+      },
+      {
+        "id": "foundation",
+        "name": "Základy",
+        "description": "Příprava pozemku a základové konstrukce",
+        "dateFrom": "Q4 2024",
+        "dateTo": "Q1 2025",
+        "order": 2
+      },
+      {
+        "id": "construction",
+        "name": "Výstavba",
+        "description": "Hrubá stavba a zastřešení viladomů",
+        "dateFrom": "Q2 2025",
+        "dateTo": "Q4 2025",
+        "order": 3
+      },
+      {
+        "id": "finishing",
+        "name": "Dokončení",
+        "description": "Interiérové práce a terénní úpravy",
+        "dateFrom": "Q1 2026",
+        "dateTo": "Q3 2026",
+        "order": 4
+      },
+      {
+        "id": "handover",
+        "name": "Předání",
+        "description": "Kolaudace a předání jednotek",
+        "dateTo": "Q4 2026",
+        "order": 5
+      }
+    ],
+    "park-residence": [
+      {
+        "id": "planning",
+        "name": "Přípravná fáze",
+        "description": "Projektová dokumentace a povolení",
+        "dateFrom": "Q3 2024",
+        "dateTo": "Q4 2024",
+        "order": 1
+      },
+      {
+        "id": "demolition",
+        "name": "Demolice",
+        "description": "Odstranění stávajících objektů",
+        "dateTo": "Q1 2025",
+        "order": 2
+      },
+      {
+        "id": "construction",
+        "name": "Výstavba",
+        "description": "Kompletní stavební práce",
+        "dateFrom": "Q2 2025",
+        "dateTo": "Q2 2026",
+        "order": 3
+      },
+      {
+        "id": "landscaping",
+        "name": "Sadové úpravy",
+        "description": "Úprava okolí a napojení na park",
+        "dateFrom": "Q3 2026",
+        "dateTo": "Q4 2026",
+        "order": 4
+      },
+      {
+        "id": "handover",
+        "name": "Předání",
+        "description": "Kolaudace a nastěhování",
+        "dateTo": "Q1 2027",
+        "order": 5
+      }
+    ],
+    "slunecni-vrsek": [
+      {
+        "id": "planning",
+        "name": "Projekt",
+        "description": "Kompletní projektová příprava",
+        "dateFrom": "Q4 2024",
+        "dateTo": "Q1 2025",
+        "order": 1
+      },
+      {
+        "id": "construction",
+        "name": "Realizace",
+        "description": "Stavební práce",
+        "dateFrom": "Q2 2025",
+        "dateTo": "Q4 2026",
+        "order": 2
+      },
+      {
+        "id": "handover",
+        "name": "Dokončení",
+        "description": "Kolaudace a předání",
+        "dateTo": "Q1 2027",
+        "order": 3
+      }
+    ]
+  }
+}

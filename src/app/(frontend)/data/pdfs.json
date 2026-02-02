@@ -1,0 +1,75 @@
+{
+  "pdfs": {
+    "rezidence-modra": [
+      {
+        "id": "standard-basic",
+        "name": "Standard Basic",
+        "file": "/pdfs/modra/standard-basic.pdf",
+        "thumbnail": "https://picsum.photos/seed/modra-standard-basic/400/300",
+        "order": 1
+      },
+      {
+        "id": "standard-premium",
+        "name": "Standard Premium",
+        "file": "/pdfs/modra/standard-premium.pdf",
+        "thumbnail": "https://picsum.photos/seed/modra-standard-premium/400/300",
+        "order": 2
+      },
+      {
+        "id": "standard-luxury",
+        "name": "Standard Luxury",
+        "file": "/pdfs/modra/standard-luxury.pdf",
+        "thumbnail": "https://picsum.photos/seed/modra-standard-luxury/400/300",
+        "order": 3
+      }
+    ],
+    "viladomy-krc": [
+      {
+        "id": "krc-standard",
+        "name": "Standardy provedení",
+        "file": "/pdfs/krc/standardy.pdf",
+        "thumbnail": "https://picsum.photos/seed/krc-standard/400/300",
+        "order": 1
+      },
+      {
+        "id": "krc-upgrades",
+        "name": "Možnosti nadstandardu",
+        "file": "/pdfs/krc/nadstandard.pdf",
+        "thumbnail": "https://picsum.photos/seed/krc-upgrades/400/300",
+        "order": 2
+      }
+    ],
+    "park-residence": [
+      {
+        "id": "park-standard",
+        "name": "Prémiové standardy",
+        "file": "/pdfs/park/standard.pdf",
+        "thumbnail": "https://picsum.photos/seed/park-standard/400/300",
+        "order": 1
+      }
+    ],
+    "slunecni-vrsek": [
+      {
+        "id": "sv-standard",
+        "name": "Standardy bytů",
+        "file": "/pdfs/slunecni/standardy.pdf",
+        "thumbnail": "https://picsum.photos/seed/slunecni-standard/400/300",
+        "order": 1
+      },
+      {
+        "id": "sv-kitchen",
+        "name": "Kuchyňské linky",
+        "file": "/pdfs/slunecni/kuchyne.pdf",
+        "thumbnail": "https://picsum.photos/seed/slunecni-kitchen/400/300",
+        "order": 2
+      },
+      {
+        "id": "sv-bathroom",
+        "name": "Koupelny",
+        "file": "/pdfs/slunecni/koupelny.pdf",
+        "thumbnail": "https://picsum.photos/seed/slunecni-bathroom/400/300",
+        "order": 3
+      }
+    ]
+  }
+}

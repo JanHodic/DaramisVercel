@@ -1,0 +1,148 @@
+{
+  "projects": [
+    {
+      "id": "rezidence-modra",
+      "name": "Rezidence Modrá",
+      "status": "current",
+      "mainImage": "https://picsum.photos/seed/rezidence-modra/1920/1080",
+      "icon": "/images/projects/modra-icon.svg",
+      "webLink": null,
+      "youtubeUrl": null,
+      "buildingPlanFile": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "sections": ["intro", "location", "model", "units", "gallery", "amenities", "standards", "timeline"],
+      "location": {
+        "lat": 50.0755,
+        "lng": 14.4378,
+        "address": "Modrá 123, Praha 5"
+      },
+      "createdAt": "2024-01-15",
+      "updatedAt": "2025-01-10"
+    },
+    {
+      "id": "viladomy-krc",
+      "name": "Viladomy Krč",
+      "status": "current",
+      "mainImage": "https://picsum.photos/seed/viladomy-krc/1920/1080",
+      "icon": "/images/projects/krc-icon.svg",
+      "webLink": null,
+      "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "buildingPlanFile": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "sections": ["intro", "location", "model", "units", "gallery", "amenities", "standards", "timeline"],
+      "location": {
+        "lat": 50.0422,
+        "lng": 14.4474,
+        "address": "Krčská 456, Praha 4"
+      },
+      "createdAt": "2024-03-20",
+      "updatedAt": "2025-01-08"
+    },
+    {
+      "id": "park-residence",
+      "name": "Park Residence",
+      "status": "current",
+      "mainImage": "https://picsum.photos/seed/park-residence/1920/1080",
+      "icon": "/images/projects/park-icon.svg",
+      "webLink": null,
+      "youtubeUrl": null,
+      "buildingPlanFile": null,
+      "sections": ["intro", "location", "model", "units", "gallery", "amenities", "timeline"],
+      "location": {
+        "lat": 50.0880,
+        "lng": 14.4208,
+        "address": "Parkova 789, Praha 7"
+      },
+      "createdAt": "2024-06-10",
+      "updatedAt": "2025-01-05"
+    },
+    {
+      "id": "slunecni-vrsek",
+      "name": "Sluneční Vršek",
+      "status": "current",
+      "mainImage": "https://picsum.photos/seed/slunecni-vrsek/1920/1080",
+      "icon": "/images/projects/slunecni-icon.svg",
+      "webLink": null,
+      "youtubeUrl": null,
+      "buildingPlanFile": null,
+      "sections": ["intro", "location", "units", "gallery", "amenities", "standards", "timeline"],
+      "location": {
+        "lat": 50.0645,
+        "lng": 14.5123,
+        "address": "Sluneční 321, Praha 10"
+      },
+      "createdAt": "2024-09-01",
+      "updatedAt": "2025-01-02"
+    },
+    {
+      "id": "bytovy-dum-liben",
+      "name": "Bytový dům Libeň",
+      "status": "planned",
+      "mainImage": "https://picsum.photos/seed/bytovy-dum-liben/1920/1080",
+      "icon": "/images/projects/liben-icon.svg",
+      "webLink": null,
+      "youtubeUrl": null,
+      "buildingPlanFile": null,
+      "sections": ["intro", "location", "gallery"],
+      "location": {
+        "lat": 50.1122,
+        "lng": 14.4789,
+        "address": "Libeňská 111, Praha 8"
+      },
+      "createdAt": "2025-01-05",
+      "updatedAt": "2025-01-10"
+    },
+    {
+      "id": "vinice-terasy",
+      "name": "Vinice Terasy",
+      "status": "planned",
+      "mainImage": "https://picsum.photos/seed/vinice-terasy/1920/1080",
+      "icon": "/images/projects/vinice-icon.svg",
+      "webLink": null,
+      "youtubeUrl": null,
+      "buildingPlanFile": null,
+      "sections": ["intro", "location", "gallery"],
+      "location": {
+        "lat": 50.0312,
+        "lng": 14.5245,
+        "address": "Viničná 222, Praha 10"
+      },
+      "createdAt": "2025-01-08",
+      "updatedAt": "2025-01-10"
+    },
+    {
+      "id": "rezidence-flora",
+      "name": "Rezidence Flora",
+      "status": "completed",
+      "mainImage": "https://picsum.photos/seed/rezidence-flora/1920/1080",
+      "icon": "/images/projects/flora-icon.svg",
+      "webLink": "https://www.daramis.cz/projekty/rezidence-flora",
+      "youtubeUrl": null,
+      "buildingPlanFile": null,
+      "sections": ["intro", "location", "gallery"],
+      "location": {
+        "lat": 50.0756,
+        "lng": 14.4689,
+        "address": "Florentská 333, Praha 3"
+      },
+      "createdAt": "2021-05-15",
+      "updatedAt": "2023-12-01"
+    },
+    {
+      "id": "zahradni-mesto",
+      "name": "Zahradní Město",
+      "status": "completed",
+      "mainImage": "https://picsum.photos/seed/zahradni-mesto/1920/1080",
+      "icon": "/images/projects/zahradni-icon.svg",
+      "webLink": "https://www.daramis.cz/projekty/zahradni-mesto",
+      "youtubeUrl": null,
+      "buildingPlanFile": null,
+      "sections": ["intro", "location", "gallery"],
+      "location": {
+        "lat": 50.0534,
+        "lng": 14.5012,
+        "address": "Zahradní 444, Praha 10"
+      },
+      "createdAt": "2020-02-20",
+      "updatedAt": "2022-08-15"
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Daramis Custom Fonts */
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('/fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Matter';
+  src: url('/fonts/Matter-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Matter';
+  src: url('/fonts/Matter-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Matter', system-ui, sans-serif;
+  --font-heading: 'Bebas Neue', system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Daramis Custom Colors */
+  --color-daramis-green: #004C45;
+  --color-daramis-red: #D40E3A;
+  --color-daramis-bg: #EEEDF4;
+  --color-daramis-green-100: #E9F4F0;
+  --color-daramis-green-200: #D3E8E1;
+  --color-daramis-green-300: #B8D0C4;
+  --color-daramis-green-400: #ADC9BC;
+  --color-daramis-green-500: #99BCAB;
+  --color-daramis-green-600: #80A6A2;
+  --color-daramis-green-700: #66948F;
+  --color-daramis-green-800: #4D827D;
+  --color-daramis-green-900: #33706A;
+  --color-daramis-gray-100: #EAE9F2;
+  --color-daramis-gray-200: #E7E5F0;
+  --color-daramis-gray-300: #E3E1ED;
+  --color-daramis-gray-400: #DCDAE9;
+  --color-daramis-red-100: #EA879D;
+  --color-daramis-red-200: #E56E89;
+  --color-daramis-red-300: #E15775;
+  --color-daramis-red-400: #DD3E61;
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Daramis Light Theme */
+  --background: #EEEDF4;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #004C45;
+  --primary-foreground: #ffffff;
+  --secondary: #E9F4F0;
+  --secondary-foreground: #004C45;
+  --muted: #E7E5F0;
+  --muted-foreground: #666666;
+  --accent: #D3E8E1;
+  --accent-foreground: #004C45;
+  --destructive: #D40E3A;
+  --destructive-foreground: #ffffff;
+  --border: #DCDAE9;
+  --input: #DCDAE9;
+  --ring: #004C45;
+  --chart-1: #004C45;
+  --chart-2: #33706A;
+  --chart-3: #66948F;
+  --chart-4: #99BCAB;
+  --chart-5: #D3E8E1;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #004C45;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #E9F4F0;
+  --sidebar-accent-foreground: #004C45;
+  --sidebar-border: #DCDAE9;
+  --sidebar-ring: #004C45;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bebas Neue', system-ui, sans-serif;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004C45;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid #004C45;
+  outline-offset: 2px;
+}

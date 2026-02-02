@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": "admin-1",
+      "email": "admin@daramis.cz",
+      "name": "Jan Novák",
+      "role": "superadmin",
+      "avatar": "/images/avatars/jan.jpg",
+      "createdAt": "2024-01-01"
+    },
+    {
+      "id": "editor-1",
+      "email": "editor@daramis.cz",
+      "name": "Marie Svobodová",
+      "role": "editor",
+      "avatar": "/images/avatars/marie.jpg",
+      "createdAt": "2024-02-15"
+    },
+    {
+      "id": "editor-2",
+      "email": "prodej@daramis.cz",
+      "name": "Petr Procházka",
+      "role": "editor",
+      "avatar": "/images/avatars/petr.jpg",
+      "createdAt": "2024-03-10"
+    },
+    {
+      "id": "viewer-1",
+      "email": "viewer@daramis.cz",
+      "name": "Eva Kowalská",
+      "role": "viewer",
+      "avatar": null,
+      "createdAt": "2024-06-20"
+    },
+    {
+      "id": "viewer-2",
+      "email": "obchod@daramis.cz",
+      "name": "Tomáš Horák",
+      "role": "viewer",
+      "avatar": null,
+      "createdAt": "2024-08-05"
+    }
+  ],
+  "roles": {
+    "superadmin": {
+      "name": "Super Admin",
+      "permissions": ["view", "edit", "create", "delete", "manage_users", "manage_projects", "api_access"]
+    },
+    "editor": {
+      "name": "Editor",
+      "permissions": ["view", "edit"]
+    },
+    "viewer": {
+      "name": "Prohlížitel",
+      "permissions": ["view"]
+    }
+  }
+}

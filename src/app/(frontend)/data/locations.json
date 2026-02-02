@@ -1,0 +1,330 @@
+{
+  "categories": [
+    {
+      "id": "transport",
+      "name": "MHD",
+      "nameEn": "Public Transport",
+      "color": "#0066CC",
+      "icon": "bus"
+    },
+    {
+      "id": "cafe",
+      "name": "Kavárny",
+      "nameEn": "Cafés",
+      "color": "#8B4513",
+      "icon": "coffee"
+    },
+    {
+      "id": "restaurant",
+      "name": "Restaurace",
+      "nameEn": "Restaurants",
+      "color": "#FF6B35",
+      "icon": "utensils"
+    },
+    {
+      "id": "grocery",
+      "name": "Potraviny",
+      "nameEn": "Grocery",
+      "color": "#28A745",
+      "icon": "shopping-cart"
+    },
+    {
+      "id": "school",
+      "name": "Školy",
+      "nameEn": "Schools",
+      "color": "#6C5CE7",
+      "icon": "graduation-cap"
+    },
+    {
+      "id": "health",
+      "name": "Zdravotnictví",
+      "nameEn": "Healthcare",
+      "color": "#E74C3C",
+      "icon": "heart-pulse"
+    },
+    {
+      "id": "sport",
+      "name": "Sport",
+      "nameEn": "Sports",
+      "color": "#00CEC9",
+      "icon": "dumbbell"
+    },
+    {
+      "id": "park",
+      "name": "Parky",
+      "nameEn": "Parks",
+      "color": "#2ECC71",
+      "icon": "trees"
+    }
+  ],
+  "locations": {
+    "rezidence-modra": [
+      {
+        "id": "metro-andel",
+        "name": "Metro Anděl",
+        "category": "transport",
+        "lat": 50.0701,
+        "lng": 14.4033,
+        "description": "Stanice metra B - 5 min pěšky",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "tram-andel",
+        "name": "Tramvaj Anděl",
+        "category": "transport",
+        "lat": 50.0698,
+        "lng": 14.4028,
+        "description": "Tramvajová zastávka - linky 4, 7, 9, 10",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "costa-coffee",
+        "name": "Costa Coffee",
+        "category": "cafe",
+        "lat": 50.0712,
+        "lng": 14.4055,
+        "description": "Oblíbená kavárna s terasou",
+        "image": "https://picsum.photos/seed/location-costa/400/300",
+        "link": "https://www.costa.cz"
+      },
+      {
+        "id": "kavarna-co-hleda-jmeno",
+        "name": "Kavárna, co hledá jméno",
+        "category": "cafe",
+        "lat": 50.0725,
+        "lng": 14.4062,
+        "description": "Hipsterská kavárna s výbornou kávou",
+        "image": "https://picsum.photos/seed/location-kavarna/400/300",
+        "link": null
+      },
+      {
+        "id": "restaurace-u-mateje",
+        "name": "U Matěje",
+        "category": "restaurant",
+        "lat": 50.0738,
+        "lng": 14.4089,
+        "description": "Tradiční česká kuchyně",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "sushi-time",
+        "name": "Sushi Time",
+        "category": "restaurant",
+        "lat": 50.0705,
+        "lng": 14.4112,
+        "description": "Japonská restaurace s rozvozem",
+        "image": null,
+        "link": "https://www.sushitime.cz"
+      },
+      {
+        "id": "albert",
+        "name": "Albert",
+        "category": "grocery",
+        "lat": 50.0695,
+        "lng": 14.4045,
+        "description": "Supermarket - otevřeno do 22:00",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "billa",
+        "name": "Billa",
+        "category": "grocery",
+        "lat": 50.0718,
+        "lng": 14.4078,
+        "description": "Supermarket v OC Nový Smíchov",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "zs-andel",
+        "name": "ZŠ Anděl",
+        "category": "school",
+        "lat": 50.0682,
+        "lng": 14.4095,
+        "description": "Základní škola s rozšířenou výukou jazyků",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "gymnazium-na-zatlance",
+        "name": "Gymnázium Na Zatlance",
+        "category": "school",
+        "lat": 50.0755,
+        "lng": 14.4125,
+        "description": "Prestižní osmileté gymnázium",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "poliklinika-andel",
+        "name": "Poliklinika Anděl",
+        "category": "health",
+        "lat": 50.0688,
+        "lng": 14.4015,
+        "description": "Komplexní zdravotnické služby",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "fitness-andel",
+        "name": "Fitness Anděl",
+        "category": "sport",
+        "lat": 50.0721,
+        "lng": 14.4008,
+        "description": "Moderní fitness centrum",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "sacre-coeur",
+        "name": "Park Sacré Coeur",
+        "category": "park",
+        "lat": 50.0665,
+        "lng": 14.4055,
+        "description": "Klidný park s lavičkami",
+        "image": "https://picsum.photos/seed/location-sacre-coeur/400/300",
+        "link": null
+      }
+    ],
+    "viladomy-krc": [
+      {
+        "id": "bus-krc",
+        "name": "Bus Krč",
+        "category": "transport",
+        "lat": 50.0435,
+        "lng": 14.4485,
+        "description": "Autobusová zastávka - linky 106, 121",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "metro-kacerov",
+        "name": "Metro Kačerov",
+        "category": "transport",
+        "lat": 50.0398,
+        "lng": 14.4562,
+        "description": "Stanice metra C - 10 min autobusem",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "starbucks-krc",
+        "name": "Starbucks",
+        "category": "cafe",
+        "lat": 50.0412,
+        "lng": 14.4498,
+        "description": "Kavárna v OC Krč",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "lidl-krc",
+        "name": "Lidl",
+        "category": "grocery",
+        "lat": 50.0445,
+        "lng": 14.4512,
+        "description": "Diskontní supermarket",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "thomayerova-nemocnice",
+        "name": "Thomayerova nemocnice",
+        "category": "health",
+        "lat": 50.0378,
+        "lng": 14.4425,
+        "description": "Velká fakultní nemocnice",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "kunraticky-les",
+        "name": "Kunratický les",
+        "category": "park",
+        "lat": 50.0285,
+        "lng": 14.4585,
+        "description": "Rozsáhlý lesní park pro výlety",
+        "image": "https://picsum.photos/seed/location-kunraticky-les/400/300",
+        "link": null
+      }
+    ],
+    "park-residence": [
+      {
+        "id": "tram-letna",
+        "name": "Tramvaj Letenské náměstí",
+        "category": "transport",
+        "lat": 50.0895,
+        "lng": 14.4225,
+        "description": "Tramvajová zastávka - linky 1, 8, 25, 26",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "cafe-letka",
+        "name": "Café Letka",
+        "category": "cafe",
+        "lat": 50.0888,
+        "lng": 14.4195,
+        "description": "Stylová kavárna s výhledem",
+        "image": "https://picsum.photos/seed/location-cafe-letka/400/300",
+        "link": null
+      },
+      {
+        "id": "letensky-zamecek",
+        "name": "Letenský zámeček",
+        "category": "restaurant",
+        "lat": 50.0912,
+        "lng": 14.4178,
+        "description": "Restaurace v historickém zámečku",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "letenske-sady",
+        "name": "Letenské sady",
+        "category": "park",
+        "lat": 50.0925,
+        "lng": 14.4155,
+        "description": "Velký městský park s vyhlídkou",
+        "image": "https://picsum.photos/seed/location-letna/400/300",
+        "link": null
+      }
+    ],
+    "slunecni-vrsek": [
+      {
+        "id": "metro-strasnicka",
+        "name": "Metro Strašnická",
+        "category": "transport",
+        "lat": 50.0712,
+        "lng": 14.4892,
+        "description": "Stanice metra A - 8 min pěšky",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "kaufland",
+        "name": "Kaufland",
+        "category": "grocery",
+        "lat": 50.0658,
+        "lng": 14.5085,
+        "description": "Hypermarket s parkováním",
+        "image": null,
+        "link": null
+      },
+      {
+        "id": "hostivarske-nadrazi",
+        "name": "Hostivařská přehrada",
+        "category": "park",
+        "lat": 50.0525,
+        "lng": 14.5245,
+        "description": "Rekreační oblast s koupalištěm",
+        "image": "https://picsum.photos/seed/location-hostivar/400/300",
+        "link": null
+      }
+    ]
+  }
+}

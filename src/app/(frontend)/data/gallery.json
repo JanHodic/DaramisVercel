@@ -1,0 +1,156 @@
+{
+  "gallery": {
+    "rezidence-modra": [
+      {
+        "id": "modra-ext-1",
+        "src": "https://picsum.photos/seed/modra-ext1/1920/1080",
+        "alt": "Rezidence Modrá - exteriér",
+        "order": 1
+      },
+      {
+        "id": "modra-ext-2",
+        "src": "https://picsum.photos/seed/modra-ext2/1920/1080",
+        "alt": "Rezidence Modrá - pohled ze zahrady",
+        "order": 2
+      },
+      {
+        "id": "modra-int-1",
+        "src": "https://picsum.photos/seed/modra-int1/1920/1080",
+        "alt": "Rezidence Modrá - obývací pokoj",
+        "order": 3
+      },
+      {
+        "id": "modra-int-2",
+        "src": "https://picsum.photos/seed/modra-int2/1920/1080",
+        "alt": "Rezidence Modrá - kuchyně",
+        "order": 4
+      },
+      {
+        "id": "modra-int-3",
+        "src": "https://picsum.photos/seed/modra-int3/1920/1080",
+        "alt": "Rezidence Modrá - ložnice",
+        "order": 5
+      },
+      {
+        "id": "modra-bath",
+        "src": "https://picsum.photos/seed/modra-bath/1920/1080",
+        "alt": "Rezidence Modrá - koupelna",
+        "order": 6
+      },
+      {
+        "id": "modra-terrace",
+        "src": "https://picsum.photos/seed/modra-terrace/1920/1080",
+        "alt": "Rezidence Modrá - terasa",
+        "order": 7
+      }
+    ],
+    "viladomy-krc": [
+      {
+        "id": "krc-ext-1",
+        "src": "https://picsum.photos/seed/krc-ext1/1920/1080",
+        "alt": "Viladomy Krč - vila A",
+        "order": 1
+      },
+      {
+        "id": "krc-ext-2",
+        "src": "https://picsum.photos/seed/krc-ext2/1920/1080",
+        "alt": "Viladomy Krč - vila B",
+        "order": 2
+      },
+      {
+        "id": "krc-garden",
+        "src": "https://picsum.photos/seed/krc-garden/1920/1080",
+        "alt": "Viladomy Krč - zahrada",
+        "order": 3
+      },
+      {
+        "id": "krc-int-1",
+        "src": "https://picsum.photos/seed/krc-int1/1920/1080",
+        "alt": "Viladomy Krč - obývací pokoj",
+        "order": 4
+      },
+      {
+        "id": "krc-int-2",
+        "src": "https://picsum.photos/seed/krc-int2/1920/1080",
+        "alt": "Viladomy Krč - jídelna",
+        "order": 5
+      }
+    ],
+    "park-residence": [
+      {
+        "id": "park-ext-1",
+        "src": "https://picsum.photos/seed/park-ext1/1920/1080",
+        "alt": "Park Residence - budova",
+        "order": 1
+      },
+      {
+        "id": "park-lobby",
+        "src": "https://picsum.photos/seed/park-lobby/1920/1080",
+        "alt": "Park Residence - lobby",
+        "order": 2
+      },
+      {
+        "id": "park-int-1",
+        "src": "https://picsum.photos/seed/park-int1/1920/1080",
+        "alt": "Park Residence - byt",
+        "order": 3
+      },
+      {
+        "id": "park-rooftop",
+        "src": "https://picsum.photos/seed/park-rooftop/1920/1080",
+        "alt": "Park Residence - střešní terasa",
+        "order": 4
+      }
+    ],
+    "slunecni-vrsek": [
+      {
+        "id": "sv-ext-1",
+        "src": "https://picsum.photos/seed/sv-ext1/1920/1080",
+        "alt": "Sluneční Vršek - vizualizace",
+        "order": 1
+      },
+      {
+        "id": "sv-ext-2",
+        "src": "https://picsum.photos/seed/sv-ext2/1920/1080",
+        "alt": "Sluneční Vršek - pohled z ulice",
+        "order": 2
+      },
+      {
+        "id": "sv-int-1",
+        "src": "https://picsum.photos/seed/sv-int1/1920/1080",
+        "alt": "Sluneční Vršek - interiér",
+        "order": 3
+      }
+    ],
+    "bytovy-dum-liben": [
+      {
+        "id": "liben-viz-1",
+        "src": "https://picsum.photos/seed/liben-viz1/1920/1080",
+        "alt": "Bytový dům Libeň - vizualizace",
+        "order": 1
+      }
+    ],
+    "rezidence-flora": [
+      {
+        "id": "flora-ext",
+        "src": "https://picsum.photos/seed/flora-ext/1920/1080",
+        "alt": "Rezidence Flora - dokončená budova",
+        "order": 1
+      },
+      {
+        "id": "flora-int",
+        "src": "https://picsum.photos/seed/flora-int/1920/1080",
+        "alt": "Rezidence Flora - ukázkový byt",
+        "order": 2
+      }
+    ],
+    "zahradni-mesto": [
+      {
+        "id": "zahradni-ext",
+        "src": "https://picsum.photos/seed/zahradni-ext/1920/1080",
+        "alt": "Zahradní Město - exteriér",
+        "order": 1
+      }
+    ]
+  }
+}

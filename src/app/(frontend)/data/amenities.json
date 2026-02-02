@@ -1,0 +1,152 @@
+{
+  "amenities": {
+    "rezidence-modra": [
+      {
+        "id": "fitness",
+        "name": "Fitness centrum",
+        "description": "Moderně vybavené fitness centrum s kardio zónou a posilovnou dostupné všem rezidentům 24/7. K dispozici jsou běžecké pásy, rotopedy, eliptické trenažéry a kompletní sada činek.",
+        "image": "https://picsum.photos/seed/modra-fitness/800/600",
+        "order": 1
+      },
+      {
+        "id": "reception",
+        "name": "24/7 Recepce",
+        "description": "Nepřetržitá recepční služba zajišťující bezpečnost a pohodlí rezidentů. Přijímání balíků, ohlašování návštěv a asistence s každodenními potřebami.",
+        "image": "https://picsum.photos/seed/modra-reception/800/600",
+        "order": 2
+      },
+      {
+        "id": "garden",
+        "name": "Společná zahrada",
+        "description": "Krásně upravená zahrada s odpočinkovou zónou, dětským hřištěm a grilovacím koutem. Ideální místo pro relaxaci a setkávání sousedů.",
+        "image": "https://picsum.photos/seed/modra-garden/800/600",
+        "order": 3
+      },
+      {
+        "id": "parking",
+        "name": "Podzemní parkování",
+        "description": "Bezpečné podzemní garáže s přímým přístupem do budovy. Každý byt má přidělené jedno až dvě parkovací stání s možností instalace wallboxu pro elektromobily.",
+        "image": "https://picsum.photos/seed/modra-parking/800/600",
+        "order": 4
+      },
+      {
+        "id": "storage",
+        "name": "Sklepní kóje",
+        "description": "Prostorné sklepní kóje pro každou bytovou jednotku. Ideální pro uložení sezónních věcí, sportovního vybavení nebo kol.",
+        "image": "https://picsum.photos/seed/modra-storage/800/600",
+        "order": 5
+      },
+      {
+        "id": "bike",
+        "name": "Kolárna",
+        "description": "Zabezpečená kolárna s kapacitou pro všechny rezidenty. Možnost uložení kol, koloběžek a dalších sportovních potřeb.",
+        "image": "https://picsum.photos/seed/modra-bike/800/600",
+        "order": 6
+      },
+      {
+        "id": "ev-charging",
+        "name": "Nabíjecí stanice",
+        "description": "Příprava pro nabíjecí stanice elektromobilů na každém parkovacím stání. Možnost instalace wallboxu dle vlastního výběru.",
+        "image": "https://picsum.photos/seed/modra-ev-charging/800/600",
+        "order": 7
+      }
+    ],
+    "viladomy-krc": [
+      {
+        "id": "private-garden",
+        "name": "Soukromé zahrady",
+        "description": "Každá přízemní jednotka má vlastní soukromou zahradu s terasou. Zahrady jsou oplocené a poskytují maximální soukromí.",
+        "image": "https://picsum.photos/seed/krc-private-garden/800/600",
+        "order": 1
+      },
+      {
+        "id": "carport",
+        "name": "Kryté parkování",
+        "description": "Elegantní kryté parkování před každou vilou. Dva parkovací stání na jednotku s možností rozšíření.",
+        "image": "https://picsum.photos/seed/krc-carport/800/600",
+        "order": 2
+      },
+      {
+        "id": "smart-home",
+        "name": "Smart Home",
+        "description": "Všechny jednotky jsou vybaveny základním systémem chytré domácnosti - ovládání osvětlení, žaluzií a vytápění přes aplikaci.",
+        "image": "https://picsum.photos/seed/krc-smart-home/800/600",
+        "order": 3
+      },
+      {
+        "id": "community-room",
+        "name": "Společenská místnost",
+        "description": "Prostorná společenská místnost k pronájmu pro soukromé akce rezidentů. Kapacita až 30 osob.",
+        "image": "https://picsum.photos/seed/krc-community-room/800/600",
+        "order": 4
+      }
+    ],
+    "park-residence": [
+      {
+        "id": "rooftop",
+        "name": "Střešní terasa",
+        "description": "Společná střešní terasa s výhledem na park. Vybavená lehátky, grilem a zelení pro relaxaci rezidentů.",
+        "image": "https://picsum.photos/seed/park-rooftop/800/600",
+        "order": 1
+      },
+      {
+        "id": "concierge",
+        "name": "Concierge služby",
+        "description": "Prémiové concierge služby zahrnující rezervace restaurací, zajištění úklidu, péče o domácí mazlíčky a další.",
+        "image": "https://picsum.photos/seed/park-concierge/800/600",
+        "order": 2
+      },
+      {
+        "id": "coworking",
+        "name": "Co-working prostor",
+        "description": "Moderní co-working prostor v přízemí budovy. Vysokorychlostní internet, tiskárna a zasedací místnost k dispozici.",
+        "image": "https://picsum.photos/seed/park-coworking/800/600",
+        "order": 3
+      },
+      {
+        "id": "spa",
+        "name": "Wellness & Spa",
+        "description": "Privátní wellness zóna se saunou, parní lázní a odpočívárnou. Možnost rezervace pro exkluzivní využití.",
+        "image": "https://picsum.photos/seed/park-spa/800/600",
+        "order": 4
+      },
+      {
+        "id": "underground-parking",
+        "name": "Podzemní garáže",
+        "description": "Dvě úrovně podzemního parkování s výtahem přímo do bytů. Prémiová parkovací stání pro větší vozidla.",
+        "image": "https://picsum.photos/seed/park-underground-parking/800/600",
+        "order": 5
+      }
+    ],
+    "slunecni-vrsek": [
+      {
+        "id": "playground",
+        "name": "Dětské hřiště",
+        "description": "Bezpečné dětské hřiště s certifikovanými herními prvky. Oplocený prostor pod dohledem kamerového systému.",
+        "image": "https://picsum.photos/seed/slunecni-playground/800/600",
+        "order": 1
+      },
+      {
+        "id": "bbq-area",
+        "name": "Grill zóna",
+        "description": "Společná grill zóna s posezením pro až 20 osob. Ideální pro letní grilovačky a setkání sousedů.",
+        "image": "https://picsum.photos/seed/slunecni-bbq-area/800/600",
+        "order": 2
+      },
+      {
+        "id": "bike-storage",
+        "name": "Úschovna kol",
+        "description": "Prostorná úschovna kol a koloběžek v přízemí budovy. Každý rezident má přidělené místo.",
+        "image": "https://picsum.photos/seed/slunecni-bike-storage/800/600",
+        "order": 3
+      },
+      {
+        "id": "package-room",
+        "name": "Balíkovna",
+        "description": "Zabezpečená místnost pro příjem a uložení balíků. Chytré schránky s notifikací při doručení.",
+        "image": "https://picsum.photos/seed/slunecni-package-room/800/600",
+        "order": 4
+      }
+    ]
+  }
+}
