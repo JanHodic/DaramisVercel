@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+import { usePublicProjectBySlug } from "../../../api/public.hooks";
 
 function pickFirstSection(project: any) {
   const sections = Array.isArray(project?.sections) ? project.sections : [];

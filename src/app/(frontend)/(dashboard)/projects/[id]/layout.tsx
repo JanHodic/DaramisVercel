@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+import { usePublicProjectBySlug } from "../../../api/public.hooks";
 
 export default function ProjectLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
