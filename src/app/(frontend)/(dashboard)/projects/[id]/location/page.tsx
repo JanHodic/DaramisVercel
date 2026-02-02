@@ -2,10 +2,11 @@
 
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
+
 
 const LocationMap = dynamic(
-  () => import("@/components/projects/LocationMap").then((mod) => mod.LocationMap),
+  () => import("src/app/(frontend)/components/projects/LocationMap"),
   {
     ssr: false,
     loading: () => (

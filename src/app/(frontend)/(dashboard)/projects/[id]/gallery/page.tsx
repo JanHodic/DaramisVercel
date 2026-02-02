@@ -1,8 +1,9 @@
 "use client";
 
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
+import { Gallery } from "@/app/(frontend)/components/projects/Gallery";
 import { useParams } from "next/navigation";
-import { Gallery } from "@/components/projects/Gallery";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+
 
 export default function GalleryPage() {
   const params = useParams();

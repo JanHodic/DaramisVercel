@@ -1,8 +1,9 @@
 "use client";
 
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
+import { Model3DPlaceholder } from "@/app/(frontend)/components/projects/Model3DPlaceholder";
 import { useParams } from "next/navigation";
-import { Model3DPlaceholder } from "@/components/projects/Model3DPlaceholder";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+
 
 export default function ModelPage() {
   const params = useParams();

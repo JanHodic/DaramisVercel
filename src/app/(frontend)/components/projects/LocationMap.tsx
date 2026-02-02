@@ -2,15 +2,15 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useLanguage } from '@/contexts/LanguageContext';
+
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from '../../components/ui/dropdown-menu';
+import { ScrollArea } from '../../components/ui/scroll-area';
 import {
   Filter,
   ZoomIn,
@@ -29,12 +29,16 @@ import {
   MapPin,
   FileText
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+
 //import locationsData from '@/data/locations.json';
-import { LocationCategory, Project } from '@/lib/types';
+
 import { ProjectMarker } from './map';
-import { cn } from '@/lib/utils';
-import { fetchProjects } from '@/api/apiClient.public';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { LocationCategory, Project } from '../../lib/types';
+import { fetchProjects } from '../../api/apiClient.public';
+import { Separator } from '@radix-ui/react-separator';
+import { cn } from '@/utilities/ui';
+
 
 interface LocationMapProps {
   projectId: string;
@@ -60,7 +64,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'trees': Trees,
 };
 
-export function LocationMap({ projectId, projectLocation, projectName, projectIcon, isPlannedProject = false, buildingPlanFile }: LocationMapProps) {
+export default function LocationMap({ projectId, projectLocation, projectName, projectIcon, isPlannedProject = false, buildingPlanFile }: LocationMapProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [isBuildingPlanOpen, setIsBuildingPlanOpen] = useState(false);
   const { t, language } = useLanguage();

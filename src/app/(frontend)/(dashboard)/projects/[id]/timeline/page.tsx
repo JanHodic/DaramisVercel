@@ -1,8 +1,9 @@
 "use client";
 
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
+import { Timeline } from "@/app/(frontend)/components/projects/Timeline";
 import { useParams } from "next/navigation";
-import { Timeline } from "@/components/projects/Timeline";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+
 
 function pickMilestones(project: any) {
   const t = project?.timeline;

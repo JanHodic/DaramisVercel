@@ -1,8 +1,9 @@
 "use client";
 
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
+import { ProjectIntro } from "@/app/(frontend)/components/projects/ProjectIntro";
 import { useParams } from "next/navigation";
-import { ProjectIntro } from "@/components/projects/ProjectIntro";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+
 
 export default function IntroPage() {
   const params = useParams();

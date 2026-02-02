@@ -1,10 +1,11 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { PDFStandards } from "@/components/projects/PDFStandards";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
-import pdfsData from '@/data/pdfs.json';
-import { PDFDocument } from "@/lib/types";
+import pdfsData from '@/app/(frontend)/data/pdfs.json';
+import { PDFDocument } from "@/app/(frontend)/lib/types";
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
+import { PDFStandards } from "@/app/(frontend)/components/projects/PDFStandards";
+
 
 function toPdf(doc: any) {
   // Media doc from Payload usually has: url, filename, mimeType, filesize, etc.

@@ -1,8 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Amenities } from "@/components/projects/Amenities";
-import { usePublicProjectBySlug } from "@/api/public.hooks";
+
+import { Amenities } from "@/app/(frontend)/components/projects/Amenities";
+import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
 
 export default function AmenitiesPage() {
   const params = useParams();
