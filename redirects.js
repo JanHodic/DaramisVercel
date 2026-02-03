@@ -5,16 +5,26 @@ const redirects = async () => {
       {
         type: 'header',
         key: 'user-agent',
-        value: '(.*Trident.*)', // all ie browsers
+        value: '(.*Trident.*)', // all IE browsers
       },
     ],
     permanent: false,
-    source: '/:path((?!ie-incompatible.html$).*)', // all pages except the incompatibility page
+    source: '/:path((?!ie-incompatible.html$).*)',
   }
 
-  const redirects = [internetExplorerRedirect]
+  const adminCanonicalRedirect = {
+    source: '/admin/:path*',
+    has: [
+      {
+        type: 'host',
+        value: '(?!daramis-vercel\\.vercel\\.app$).*',
+      },
+    ],
+    destination: 'https://daramis-vercel.vercel.app/admin/:path*',
+    permanent: false,
+  }
 
-  return redirects
+  return [internetExplorerRedirect, adminCanonicalRedirect]
 }
 
 export default redirects
