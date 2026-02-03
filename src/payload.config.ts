@@ -22,18 +22,20 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const connectionString =
-  process.env.POSTGRES_URL ||
   process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
   process.env.NEON_DATABASE_URL
 
 if (!connectionString) {
-  throw new Error('Missing POSTGRES_URL / DATABASE_URL / NEON_DATABASE_URL')
+  throw new Error('Missing DATABASE_URL / POSTGRES_URL / NEON_DATABASE_URL')
 }
 
 const serverURL =
-  process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_SERVER_URL
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+
+if (!serverURL) throw new Error('Missing NEXT_PUBLIC_SERVER_URL')
+
 
 const isString = (v: unknown): v is string => typeof v === 'string' && v.length > 0
 
@@ -100,20 +102,26 @@ export default buildConfig({
     Page
   ],
 
-  cors: [
-    serverURL,
-    getServerSideURL(),
-    'http://localhost:3001',
-    'http://127.0.0.1:3001',
-    'http://172.20.10.10:3001',
-  ].filter(isString),
+cors: [
+  serverURL,
+  getServerSideURL(),
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://172.20.10.10:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'http://172.20.10.10:3001',
+].filter(isString),
 
-  csrf: [
-    serverURL,
-    'http://localhost:3001',
-    'http://127.0.0.1:3001',
-    'http://172.20.10.10:3001',
-  ],
+csrf: [
+  serverURL,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://172.20.10.10:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'http://172.20.10.10:3001',
+].filter(isString),
 
   plugins: [
     openapi({
