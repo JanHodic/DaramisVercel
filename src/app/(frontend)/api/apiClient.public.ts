@@ -7,7 +7,7 @@
  * If your server mounts endpoints differently, pass `apiPrefix: ''` or customize it.
  */
 
-import type { Project } from "@/lib/types";
+import type { Project } from "../lib/types";
 
 // ---- Payload helpers
 
