@@ -46,6 +46,12 @@ export default buildConfig({
     fallbackLanguage: 'cs',
   },
 
+  upload: {
+  limits: {
+    fileSize: 50_000_000,
+    },
+  },
+
   // ✅ Content localization (localized fields + ?locale=cs)
   localization: {
     locales: ['cs', 'en'],
@@ -134,7 +140,10 @@ csrf: [
         media: {
           prefix: 'media',
           generateFileURL: ({ filename, prefix }) => {
-            const base = process.env.R2_PUBLIC_BASE_URL
+            const base =
+              (process.env.R2_PUBLIC_BASE_URL || '').replace(/\/+$/, '') ||
+              'https://pub-50065115e42b4cc6a071c495b7ad78ce.r2.dev'
+
             const key = prefix ? `${prefix}/${filename}` : filename
             return `${base}/${key}`
           },
