@@ -8,10 +8,10 @@ import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
 import { UIProject } from "../mappers/UITypes";
 
 const api = createDaramisApiClient({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://daramis-vercel.vercel.app',
-  getToken: () => localStorage.getItem('token'),
-  defaultQuery: { locale: 'cs', depth: 2 },
-})
+  baseUrl: process.env.NEXT_PUBLIC_API_URL ?? undefined,
+  getToken: () => localStorage.getItem("token"),
+  defaultQuery: { locale: "cs", depth: 1 },
+});
 
 export default function DashboardPage() {
   const [projects, setProjects] = useState<UIProject[]>([]);
