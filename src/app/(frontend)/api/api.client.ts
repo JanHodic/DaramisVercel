@@ -386,10 +386,15 @@ export class DaramisApiClient {
     this.onRequest = opts.onRequest
   }
 
-  private buildUrl(path: string, query?: Record<string, any>) {
-    const mergedQuery = { ...(this.defaultQuery ?? {}), ...(query ?? {}) }
-    return `${this.baseUrl}${path}${toQueryString(mergedQuery)}`
-  }
+ private buildUrl(path: string, query?: Record<string, any>) {
+  const mergedQuery = { ...(this.defaultQuery ?? {}), ...(query ?? {}) }
+
+  const base = (this.baseUrl || '').replace(/\/+$/, '')
+  const p = path.startsWith('/') ? path : `/${path}`
+
+  return `${base}${p}${toQueryString(mergedQuery)}`
+}
+
 
   private async request<T>(
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
