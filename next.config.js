@@ -18,6 +18,14 @@ const nextConfig = {
           protocol: url.protocol.replace(':', ''),
         }
       }),
+            // tvoje R2 / media doména
+      { protocol: "https", hostname: "media.apadore.cz" },
+
+      // když někde bereš media i z payload serveru
+      { protocol: "https", hostname: "daramis-vercel.vercel.app" },
+
+      // (volitelné) pokud máš i r2.dev public
+      { protocol: "https", hostname: "*.r2.dev" },
     ],
   },
   webpack: (webpackConfig) => {

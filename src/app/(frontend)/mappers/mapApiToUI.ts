@@ -12,20 +12,31 @@ import type {
 
 import type { Media } from '../api/api.client'
 
-export function mediaToUrl(media?: string | Media | null): string | null {
-  if (!media) return null
-  if (typeof media === 'string') return media
-  return media.url ?? null
+const DEFAULT_BASE =
+  process.env.NEXT_PUBLIC_API_URL || 'https://daramis-vercel.vercel.app'
+
+function absolutize(url: string, baseUrl: string) {
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`
 }
 
-export function mediaToThumbnail(media?: string | Media | null): string | null {
-  if (!media || typeof media === 'string') return null
-  return (
-    media.sizes?.thumbnail?.url ??
-    media.thumbnailURL ??
-    media.url ??
-    null
-  )
+export function mediaToUrl(
+  media?: string | Media | null,
+  baseUrl: string = DEFAULT_BASE,
+): string | null {
+  if (!media) return null
+
+  const url =
+    typeof media === 'string'
+      ? media
+      : media.url ??
+        media.sizes?.large?.url ??
+        media.sizes?.medium?.url ??
+        media.sizes?.thumbnail?.url ??
+        null
+
+  if (!url) return null
+  return absolutize(url, baseUrl)
 }
 
 /* -----------------------------
@@ -52,21 +63,23 @@ const sectionMap: Record<ProjectSection, UISectionType> = {
  * Main mapper
  * ---------------------------- */
 
+
+const BASE =
+  process.env.NEXT_PUBLIC_API_URL || 'https://daramis-vercel.vercel.app'
+
 export function mapProjectToUIProject(p: Project): UIProject {
   return {
     id: p.id,
     name: p.title,
     status: statusMap[p.status],
 
-    mainImage: mediaToUrl(p.cover) ?? '',
-    icon: mediaToUrl(p.logo),
+    mainImage: mediaToUrl(p.cover, BASE) ?? '',   
+    icon: mediaToUrl(p.logo, BASE),              
 
     webLink: `/projekty/${p.slug}`,
     youtubeUrl: p.heroYouTubeUrl ?? null,
 
-    sections: (p.sections ?? [])
-      .map((s) => sectionMap[s])
-      .filter(Boolean),
+    sections: (p.sections ?? []).map((s) => sectionMap[s]).filter(Boolean),
 
     location: {
       lat: p.locationTab?.centerLat ?? 0,
@@ -78,10 +91,6 @@ export function mapProjectToUIProject(p: Project): UIProject {
     updatedAt: p.updatedAt,
   }
 }
-
-/* -----------------------------
- * Collection helper
- * ---------------------------- */
 
 export function mapProjectsToUIProjects(projects: Project[]): UIProject[] {
   return projects.map(mapProjectToUIProject)
