@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { UserRole } from '../../lib/types';
+import { UIUserRole } from '../../lib/types';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -11,13 +11,13 @@ import {
 } from '../../components/ui/popover';
 import { cn } from '../../lib/utils';
 
-const roles: { value: UserRole; label: string; description: string }[] = [
+const roles: { value: UIUserRole; label: string; description: string }[] = [
   { value: 'superadmin', label: 'Super Admin', description: 'Plný přístup' },
   { value: 'editor', label: 'Editor', description: 'Může upravovat' },
   { value: 'viewer', label: 'Prohlížitel', description: 'Pouze prohlížení' },
 ];
 
-const roleColors: Record<UserRole, string> = {
+const roleColors: Record<UIUserRole, string> = {
   superadmin: 'bg-red-500',
   editor: 'bg-blue-500',
   viewer: 'bg-green-500',
