@@ -1,15 +1,15 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Language } from '../lib/types';
+import { UILanguage } from '../lib/types';
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
+  language: UILanguage;
+  setLanguage: (lang: UILanguage) => void;
   t: (key: string) => string;
 }
 
-const translations: Record<Language, Record<string, string>> = {
+const translations: Record<UILanguage, Record<string, string>> = {
   cs: {
     // Auth
     'auth.login': 'Přihlásit se',
@@ -233,16 +233,16 @@ const translations: Record<Language, Record<string, string>> = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('cs');
+  const [language, setLanguageState] = useState<UILanguage>('cs');
 
   useEffect(() => {
-    const stored = localStorage.getItem('daramis_language') as Language | null;
+    const stored = localStorage.getItem('daramis_language') as UILanguage | null;
     if (stored && (stored === 'cs' || stored === 'en')) {
       setLanguageState(stored);
     }
   }, []);
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = (lang: UILanguage) => {
     setLanguageState(lang);
     localStorage.setItem('daramis_language', lang);
     document.documentElement.lang = lang;
