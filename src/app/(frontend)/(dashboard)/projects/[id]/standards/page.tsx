@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import pdfsData from '@/app/(frontend)/data/pdfs.json';
-import { PDFDocument } from "@/app/(frontend)/lib/types";
+import { UIPDFDocument } from "@/app/(frontend)/lib/types";
 import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
 import { PDFStandards } from "@/app/(frontend)/components/projects/PDFStandards";
 
@@ -30,7 +30,7 @@ export default function StandardsPage() {
   const project = (data as any).project;
 
   const standardsRaw = project?.standards ?? [];
-  const pdfs = (pdfsData.pdfs as Record<string, PDFDocument[]>)[projectId] || [];
+  const pdfs = (pdfsData.pdfs as Record<string, UIPDFDocument[]>)[projectId] || [];
 
   return (
     <div className="h-full">
