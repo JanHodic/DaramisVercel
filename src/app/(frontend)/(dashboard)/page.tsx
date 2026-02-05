@@ -2,18 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { ProjectSlider } from "../components/dashboard/ProjectSlider";
-import { createDaramisApiClient } from "../api/api.client";
 import type { Project, PayloadListResponse } from "../api/api.client";
 import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
-import { UIProject } from "../mappers/UITypes";
-
-export const api = createDaramisApiClient({
-  // baseUrl NECH prázdné / undefined => same-origin
-  baseUrl: undefined,
-  defaultQuery: { locale: 'cs', depth: 1 },
-  getToken: () => (typeof window !== 'undefined' ? localStorage.getItem('token') : null),
-})
-
+import type { UIProject } from "../mappers/UITypes";
+import { api } from "../api/api.instance";
 
 export default function DashboardPage() {
   const [projects, setProjects] = useState<UIProject[]>([]);
@@ -36,7 +28,7 @@ export default function DashboardPage() {
         });
 
         if (mounted) {
-          setProjects(mapProjectsToUIProjects(res?.docs));
+          setProjects(mapProjectsToUIProjects(res?.docs ?? []));
         }
       } catch (err) {
         console.error("Failed to load projects", err);
@@ -67,9 +59,7 @@ export default function DashboardPage() {
   if (isError) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-muted-foreground">
-          Nepodařilo se načíst projekty.
-        </p>
+        <p className="text-muted-foreground">Nepodařilo se načíst projekty.</p>
       </div>
     );
   }
