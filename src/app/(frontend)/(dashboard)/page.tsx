@@ -7,11 +7,13 @@ import type { Project, PayloadListResponse } from "../api/api.client";
 import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
 import { UIProject } from "../mappers/UITypes";
 
-const api = createDaramisApiClient({
-  baseUrl: '',
-  getToken: () => localStorage.getItem("token"),
-  defaultQuery: { locale: "cs", depth: 1 },
-});
+export const api = createDaramisApiClient({
+  // baseUrl NECH prázdné / undefined => same-origin
+  baseUrl: undefined,
+  defaultQuery: { locale: 'cs', depth: 1 },
+  getToken: () => (typeof window !== 'undefined' ? localStorage.getItem('token') : null),
+})
+
 
 export default function DashboardPage() {
   const [projects, setProjects] = useState<UIProject[]>([]);
