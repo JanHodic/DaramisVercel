@@ -7,10 +7,10 @@ import type { Project, PayloadListResponse } from "../api/api.client";
 import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
 import { UIProject } from "../mappers/UITypes";
 
-const api = createDaramisApiClient({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://daramis-vercel.vercel.app',
-  getToken: () => localStorage.getItem('token'),
-  defaultQuery: { locale: 'cs', depth: 2 },
+export const api = createDaramisApiClient({
+  baseUrl: "", // 👈 RELATIVNÍ /api/...
+  getToken: () => localStorage.getItem("token") ?? undefined,
+  defaultQuery: { locale: "cs", depth: 2 },
 })
 
 export default function DashboardPage() {
