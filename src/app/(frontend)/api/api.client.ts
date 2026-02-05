@@ -9,7 +9,7 @@
  * - Strong-ish typing for main entities & list responses from OpenAPI snippet
  */
 
-export const DEFAULT_BASE_URL = 'https://daramis-vercel.vercel.app'
+export const DEFAULT_BASE_URL = ''
 
 /** -----------------------------
  * Types (from your OpenAPI)
