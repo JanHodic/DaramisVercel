@@ -1,11 +1,11 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { User, UserRole, AuthState } from '../lib/types';
+import { UIUser, UIUserRole, UIAuthState } from '../lib/types';
 import usersData from '../data/users.json';
 
-interface AuthContextType extends AuthState {
-  switchRole: (role: UserRole) => void;
+interface AuthContextType extends UIAuthState {
+  switchRole: (role: UIUserRole) => void;
   hasPermission: (permission: string) => boolean;
   canEdit: () => boolean;
   canManageProjects: () => boolean;
@@ -14,19 +14,19 @@ interface AuthContextType extends AuthState {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Get default user based on role
-const getUserByRole = (role: UserRole): User => {
+const getUserByRole = (role: UIUserRole): UIUser => {
   const user = usersData.users.find(u => u.role === role);
-  return user as User || usersData.users[0] as User;
+  return user as UIUser || usersData.users[0] as UIUser;
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
+  const [state, setState] = useState<UIAuthState>({
     user: getUserByRole('superadmin'),
     isAuthenticated: true,
     isLoading: false,
   });
 
-  const switchRole = (role: UserRole) => {
+  const switchRole = (role: UIUserRole) => {
     const user = getUserByRole(role);
     setState({
       user,
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const getRolePermissions = (role: UserRole): string[] => {
+  const getRolePermissions = (role: UIUserRole): string[] => {
     const roleData = usersData.roles[role];
     return roleData?.permissions || [];
   };
