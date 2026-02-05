@@ -2,14 +2,14 @@
 
 import { useMemo } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { TimelineMilestone } from '../../lib/types';
+import { UITimelineMilestone } from '../../lib/types';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Badge } from '../../components/ui/badge';
 import { CheckCircle2, Circle, Clock } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface TimelineProps {
-  milestones: TimelineMilestone[];
+  milestones: UITimelineMilestone[];
   projectName: string;
 }
 
@@ -26,7 +26,7 @@ function parseQuarterDate(quarter: string): Date {
 }
 
 // Get current progress position
-function getCurrentProgress(milestones: TimelineMilestone[]): number {
+function getCurrentProgress(milestones: UITimelineMilestone[]): number {
   const now = new Date();
 
   for (let i = 0; i < milestones.length; i++) {

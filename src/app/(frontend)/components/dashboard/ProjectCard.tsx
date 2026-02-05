@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Badge } from "../../components/ui/badge";
 
-import { Project, ProjectStatus } from "../../lib/types";
+import { Project, UIProjectStatus } from "../../lib/types";
 import { cn } from "../../lib/utils";
 
 interface ProjectCardProps {
@@ -24,8 +24,8 @@ export function ProjectCard({
   const { t, language } = useLanguage();
   console.log("loaded");
 
-  const getStatusBadge = (status: ProjectStatus) => {
-    const variants: Record<ProjectStatus, { className: string; label: string }> =
+  const getStatusBadge = (status: UIProjectStatus) => {
+    const variants: Record<UIProjectStatus, { className: string; label: string }> =
       {
         current: {
           className: "bg-primary text-primary-foreground",

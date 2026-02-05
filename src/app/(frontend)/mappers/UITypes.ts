@@ -3,7 +3,7 @@ export type UIProjectStatus = 'current' | 'planned' | 'completed';
 
 export type UISectionType = 'intro' | 'location' | 'model' | 'units' | 'gallery' | 'amenities' | 'standards' | 'timeline';
 
-export interface Project {
+export interface UIProject {
   id: string;
   name: string;
   status: UIProjectStatus;
@@ -103,13 +103,13 @@ export interface UIGalleryImage {
 }
 
 // User Types
-export type UIUserRole = 'superadmin' | 'editor' | 'viewer';
+export type UserRole = 'superadmin' | 'editor' | 'viewer';
 
 export interface UIUser {
   id: string;
   email: string;
   name: string;
-  role: UIUserRole;
+  role: UserRole;
   avatar: string | null;
   createdAt: string;
 }

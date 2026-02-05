@@ -2,19 +2,20 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Project, ProjectStatus, Unit } from "../../lib/types";
+import { Project, UIProjectStatus, UIUnit } from "../../lib/types";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { ProjectCard } from "./ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { UIProject } from "../../mappers/UITypes";
 
 interface ProjectSliderProps {
-  projects: Project[];
+  projects: UIProject[];
 }
 
-type FilterStatus = "all" | ProjectStatus;
+type FilterStatus = "all" | UIProjectStatus;
 
 /**
  * Bez units.json:
@@ -27,7 +28,7 @@ function getAvailableUnitsCountFromProject(project: Project): number | undefined
 
   if (typeof anyProject.availableUnits === "number") return anyProject.availableUnits;
 
-  const units = anyProject.units as Unit[] | undefined | null;
+  const units = anyProject.units as UIUnit[] | undefined | null;
   if (Array.isArray(units)) {
     return units.filter((u) => u?.status === "available").length;
   }
@@ -54,7 +55,7 @@ export function ProjectSlider({ projects }: ProjectSliderProps) {
     const list = (projects ?? [])
       .filter((p) => filter === "all" || p.status === filter)
       .sort((a, b) => {
-        const order: Record<ProjectStatus, number> = { current: 0, planned: 1, completed: 2 };
+        const order: Record<UIProjectStatus, number> = { current: 0, planned: 1, completed: 2 };
         return order[a.status] - order[b.status];
       });
 

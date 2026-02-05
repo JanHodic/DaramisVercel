@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Unit, UnitStatus, Disposition } from '../../lib/types';
+import { UIUnit, UIUnitStatus, UIDisposition } from '../../lib/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '../../components/ui/badge';
@@ -16,7 +16,7 @@ import { X, ArrowLeft, RotateCcw, Scale, Home, ArrowUpDown, ArrowUp, ArrowDown }
 import { cn } from '../../lib/utils';
 
 interface UnitsTableProps {
-  units: Unit[];
+  units: UIUnit[];
   projectId: string;
 }
 
@@ -26,7 +26,7 @@ export function UnitsTable({ units, projectId }: UnitsTableProps) {
   // Filters state
   const [floorFilter, setFloorFilter] = useState<string>('all');
   const [buildingFilter, setBuildingFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<UnitStatus | 'all'>('available');
+  const [statusFilter, setStatusFilter] = useState<UIUnitStatus | 'all'>('available');
   const [dispositionFilter, setDispositionFilter] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
 
@@ -36,11 +36,11 @@ export function UnitsTable({ units, projectId }: UnitsTableProps) {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   // Selection and comparison state
-  const [selectedUnits, setSelectedUnits] = useState<Unit[]>([]);
+  const [selectedUnits, setSelectedUnits] = useState<UIUnit[]>([]);
   const [isComparing, setIsComparing] = useState(false);
 
   // Unit detail - now shows PDF fullscreen directly
-  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<UIUnit | null>(null);
 
   // Get unique values for filters
   const floors = useMemo(() => [...new Set(units.map(u => u.floor))].sort((a, b) => a - b), [units]);
@@ -126,7 +126,7 @@ export function UnitsTable({ units, projectId }: UnitsTableProps) {
       : <ArrowDown className="h-4 w-4 ml-1" />;
   };
 
-  const toggleUnitSelection = (unit: Unit) => {
+  const toggleUnitSelection = (unit: UIUnit) => {
     setSelectedUnits(prev => {
       const isSelected = prev.some(u => u.id === unit.id);
       if (isSelected) {
@@ -159,8 +159,8 @@ export function UnitsTable({ units, projectId }: UnitsTableProps) {
     }).format(price);
   };
 
-  const getStatusBadge = (status: UnitStatus) => {
-    const variants: Record<UnitStatus, { className: string; label: string }> = {
+  const getStatusBadge = (status: UIUnitStatus) => {
+    const variants: Record<UIUnitStatus, { className: string; label: string }> = {
       available: {
         className: 'bg-green-100 text-green-800 border-green-200',
         label: t('units.available'),
@@ -363,7 +363,7 @@ export function UnitsTable({ units, projectId }: UnitsTableProps) {
           </Select>
 
           {/* Status Filter */}
-          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as UnitStatus | 'all')}>
+          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as UIUnitStatus | 'all')}>
             <SelectTrigger className="flex-1 min-w-0">
               <SelectValue placeholder={t('units.status')} />
             </SelectTrigger>

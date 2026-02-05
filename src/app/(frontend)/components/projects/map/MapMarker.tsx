@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { MapLocation, LocationCategory } from '../../../lib/types';
+import { UIMapLocation, UILocationCategory } from '../../../lib/types';
 import {
   Bus,
   Coffee,
@@ -15,8 +15,8 @@ import {
 import { cn } from '../../../lib/utils';
 
 interface MapMarkerProps {
-  location: MapLocation;
-  category: LocationCategory;
+  location: UIMapLocation;
+  category: UILocationCategory;
   position: { x: number; y: number };
   onClick?: () => void;
   isClickable: boolean;

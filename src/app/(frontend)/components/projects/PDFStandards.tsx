@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { PDFDocument } from '../../lib/types';
+import { UIPDFDocument } from '../../lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AspectRatio } from '../../components/ui/aspect-ratio';
@@ -10,12 +10,12 @@ import { ScrollArea } from '../../components/ui/scroll-area';
 import { ArrowLeft, Maximize2, FileText, X } from 'lucide-react';
 
 interface PDFStandardsProps {
-  pdfs: PDFDocument[];
+  pdfs: UIPDFDocument[];
   projectName: string;
 }
 
 export function PDFStandards({ pdfs, projectName }: PDFStandardsProps) {
-  const [selectedPdf, setSelectedPdf] = useState<PDFDocument | null>(null);
+  const [selectedPdf, setSelectedPdf] = useState<UIPDFDocument | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { t } = useLanguage();
 

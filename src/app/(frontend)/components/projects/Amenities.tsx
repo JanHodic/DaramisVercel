@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Amenity } from '../../lib/types';
+import { UIAmenity } from '../../lib/types';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '../../components/ui/aspect-ratio';
@@ -10,7 +10,7 @@ import { Image as ImageIcon, Video, X, ChevronRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface AmenitiesProps {
-  amenities: Amenity[];
+  amenities: UIAmenity[];
   projectName: string;
 }
 
