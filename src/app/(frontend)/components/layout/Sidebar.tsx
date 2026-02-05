@@ -32,8 +32,8 @@ import {
   Play,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import type { Project, SectionType } from '../../lib/types';
 import { fetchAllProjects, findProject } from '../../api/apiClient.public';
+import { UIProject, UISectionType } from '../../mappers/UITypes';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -71,7 +71,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
   const { user, canEdit } = useAuth();
   const { t, language, setLanguage } = useLanguage();
 
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<UIProject[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState<boolean>(false);
 
   // Load projects from backend
@@ -122,7 +122,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
     console.log('Logout clicked');
   };
 
-  const isSectionType = (v: unknown): v is SectionType => {
+  const isSectionType = (v: unknown): v is UISectionType => {
     return typeof v === 'string' && v.length > 0
   }
 
@@ -170,7 +170,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
 
         {/* Project Sections (only when in project detail, not admin) */}
         {(currentProject?.sections ?? [])
-          .map((s: any) => (typeof s === 'string' ? s : (s?.key as SectionType | undefined)))
+          .map((s: any) => (typeof s === 'string' ? s : (s?.key as UISectionType | undefined)))
           .filter(isSectionType)
           .map((section:any) => {
             const Icon = sectionIcons[section] || FileText
