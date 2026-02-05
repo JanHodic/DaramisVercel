@@ -8,7 +8,7 @@ import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
 import { UIProject } from "../mappers/UITypes";
 
 const api = createDaramisApiClient({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL ?? undefined,
+  baseUrl: '',
   getToken: () => localStorage.getItem("token"),
   defaultQuery: { locale: "cs", depth: 1 },
 });
