@@ -301,6 +301,7 @@ export function MobileNav() {
                 {canEdit() && (
                   <Link
                     href="/admin"
+                    prefetch={false}
                     onClick={handleNavClick}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
