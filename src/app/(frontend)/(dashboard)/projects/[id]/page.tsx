@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "../../../api/api.instance";
+import type { ApiError } from "../../../api/api.client";
 
 function readParam(
   params: Record<string, string | string[] | undefined>,
@@ -13,14 +14,14 @@ function readParam(
   return Array.isArray(v) ? (v[0] ?? null) : v;
 }
 
-function isNumericId(value: string) {
+function isNumeric(value: string) {
   return /^[0-9]+$/.test(value);
 }
 
 /**
  * Vrátí první sekci:
- * - Payload: sections jako string[]  (např. ["location","gallery"])
- * - UI: sections jako [{ key, enabled }]  (např. [{key:"gallery", enabled:true}])
+ * - Payload: sections jako string[]  (["location","gallery"...])
+ * - UI: sections jako [{ key, enabled }]
  * - fallback: "intro"
  */
 function pickFirstSection(project: any) {
@@ -33,12 +34,25 @@ function pickFirstSection(project: any) {
 
     if (first && typeof first === "object") {
       const enabled = sections.filter((s: any) => s?.enabled !== false);
-      const key = enabled?.[0]?.key;
-      return key ?? "intro";
+      return enabled?.[0]?.key ?? "intro";
     }
   }
 
   return "intro";
+}
+
+function getApiErrorMessage(err: unknown) {
+  const e = err as any;
+
+  // ApiError z tvého klienta má .status
+  const status = typeof e?.status === "number" ? e.status : null;
+  const msg =
+    e?.message ||
+    (typeof e === "string" ? e : null) ||
+    "Unknown error";
+
+  if (status) return `API error ${status}: ${msg}`;
+  return msg;
 }
 
 export default function ProjectPage() {
@@ -46,9 +60,10 @@ export default function ProjectPage() {
   const params = useParams() as Record<string, string | string[] | undefined>;
 
   const key = useMemo(() => {
+    // podporuje [id], [slug], případně [projectId]
     return (
-      readParam(params, "slug") ||
       readParam(params, "id") ||
+      readParam(params, "slug") ||
       readParam(params, "projectId") ||
       null
     );
@@ -56,33 +71,36 @@ export default function ProjectPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [errorText, setErrorText] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function loadAndRedirect() {
+    async function run() {
       if (!key) {
         setIsLoading(false);
         setNotFound(true);
+        setErrorText("Missing route param (id/slug).");
         return;
       }
 
       setIsLoading(true);
       setNotFound(false);
+      setErrorText(null);
 
       try {
         let project: any = null;
 
-        // 1) numeric -> /api/projects/:id
-        if (isNumericId(key)) {
+        // 1) pokud je to číslo, zkus /api/projects/:id
+        if (isNumeric(key)) {
           try {
             project = await api.findProjectById(key, { depth: 2, locale: "cs" });
-          } catch {
+          } catch (e) {
             project = null;
           }
         }
 
-        // 2) fallback -> find by slug přes listProjects + where
+        // 2) zkus najít podle slug
         if (!project) {
           const res = await api.listProjects({
             limit: 1,
@@ -91,7 +109,18 @@ export default function ProjectPage() {
             locale: "cs",
             where: { slug: { equals: key } },
           });
+          project = res?.docs?.[0] ?? null;
+        }
 
+        // 3) fallback: najít podle id přes where (když id není číslo / uuid / string)
+        if (!project) {
+          const res = await api.listProjects({
+            limit: 1,
+            page: 1,
+            depth: 2,
+            locale: "cs",
+            where: { id: { equals: key } },
+          });
           project = res?.docs?.[0] ?? null;
         }
 
@@ -99,6 +128,7 @@ export default function ProjectPage() {
 
         if (!project) {
           setNotFound(true);
+          setErrorText(`Project not found for key="${key}"`);
           setIsLoading(false);
           return;
         }
@@ -107,16 +137,17 @@ export default function ProjectPage() {
         const slug = project?.slug ? String(project.slug) : key;
 
         router.replace(`/projects/${slug}/${first}`);
-      } catch (e) {
+      } catch (err) {
         if (cancelled) return;
         setNotFound(true);
+        setErrorText(getApiErrorMessage(err));
       } finally {
         if (cancelled) return;
         setIsLoading(false);
       }
     }
 
-    loadAndRedirect();
+    run();
 
     return () => {
       cancelled = true;
@@ -137,19 +168,26 @@ export default function ProjectPage() {
   if (notFound) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-xl px-6">
           <h1 className="text-2xl font-heading text-foreground">
             Projekt nenalezen
           </h1>
           <p className="text-muted-foreground mt-2">
-            Požadovaný projekt neexistuje.
+            Požadovaný projekt neexistuje (nebo není dostupný).
           </p>
+
+          {/* tohle ti řekne PRAVDU proč (403/CORS/404) */}
+          {errorText && (
+            <pre className="mt-4 text-left text-xs bg-muted/50 border rounded p-3 overflow-auto">
+              {errorText}
+            </pre>
+          )}
         </div>
       </div>
     );
   }
 
-  // while redirecting (většinou už to přesměruje)
+  // while redirecting
   return (
     <div className="h-full flex items-center justify-center">
       <div className="text-center space-y-4">
