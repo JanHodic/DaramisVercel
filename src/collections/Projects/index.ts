@@ -479,84 +479,44 @@ export const Projects: CollectionConfig = {
                   ],
                 },
 
-                // ✅ NOVÉ: časový rozsah Od/Do (Rok + Kvartál)
+                // ✅ DB-kompat: flat fields (from_year/from_quarter/to_year/to_quarter)
                 {
                   type: 'row',
                   fields: [
+                    // --- FROM
                     {
-                      name: 'from',
-                      label: { en: 'From', cs: 'Od' },
-                      type: 'group',
-                      admin: { width: '50%' },
-                      fields: [
-                        {
-                          type: 'row',
-                          fields: [
-                            {
-                              name: 'year',
-                              label: { en: 'Year', cs: 'Rok' },
-                              type: 'select',
-                              required: true,
-                              admin: { width: '50%' },
-                              options: [
-                                { label: '2020', value: '2020' },
-                                { label: '2021', value: '2021' },
-                                { label: '2022', value: '2022' },
-                                { label: '2023', value: '2023' },
-                                { label: '2024', value: '2024' },
-                                { label: '2025', value: '2025' },
-                                { label: '2026', value: '2026' },
-                                { label: '2027', value: '2027' },
-                                { label: '2028', value: '2028' },
-                                { label: '2029', value: '2029' },
-                                { label: '2030', value: '2030' },
-                              ],
-                            },
-                            {
-                              name: 'quarter',
-                              label: { en: 'Quarter', cs: 'Kvartál' },
-                              type: 'select',
-                              required: true,
-                              admin: { width: '50%' },
-                              options: [
-                                { label: 'Q1', value: 'Q1' },
-                                { label: 'Q2', value: 'Q2' },
-                                { label: 'Q3', value: 'Q3' },
-                                { label: 'Q4', value: 'Q4' },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
+                      name: 'from_year',
+                      label: { en: 'From year', cs: 'Od – rok' },
+                      type: 'select',
+                      required: true,
+                      admin: { width: '25%' },
+                      options: yearOptions,
                     },
                     {
-                      name: 'to',
-                      label: { en: 'To', cs: 'Do' },
-                      type: 'group',
-                      admin: { width: '50%' },
-                      fields: [
-                        {
-                          type: 'row',
-                          fields: [
-                            {
-                              name: 'year',
-                              label: { en: 'Year', cs: 'Rok' },
-                              type: 'select',
-                              required: true,
-                              admin: { width: '50%' },
-                              options: yearOptions,
-                            },
-                            {
-                              name: 'quarter',
-                              label: { en: 'Quarter', cs: 'Kvartál' },
-                              type: 'select',
-                              required: true,
-                              admin: { width: '50%' },
-                              options: [...quarterOptions],
-                            },
-                          ],
-                        },
-                      ],
+                      name: 'from_quarter',
+                      label: { en: 'From quarter', cs: 'Od – kvartál' },
+                      type: 'select',
+                      required: true,
+                      admin: { width: '25%' },
+                      options: [...quarterOptions],
+                    },
+
+                    // --- TO
+                    {
+                      name: 'to_year',
+                      label: { en: 'To year', cs: 'Do – rok' },
+                      type: 'select',
+                      required: true,
+                      admin: { width: '25%' },
+                      options: yearOptions,
+                    },
+                    {
+                      name: 'to_quarter',
+                      label: { en: 'To quarter', cs: 'Do – kvartál' },
+                      type: 'select',
+                      required: true,
+                      admin: { width: '25%' },
+                      options: [...quarterOptions],
                     },
                   ],
                 },
@@ -564,6 +524,7 @@ export const Projects: CollectionConfig = {
             },
           ],
         },
+
 
         // ==================== TAB 6: REALPAD (conditional) ====================
         {
