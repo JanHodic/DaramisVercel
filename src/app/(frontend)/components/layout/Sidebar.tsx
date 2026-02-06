@@ -34,6 +34,7 @@ import {
 import { cn } from '../../lib/utils';
 import { fetchAllProjects, findProject } from '../../api/apiClient.public';
 import { UIProject, UISectionType } from '../../mappers/UITypes';
+import { Project } from '../../api/api.client';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -71,7 +72,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
   const { user, canEdit } = useAuth();
   const { t, language, setLanguage } = useLanguage();
 
-  const [projects, setProjects] = useState<UIProject[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState<boolean>(false);
 
   // Load projects from backend
