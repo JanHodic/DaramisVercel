@@ -3,6 +3,26 @@ import type { CollectionConfig } from 'payload'
 import { isEditorOrAbove } from '../../access/index'
 import { text } from 'payload/shared'
 
+const buildYearOptions = (fromOffset = -5, toOffset = 10) => {
+  const currentYear = new Date().getFullYear()
+  const years: { label: string; value: string }[] = []
+
+  for (let y = currentYear + fromOffset; y <= currentYear + toOffset; y++) {
+    years.push({ label: String(y), value: String(y) })
+  }
+
+  return years
+}
+
+const quarterOptions = [
+  { label: 'Q1', value: 'Q1' },
+  { label: 'Q2', value: 'Q2' },
+  { label: 'Q3', value: 'Q3' },
+  { label: 'Q4', value: 'Q4' },
+] as const
+
+const yearOptions = buildYearOptions(-5, 10)
+
 export const Projects: CollectionConfig = {
   slug: 'projects',
   labels: {
@@ -455,6 +475,88 @@ export const Projects: CollectionConfig = {
                           },
                         },
                       },
+                    },
+                  ],
+                },
+
+                // ✅ NOVÉ: časový rozsah Od/Do (Rok + Kvartál)
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'from',
+                      label: { en: 'From', cs: 'Od' },
+                      type: 'group',
+                      admin: { width: '50%' },
+                      fields: [
+                        {
+                          type: 'row',
+                          fields: [
+                            {
+                              name: 'year',
+                              label: { en: 'Year', cs: 'Rok' },
+                              type: 'select',
+                              required: true,
+                              admin: { width: '50%' },
+                              options: [
+                                { label: '2020', value: '2020' },
+                                { label: '2021', value: '2021' },
+                                { label: '2022', value: '2022' },
+                                { label: '2023', value: '2023' },
+                                { label: '2024', value: '2024' },
+                                { label: '2025', value: '2025' },
+                                { label: '2026', value: '2026' },
+                                { label: '2027', value: '2027' },
+                                { label: '2028', value: '2028' },
+                                { label: '2029', value: '2029' },
+                                { label: '2030', value: '2030' },
+                              ],
+                            },
+                            {
+                              name: 'quarter',
+                              label: { en: 'Quarter', cs: 'Kvartál' },
+                              type: 'select',
+                              required: true,
+                              admin: { width: '50%' },
+                              options: [
+                                { label: 'Q1', value: 'Q1' },
+                                { label: 'Q2', value: 'Q2' },
+                                { label: 'Q3', value: 'Q3' },
+                                { label: 'Q4', value: 'Q4' },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: 'to',
+                      label: { en: 'To', cs: 'Do' },
+                      type: 'group',
+                      admin: { width: '50%' },
+                      fields: [
+                        {
+                          type: 'row',
+                          fields: [
+                            {
+                              name: 'year',
+                              label: { en: 'Year', cs: 'Rok' },
+                              type: 'select',
+                              required: true,
+                              admin: { width: '50%' },
+                              options: yearOptions,
+                            },
+                            {
+                              name: 'quarter',
+                              label: { en: 'Quarter', cs: 'Kvartál' },
+                              type: 'select',
+                              required: true,
+                              admin: { width: '50%' },
+                              options: [...quarterOptions],
+                            },
+                          ],
+                        },
+                      ],
                     },
                   ],
                 },
