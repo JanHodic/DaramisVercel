@@ -2,9 +2,10 @@
 
 import { useParams } from "next/navigation";
 import pdfsData from '@/app/(frontend)/data/pdfs.json';
-import { UIPDFDocument } from "@/app/(frontend)/lib/types";
+
 import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
 import { PDFStandards } from "@/app/(frontend)/components/projects/PDFStandards";
+import { UIPDFDocument } from "@/app/(frontend)/mappers/UITypes";
 
 
 function toPdf(doc: any) {
