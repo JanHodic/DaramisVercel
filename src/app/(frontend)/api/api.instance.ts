@@ -5,4 +5,3 @@ export const api = createDaramisApiClient({
   getToken: () => localStorage.getItem('token'),
   defaultQuery: { locale: 'cs', depth: 2 },
 })
-
