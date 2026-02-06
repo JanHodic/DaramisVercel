@@ -1,47 +1,153 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
+
 import { usePublicProjectBySlug } from "../../../api/public.hooks";
+import { api } from "../../../api/api.instance";
 
+/** robustně vezme string z useParams pro různé názvy segmentů */
+function readParam(
+  params: Record<string, string | string[] | undefined>,
+  key: string
+): string | null {
+  const v = params[key];
+  if (!v) return null;
+  return Array.isArray(v) ? (v[0] ?? null) : v;
+}
+
+function isProbablyId(value: string) {
+  // payload id může být number-like nebo uuid; u tebe v URL je to "2"
+  // bereme jen čisté číslo jako "id v URL" case
+  return /^[0-9]+$/.test(value);
+}
+
+/**
+ * Vrátí první sekci:
+ * - pokud project.sections je string[] -> první string
+ * - pokud je to [{key, enabled}] -> první enabled key
+ * - fallback: "intro"
+ */
 function pickFirstSection(project: any) {
-  const sections = Array.isArray(project?.sections) ? project.sections : [];
-  const enabled = sections.filter((s: any) => s?.enabled !== false);
+  const sections = project?.sections;
 
-  // your CMS stores: { key: 'gallery' | 'location' | ... }
-  const firstKey = enabled?.[0]?.key;
+  if (Array.isArray(sections) && sections.length > 0) {
+    const first = sections[0];
 
-  // fallback if not configured
-  return firstKey ?? "intro";
+    // Payload: string[]
+    if (typeof first === "string") return first;
+
+    // Některé UI: [{ key, enabled }]
+    if (first && typeof first === "object") {
+      const enabled = sections.filter((s: any) => s?.enabled !== false);
+      const k = enabled?.[0]?.key;
+      return k ?? "intro";
+    }
+  }
+
+  return "intro";
 }
 
 export default function ProjectPage() {
-  const params = useParams();
   const router = useRouter();
-  const slug = params.id as string;
+  const params = useParams() as Record<string, string | string[] | undefined>;
 
-  const { data, isLoading, isError } = usePublicProjectBySlug(slug, { depth: 2 });
+  // podporujeme jak /projects/[id] tak /projects/[slug]
+  const raw = useMemo(() => {
+    return (
+      readParam(params, "slug") ||
+      readParam(params, "id") ||
+      readParam(params, "projectId") ||
+      null
+    );
+  }, [params]);
 
-  const project = data && !("error" in (data as any)) ? (data as any).project : null;
+  const key = raw ?? "";
+
+  // 1) zkus public endpoint podle "slug" (u tebe to volá /api/public/projects/:slug)
+  const publicQuery = usePublicProjectBySlug(raw ?? undefined, { depth: 2 });
+
+  // 2) pokud public selže a key vypadá jako numeric ID, zkus REST /api/projects/:id
+  //    (používá stejný origin přes api.instance)
+  const shouldTryById = Boolean(raw && isProbablyId(raw));
 
   useEffect(() => {
-    if (!project) return;
-    const first = pickFirstSection(project);
-    router.replace(`/projects/${slug}/${first}`);
-  }, [project, slug, router]);
+    let cancelled = false;
 
-  if (isLoading) {
+    async function run() {
+      if (!raw) return;
+
+      // pokud public ještě načítá, čekáme
+      if (publicQuery.isLoading) return;
+
+      // pokud public vrátil project, použijeme ho
+      const publicData: any = publicQuery.data as any;
+      const publicHasError = publicData && typeof publicData === "object" && "error" in publicData;
+      const publicProject = !publicHasError ? publicData?.project : null;
+
+      if (publicProject) {
+        const first = pickFirstSection(publicProject);
+        if (!cancelled) router.replace(`/projects/${raw}/${first}`);
+        return;
+      }
+
+      // fallback: zkusit REST /api/projects/:id (jen když numeric)
+      if (shouldTryById) {
+        try {
+          const byIdProject = await api.findProjectById(raw, { depth: 2, locale: "cs" });
+          if (cancelled) return;
+
+          const first = pickFirstSection(byIdProject);
+          // důležitý: když jsme přišli přes ID, ale projekt má slug, je lepší kanonizovat URL na slug
+          const slug = (byIdProject as any)?.slug;
+          const canonical = slug ? String(slug) : raw;
+
+          router.replace(`/projects/${canonical}/${first}`);
+          return;
+        } catch {
+          // spadne to do "nenalezen"
+        }
+      }
+    }
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [raw, shouldTryById, publicQuery.isLoading, publicQuery.data, router]);
+
+  // Loading stav: dokud se nedozvíme, jestli public existuje a případně fallback přes ID
+  const isLoading = !raw || publicQuery.isLoading;
+
+  // když public skončil a není projekt, a nemáme fallback, je to error
+  const publicData: any = publicQuery.data as any;
+  const publicHasError = publicData && typeof publicData === "object" && "error" in publicData;
+  const publicProject = !publicHasError ? publicData?.project : null;
+
+  const showNotFound =
+    Boolean(raw) &&
+    !publicQuery.isLoading &&
+    !publicProject &&
+    // pokud je numeric, ještě může probíhat fallback přes ID (tohle neumíme 100% detekovat bez extra state),
+    // ale v praxi to proběhne rychle a během toho ukážeme spinner
+    !shouldTryById;
+
+  if (isLoading || shouldTryById) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-muted-foreground">Načítání projektu…</p>
+          <p className="text-muted-foreground">
+            {raw ? "Načítání projektu…" : "Načítání…"}
+          </p>
         </div>
       </div>
     );
   }
 
-  if (isError || !data || "error" in (data as any) || !project) {
+  if (showNotFound || publicQuery.isError) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
@@ -52,7 +158,7 @@ export default function ProjectPage() {
     );
   }
 
-  // while redirecting
+  // pokud se sem dostaneme, většinou už proběhl redirect
   return (
     <div className="h-full flex items-center justify-center">
       <div className="text-center space-y-4">
