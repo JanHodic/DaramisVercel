@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import { Project } from '../../lib/types';
+import { UIProject } from '../../mappers/UITypes';
+
 
 interface ProjectIntroProps {
-  project: Project;
+  project: UIProject;
 }
 
 function getYouTubeEmbedUrl(url: string): string | null {

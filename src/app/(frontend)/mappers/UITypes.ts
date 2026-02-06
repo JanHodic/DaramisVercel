@@ -103,13 +103,13 @@ export interface UIGalleryImage {
 }
 
 // User Types
-export type UserRole = 'superadmin' | 'editor' | 'viewer';
+export type UIUserRole = 'superadmin' | 'editor' | 'viewer';
 
 export interface UIUser {
   id: string;
   email: string;
   name: string;
-  role: UserRole;
+  role: UIUserRole;
   avatar: string | null;
   createdAt: string;
 }

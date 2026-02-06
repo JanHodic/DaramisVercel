@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import { X, ExternalLink } from 'lucide-react';
-import { UIMapLocation, UILocationCategory } from '../../../lib/types';
+
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '../../../components/ui/scroll-area';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { cn } from '../../../lib/utils';
+import { UILocationCategory, UIMapLocation } from '@/app/(frontend)/mappers/UITypes';
 
 interface LocationDetailPanelProps {
   location: UIMapLocation | null;

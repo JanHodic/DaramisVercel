@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { UIMapLocation, UILocationCategory } from '../../../lib/types';
+
 import {
   Bus,
   Coffee,
@@ -13,6 +13,7 @@ import {
   Trees
 } from 'lucide-react';
 import { cn } from '../../../lib/utils';
+import { UILocationCategory, UIMapLocation } from '@/app/(frontend)/mappers/UITypes';
 
 interface MapMarkerProps {
   location: UIMapLocation;

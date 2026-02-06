@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { UIUnit, UIUnitStatus, UIDisposition } from '../../lib/types';
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '../../components/ui/badge';
@@ -14,6 +14,7 @@ import { ScrollArea } from '../../components/ui/scroll-area';
 import { AspectRatio } from '../../components/ui/aspect-ratio';
 import { X, ArrowLeft, RotateCcw, Scale, Home, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { UIUnit, UIUnitStatus } from '../../mappers/UITypes';
 
 interface UnitsTableProps {
   units: UIUnit[];

@@ -6,7 +6,9 @@
  * so `/public/home` becomes `/api/public/home`.
  */
 
-import type { Project } from "../lib/types";
+import { Project } from "./api.client";
+
+
 
 // ---- Payload helpers
 

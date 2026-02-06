@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { UIUser, UIUserRole, UIAuthState } from '../lib/types';
+import { UIUser, UIUserRole, UIAuthState } from '../mappers/UITypes';
 import usersData from '../data/users.json';
 
 interface AuthContextType extends UIAuthState {

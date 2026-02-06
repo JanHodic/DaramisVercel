@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { UIUserRole } from '../../lib/types';
+
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from '../../components/ui/popover';
 import { cn } from '../../lib/utils';
+import { UIUserRole } from '../../mappers/UITypes';
 
 const roles: { value: UIUserRole; label: string; description: string }[] = [
   { value: 'superadmin', label: 'Super Admin', description: 'Plný přístup' },

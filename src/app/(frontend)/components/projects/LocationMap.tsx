@@ -38,6 +38,7 @@ import { fetchProjects } from '../../api/apiClient.public';
 import { Separator } from '@radix-ui/react-separator';
 import { cn } from '@/utilities/ui';
 import { UILocationCategory, UIProject } from '../../mappers/UITypes';
+import { Project } from '../../api/api.client';
 
 
 interface LocationMapProps {
@@ -69,7 +70,7 @@ export default function LocationMap({ projectId, projectLocation, projectName, p
   const [isBuildingPlanOpen, setIsBuildingPlanOpen] = useState(false);
   const { t, language } = useLanguage();
 
-  const [projects, setProjects] = useState<UIProject[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<UILocationCategory[]>([]);
 

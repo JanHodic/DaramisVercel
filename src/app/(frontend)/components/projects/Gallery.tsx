@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { UIGalleryImage } from '../../lib/types';
+
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { UIGalleryImage } from '../../mappers/UITypes';
 
 interface GalleryProps {
   images: UIGalleryImage[];

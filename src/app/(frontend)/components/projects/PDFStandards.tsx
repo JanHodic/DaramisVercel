@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { UIPDFDocument } from '../../lib/types';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AspectRatio } from '../../components/ui/aspect-ratio';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { ArrowLeft, Maximize2, FileText, X } from 'lucide-react';
+import { UIPDFDocument } from '../../mappers/UITypes';
 
 interface PDFStandardsProps {
   pdfs: UIPDFDocument[];
