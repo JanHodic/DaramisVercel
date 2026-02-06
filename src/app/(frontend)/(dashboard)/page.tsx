@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { ProjectSlider } from "../components/dashboard/ProjectSlider";
-import type { Project, PayloadListResponse } from "../api/api.client";
+import { api } from "../api/api.instance";
 import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
 import type { UIProject } from "../mappers/UITypes";
-import { api } from "../api/api.instance";
+import type { Project, PayloadListResponse } from "../api/api.client";
 
 export default function DashboardPage() {
   const [projects, setProjects] = useState<UIProject[]>([]);
@@ -20,6 +20,7 @@ export default function DashboardPage() {
         setIsLoading(true);
         setIsError(false);
 
+        // ✅ same-origin => /api/projects (no CORS)
         const res: PayloadListResponse<Project> = await api.listProjects({
           limit: 100,
           page: 1,
@@ -27,9 +28,7 @@ export default function DashboardPage() {
           // where: { status: { equals: "current" } },
         });
 
-        if (mounted) {
-          setProjects(mapProjectsToUIProjects(res?.docs ?? []));
-        }
+        if (mounted) setProjects(mapProjectsToUIProjects(res?.docs ?? []));
       } catch (err) {
         console.error("Failed to load projects", err);
         if (mounted) setIsError(true);
@@ -39,7 +38,6 @@ export default function DashboardPage() {
     }
 
     loadProjects();
-
     return () => {
       mounted = false;
     };
