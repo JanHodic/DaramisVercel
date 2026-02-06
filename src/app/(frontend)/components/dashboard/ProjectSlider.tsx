@@ -2,14 +2,13 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Project, UIProjectStatus, UIUnit } from "../../lib/types";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { ProjectCard } from "./ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { UIProject } from "../../mappers/UITypes";
+import { UIProject, UIProjectStatus, UIUnit } from "../../mappers/UITypes";
 
 interface ProjectSliderProps {
   projects: UIProject[];
@@ -23,7 +22,7 @@ type FilterStatus = "all" | UIProjectStatus;
  * - nebo pokud posílá `project.units` (Unit[]), spočítáme available
  * - jinak vrátíme undefined (a ProjectCard nic neukáže)
  */
-function getAvailableUnitsCountFromProject(project: Project): number | undefined {
+function getAvailableUnitsCountFromProject(project: UIProject): number | undefined {
   const anyProject = project as any;
 
   if (typeof anyProject.availableUnits === "number") return anyProject.availableUnits;
@@ -36,7 +35,7 @@ function getAvailableUnitsCountFromProject(project: Project): number | undefined
   return undefined;
 }
 
-function projectKeyForUrl(project: Project): string {
+function projectKeyForUrl(project: UIProject): string {
   const anyProject = project as any;
   return (anyProject.slug as string) || String(anyProject.id);
 }
@@ -84,7 +83,7 @@ export function ProjectSlider({ projects }: ProjectSliderProps) {
   }, [filteredProjects.length]);
 
   const handleProjectClick = useCallback(
-    (project: Project) => {
+    (project: UIProject) => {
       const key = projectKeyForUrl(project);
 
       if (project.status === "current" || project.status === "planned") {
