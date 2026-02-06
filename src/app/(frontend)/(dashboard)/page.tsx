@@ -1,70 +1,106 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ProjectSlider } from "../components/dashboard/ProjectSlider";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { api } from "../api/api.instance";
-import { mapProjectsToUIProjects } from "../mappers/mapApiToUI";
-import type { UIProject } from "../mappers/UITypes";
-import type { Project, PayloadListResponse } from "../api/api.client";
+import type { Project } from "../api/api.client";
 
-export default function DashboardPage() {
-  const [projects, setProjects] = useState<UIProject[]>([]);
+function pickFirstSection(project: any) {
+  // podporuje: sections: string[] i sections: [{ key: "gallery" }, ...]
+  const raw = Array.isArray(project?.sections) ? project.sections : [];
+
+  const keys = raw
+    .map((s: any) => {
+      if (typeof s === "string") return s;
+      if (s && typeof s === "object" && typeof s.key === "string") return s.key;
+      return null;
+    })
+    .filter(Boolean) as string[];
+
+  // sjednocení názvů sekcí podle tvého routingu
+  const normalized = keys.map((k) => (k === "model3d" ? "model" : k));
+
+  return normalized[0] ?? "intro";
+}
+
+export default function ProjectPage() {
+  const params = useParams();
+  const router = useRouter();
+
+  const id = useMemo(() => String((params as any)?.id ?? "").trim(), [params]);
+
+  const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     let mounted = true;
 
-    async function loadProjects() {
+    async function run() {
       try {
         setIsLoading(true);
         setIsError(false);
 
-        // ✅ same-origin => /api/projects (no CORS)
-        const res: PayloadListResponse<Project> = await api.listProjects({
-          limit: 100,
-          page: 1,
+        // ID-only: pokud není číslo, rovnou error
+        if (!/^\d+$/.test(id)) {
+          throw new Error(`Project id must be numeric, got: "${id}"`);
+        }
+
+        const p = await api.findProjectById(id, {
           depth: 2,
-          // where: { status: { equals: "current" } },
+          locale: "cs",
         });
 
-        if (mounted) setProjects(mapProjectsToUIProjects(res?.docs ?? []));
-      } catch (err) {
-        console.error("Failed to load projects", err);
+        if (!mounted) return;
+
+        setProject(p);
+
+        const first = pickFirstSection(p);
+        router.replace(`/projects/${id}/${first}`);
+      } catch (e) {
+        console.error("Failed to load project by id", e);
         if (mounted) setIsError(true);
       } finally {
         if (mounted) setIsLoading(false);
       }
     }
 
-    loadProjects();
+    if (id) run();
+
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [id, router]);
 
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-muted-foreground">Načítání projektů…</p>
+          <p className="text-muted-foreground">Načítání projektu…</p>
         </div>
       </div>
     );
   }
 
-  if (isError) {
+  if (isError || !project) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-muted-foreground">Nepodařilo se načíst projekty.</p>
+        <div className="text-center">
+          <h1 className="text-2xl font-heading text-foreground">Projekt nenalezen</h1>
+          <p className="text-muted-foreground mt-2">Požadovaný projekt neexistuje.</p>
+        </div>
       </div>
     );
   }
 
+  // while redirecting
   return (
-    <div className="h-full">
-      <ProjectSlider projects={projects} />
+    <div className="h-full flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-muted-foreground">Přesměrování…</p>
+      </div>
     </div>
   );
 }

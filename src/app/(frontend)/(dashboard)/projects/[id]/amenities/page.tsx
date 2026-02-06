@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import { Amenities } from "@/app/(frontend)/components/projects/Amenities";
 import { usePublicProjectBySlug } from "@/app/(frontend)/api/public.hooks";
-//import {  }
+import { createDaramisApiClient } from "../../../../api/api.client";
 
 export default function AmenitiesPage() {
   const params = useParams();
@@ -12,6 +12,8 @@ export default function AmenitiesPage() {
   console.log(slug);
 
   const { data, isLoading, isError } = usePublicProjectBySlug(slug, { depth: 6 });
+
+  //const { data, isLoading, isError } = createDaramisApiClient.;
 
   if (isLoading) return <div className="p-6">Loading…</div>;
   if (isError || !data || "error" in (data as any)) return <div className="p-6">Failed to load.</div>;
