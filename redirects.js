@@ -20,7 +20,7 @@ const redirects = async () => {
         value: '(?!daramis-vercel\\.vercel\\.app$).*',
       },
     ],
-    destination: '/admin/:path*',
+    destination: 'https://daramis-vercel.vercel.app/admin/:path*',
     permanent: false,
   }
 
